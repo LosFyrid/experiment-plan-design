@@ -1,0 +1,44 @@
+# .gitignore
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# 虚拟环境
+.venv/
+venv/
+ENV/
+env/
+
+# 依赖管理
+*.egg-info/
+dist/
+build/
+
+# IDE & 编辑器配置
+.vscode/
+.idea/
+*.swp
+*.swo
+.claude/
+
+# 敏感信息 (!! 必须 !!)
+config/api_keys.yml
+.env
+*.env
+
+# 数据 (根据需要决定是否跟踪)
+
+
+# Notebook 缓存
+.ipynb_checkpoints/
+
+# 测试与覆盖率
+.pytest_cache/
+.coverage
+htmlcov/
+
+CLAUDE.md
