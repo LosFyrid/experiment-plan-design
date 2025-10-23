@@ -42,3 +42,7 @@ config/api_keys.yml
 htmlcov/
 
 CLAUDE.md
+
+src/external/MOSES/data/pdf/
+
+logs/

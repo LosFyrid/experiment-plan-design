@@ -30,7 +30,7 @@ except ImportError:
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 SRC_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, '..')) # Go up one level to src
 TESTS_ROOT = os.path.abspath(os.path.join(SRC_ROOT, '..')) # Go up one level to Supramolecular
-PROJECT_ROOT = os.path.abspath(os.path.join(TESTS_ROOT, '../../')) # Go up two levels to Chem-Ontology-Constructor
+PROJECT_ROOT = os.path.abspath(os.path.join(TESTS_ROOT, '..')) # Go up two levels to Chem-Ontology-Constructor
 
 PDF_DIR = os.path.join(PROJECT_ROOT, r'data\pdfs')
 CHUNKS_DIR = os.path.join(PROJECT_ROOT, r'data\processed_texts')

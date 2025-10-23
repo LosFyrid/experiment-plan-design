@@ -18,7 +18,7 @@ if "PROJECT_ROOT" not in os.environ:
         SCRIPT_DIR = Path(__file__).resolve().parent
         SRC_ROOT = SCRIPT_DIR.parent # tests/Supramolecular/src/
         TESTS_ROOT = SRC_ROOT.parent # tests/Supramolecular/
-        PROJECT_ROOT_GUESS = TESTS_ROOT.parent.parent # Chem-Ontology-Constructor/
+        PROJECT_ROOT_GUESS = TESTS_ROOT # MOSES root directory (for subtree setup)
         if (PROJECT_ROOT_GUESS / 'config' / 'settings.py').exists():
              print(f"PROJECT_ROOT environment variable not set. Guessing: {PROJECT_ROOT_GUESS}")
              os.environ['PROJECT_ROOT'] = str(PROJECT_ROOT_GUESS)
@@ -96,9 +96,10 @@ def setup_dspy_lm():
     """Sets up and configures the DSPy Language Model."""
     try:
         logger.info("Setting up DSPy LM...")
-        lm = dspy.LM('openai/gpt-4.1', temperature=0, max_tokens=10000)
+        # lm = dspy.LM('openai/qwen3-next-80b-a3b-thinking', temperature=0, max_tokens=8192, api_key=os.getenv("DASHSCOPE_API_KEY"), api_base="https://dashscope.aliyuncs.com/compatible-mode/v1")
+        lm = dspy.LM("openai/gpt-5",temperature=0,max_tokens=10000)
         dspy.configure(lm=lm)
-        teacher = dspy.LM("openai/gpt-4o",temperature=1)
+        teacher = dspy.LM("dashscope/qwen-turbo",temperature=1)
     except Exception as e:
         logger.exception("Failed to set up DSPy LM.")
         raise

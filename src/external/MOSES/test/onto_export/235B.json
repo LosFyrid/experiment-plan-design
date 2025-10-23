@@ -1,0 +1,52 @@
+{
+  "name": "Thing",
+  "iri": "http://www.w3.org/2002/07/owl#Thing",
+  "children": [
+    {
+      "name": "SourcedInformation",
+      "iri": "http://www.test.org/chem_ontologies/meta/SourcedInformation",
+      "children": []
+    },
+    {
+      "name": "stacking_fault_energy(SFE)",
+      "iri": "http://www.test.org/chem_ontologies/classes/stacking_fault_energy(SFE)",
+      "children": []
+    },
+    {
+      "name": "starting_grain_size",
+      "iri": "http://www.test.org/chem_ontologies/classes/starting_grain_size",
+      "children": []
+    },
+    {
+      "name": "thermo_mechanical_processing_condition",
+      "iri": "http://www.test.org/chem_ontologies/classes/thermo_mechanical_processing_condition",
+      "children": []
+    },
+    {
+      "name": "second_phase_particle",
+      "iri": "http://www.test.org/chem_ontologies/classes/second_phase_particle",
+      "children": []
+    },
+    {
+      "name": "dynamic_recrystallization(DRX)",
+      "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recrystallization(DRX)",
+      "children": [
+        {
+          "name": "continuous_dynamic_recrystallization(CDRX)",
+          "iri": "http://www.test.org/chem_ontologies/classes/continuous_dynamic_recrystallization(CDRX)",
+          "children": []
+        },
+        {
+          "name": "discontinuous_dynamic_recrystallization(DDRX)",
+          "iri": "http://www.test.org/chem_ontologies/classes/discontinuous_dynamic_recrystallization(DDRX)",
+          "children": []
+        },
+        {
+          "name": "geometric_dynamic_recrystallization(GDRX)",
+          "iri": "http://www.test.org/chem_ontologies/classes/geometric_dynamic_recrystallization(GDRX)",
+          "children": []
+        }
+      ]
+    }
+  ]
+}

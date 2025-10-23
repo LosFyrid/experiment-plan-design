@@ -1,0 +1,65 @@
+[
+  {
+    "name": "SourcedInformation",
+    "iri": "http://www.test.org/chem_ontologies/meta/SourcedInformation",
+    "direct_parents": [
+      "Thing"
+    ]
+  },
+  {
+    "name": "continuous_dynamic_recrystallization(CDRX)",
+    "iri": "http://www.test.org/chem_ontologies/classes/continuous_dynamic_recrystallization(CDRX)",
+    "direct_parents": [
+      "dynamic_recrystallization(DRX)"
+    ]
+  },
+  {
+    "name": "discontinuous_dynamic_recrystallization(DDRX)",
+    "iri": "http://www.test.org/chem_ontologies/classes/discontinuous_dynamic_recrystallization(DDRX)",
+    "direct_parents": [
+      "dynamic_recrystallization(DRX)"
+    ]
+  },
+  {
+    "name": "dynamic_recrystallization(DRX)",
+    "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recrystallization(DRX)",
+    "direct_parents": [
+      "Thing"
+    ]
+  },
+  {
+    "name": "geometric_dynamic_recrystallization(GDRX)",
+    "iri": "http://www.test.org/chem_ontologies/classes/geometric_dynamic_recrystallization(GDRX)",
+    "direct_parents": [
+      "dynamic_recrystallization(DRX)"
+    ]
+  },
+  {
+    "name": "second_phase_particle",
+    "iri": "http://www.test.org/chem_ontologies/classes/second_phase_particle",
+    "direct_parents": [
+      "Thing"
+    ]
+  },
+  {
+    "name": "stacking_fault_energy(SFE)",
+    "iri": "http://www.test.org/chem_ontologies/classes/stacking_fault_energy(SFE)",
+    "direct_parents": [
+      "Thing"
+    ]
+  },
+  {
+    "name": "starting_grain_size",
+    "iri": "http://www.test.org/chem_ontologies/classes/starting_grain_size",
+    "direct_parents": [
+      "Thing"
+    ]
+  },
+  {
+    "name": "thermo_mechanical_processing_condition",
+    "iri": "http://www.test.org/chem_ontologies/classes/thermo_mechanical_processing_condition",
+    "direct_parents": [
+      "Thing"
+    ]
+  }
+]

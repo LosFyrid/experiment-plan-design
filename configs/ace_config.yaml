@@ -1,0 +1,76 @@
+# ACE Framework Configuration
+
+ace:
+  # LLM Model Configuration (统一使用Qwen)
+  model:
+    provider: "qwen"
+    model_name: "qwen-max"  # qwen-max, qwen-plus, qwen-turbo
+    temperature: 0.7
+    max_tokens: 4096
+
+  # Embedding Configuration (使用Qwen Embedding API)
+  embedding:
+    model: "text-embedding-v4"  # Qwen最新embedding模型
+    batch_size: 10  # Qwen API支持最多10个文本/批次
+    # 不需要device参数（基于API，非本地模型）
+
+  # Generator Configuration
+  generator:
+    max_playbook_bullets: 50  # Retrieve top-k relevant bullets
+    include_examples: true
+    enable_few_shot: true
+    few_shot_count: 3
+    output_format: "structured"  # "structured" or "markdown"
+
+  # Reflector Configuration
+  reflector:
+    max_refinement_rounds: 5  # Iterative refinement (ACE paper §3)
+    enable_iterative: true
+    reflection_mode: "detailed"  # "detailed" or "concise"
+    bullet_tagging: true  # Tag bullets as helpful/harmful/neutral
+
+  # Curator Configuration
+  curator:
+    update_mode: "incremental"  # "incremental" or "lazy" (ACE paper §3.2)
+    deduplication_threshold: 0.85  # Cosine similarity for semantic dedup
+    max_playbook_size: 200  # Maximum number of bullets
+    enable_grow_and_refine: true
+    prune_harmful_bullets: true  # Remove bullets with harmful_count > helpful_count
+
+  # Playbook Configuration
+  playbook:
+    default_path: "data/playbooks/chemistry_playbook.json"
+    sections:
+      - material_selection
+      - procedure_design
+      - safety_protocols
+      - quality_control
+      - troubleshooting
+      - common_mistakes
+
+    # Bullet ID prefix by section
+    id_prefixes:
+      material_selection: "mat"
+      procedure_design: "proc"
+      safety_protocols: "safe"
+      quality_control: "qc"
+      troubleshooting: "ts"
+      common_mistakes: "err"
+
+  # Training Configuration (Offline Adaptation)
+  training:
+    num_epochs: 5
+    batch_size: 1  # ACE paper uses batch_size=1
+    feedback_source: "llm_judge"  # "llm_judge", "human", "auto"
+    enable_offline_warmup: false  # Set to true when ready
+
+  # Evaluation Configuration
+  evaluation:
+    enable_auto_check: true
+    enable_llm_judge: true
+    evaluation_criteria:
+      - completeness
+      - safety
+      - clarity
+      - executability
+      - cost_effectiveness

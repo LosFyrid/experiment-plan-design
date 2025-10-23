@@ -1,0 +1,267 @@
+{
+  "bullets": [
+    {
+      "id": "mat-00001",
+      "section": "material_selection",
+      "content": "When selecting solvents for organic reactions, consider polarity, boiling point, and reactivity with reagents. Polar protic solvents (e.g., water, alcohols) favor SN1/E1 mechanisms, while polar aprotic solvents (e.g., DMF, DMSO) favor SN2 reactions.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "mat-00002",
+      "section": "material_selection",
+      "content": "Always verify reagent purity and expiration dates before use. Degraded or contaminated reagents can lead to failed reactions or unexpected side products.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "mat-00003",
+      "section": "material_selection",
+      "content": "When using strong oxidizers (e.g., KMnO4, H2O2, PCC), verify that all glassware and equipment are free from organic residues to prevent violent exothermic reactions.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "proc-00001",
+      "section": "procedure_design",
+      "content": "For temperature-sensitive reactions, allow reagents to equilibrate to the target temperature before mixing. Sudden temperature changes can cause side reactions or decomposition. For example, explain 'thermal shock' as 'rapid temperature changes that can cause materials to crack or break.' Alternatively, replace it with a more descriptive phrase such as 'sudden temperature change leading to material damage.'",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-10-23T20:34:52.377554",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "proc-00002",
+      "section": "procedure_design",
+      "content": "When adding reagents dropwise or portion-wise, maintain consistent addition rate and monitor reaction temperature. Rapid addition can cause thermal runaway in exothermic reactions.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "proc-00003",
+      "section": "procedure_design",
+      "content": "For reactions requiring inert atmosphere, perform at least three purge cycles (vacuum + inert gas) to remove oxygen and moisture. Monitor with humidity/oxygen sensors when possible.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "proc-00004",
+      "section": "procedure_design",
+      "content": "Include specific stirring speed or agitation method in procedure. Mass transfer limitations can significantly affect reaction rates, especially for heterogeneous reactions.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "safe-00001",
+      "section": "safety_protocols",
+      "content": "When working with pyrophoric reagents (e.g., n-BuLi, Grignard reagents), use syringe techniques under inert atmosphere. Have dry ice/sand available for emergency quenching, not water.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "safe-00002",
+      "section": "safety_protocols",
+      "content": "Always add acid to water, never water to acid, to avoid violent splattering from heat of dilution. Use ice bath to control temperature during acid/base dilutions.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "safe-00003",
+      "section": "safety_protocols",
+      "content": "For reactions generating toxic or flammable gases (e.g., H2, HCl, CO), ensure adequate ventilation and use gas traps or scrubbers. Monitor gas buildup in closed systems.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "qc-00001",
+      "section": "quality_control",
+      "content": "Use TLC to monitor reaction progress before work-up. Document Rf values and visualization methods (UV, stain) for reproducibility.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "qc-00002",
+      "section": "quality_control",
+      "content": "Record physical properties of products (melting point, boiling point, color, odor) and compare with literature values. Significant deviations indicate impurities or incorrect product.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "qc-00003",
+      "section": "quality_control",
+      "content": "For scale-up or critical reactions, run test reactions at small scale (100mg-1g) first to optimize conditions and identify issues before committing large quantities of reagents.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "ts-00001",
+      "section": "troubleshooting",
+      "content": "If reaction does not progress as expected, check: (1) reagent quality and stoichiometry, (2) temperature control, (3) moisture/oxygen contamination, (4) solvent identity and purity.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "ts-00002",
+      "section": "troubleshooting",
+      "content": "For low yields, analyze crude product by NMR before purification to determine if issue is reaction conversion or purification losses. Adjust strategy accordingly.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "err-00001",
+      "section": "common_mistakes",
+      "content": "Common mistake: Not accounting for water of hydration in reagent mass. Always check formula and adjust quantities accordingly (e.g., CuSO4·5H2O vs anhydrous CuSO4).",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "err-00002",
+      "section": "common_mistakes",
+      "content": "Common mistake: Using magnetic stirrer with thick suspensions or viscous solutions. Switch to mechanical stirring when magnetic bar becomes decoupled or ineffective.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "err-00003",
+      "section": "common_mistakes",
+      "content": "Common mistake: Forgetting to account for volume changes during heating/cooling. Use reaction vessels with adequate headspace (typically fill to 2/3 capacity max).",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-01-22T00:00:00",
+        "last_updated": "2025-01-22T00:00:00",
+        "source": "seed",
+        "embedding": null
+      }
+    }
+  ],
+  "sections": [
+    "material_selection",
+    "procedure_design",
+    "safety_protocols",
+    "quality_control",
+    "troubleshooting",
+    "common_mistakes"
+  ],
+  "version": "1.0.0",
+  "last_updated": "2025-10-23T20:34:57.276820",
+  "total_generations": 1
+}

@@ -1,0 +1,56 @@
+# RAG Template Library Configuration
+
+rag:
+  # Vector Store Configuration
+  vector_store:
+    type: "chroma"  # Options: "chroma", "faiss", "qdrant"
+    persist_directory: "data/chroma_db"
+    collection_name: "experiment_templates"
+
+  # Embedding Configuration
+  embeddings:
+    model_name: "BAAI/bge-large-zh-v1.5"  # Best for Chinese text
+    model_kwargs:
+      device: "cpu"  # "cpu" or "cuda"
+    encode_kwargs:
+      normalize_embeddings: true
+      batch_size: 32
+
+  # Retrieval Configuration
+  retrieval:
+    top_k: 5  # Number of templates to retrieve
+    similarity_threshold: 0.7  # Minimum similarity score
+    enable_reranking: false  # Use cross-encoder for reranking
+    reranker_model: null  # "BAAI/bge-reranker-large" if enabled
+
+  # Document Processing
+  document_processing:
+    chunk_size: 512
+    chunk_overlap: 50
+    enable_metadata_extraction: true
+    supported_formats:
+      - json
+      - markdown
+      - txt
+
+  # Template Schema
+  template_schema:
+    required_fields:
+      - title
+      - objective
+      - materials
+      - procedure
+    optional_fields:
+      - safety_notes
+      - expected_yield
+      - quality_control
+      - references
+
+  # Indexing Configuration
+  indexing:
+    auto_index_on_startup: false
+    template_directory: "data/templates"
+    index_metadata:
+      - domain  # e.g., "organic_synthesis", "analytical_chemistry"
+      - difficulty  # "beginner", "intermediate", "advanced"
+      - safety_level  # 1-5

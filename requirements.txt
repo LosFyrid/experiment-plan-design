@@ -1,0 +1,54 @@
+# Core LLM Framework
+langchain>=0.3.7
+langchain-community>=0.3.0
+langchain-core>=0.3.0
+openai>=1.0.0
+
+# ACE & RAG
+llama-index>=0.10.0
+llama-index-embeddings-huggingface>=0.3.0
+llama-index-vector-stores-chroma>=0.3.0
+chromadb>=0.4.0
+# sentence-transformers>=2.2.0  # 已改用Qwen embedding API
+
+# MOSES Dependencies (from src/external/MOSES/requirements.txt)
+owlready2>=0.47
+rank-bm25>=0.2.2
+
+# Data Processing & Validation
+pydantic>=2.11.7
+pydantic-settings>=2.0.0
+pyyaml>=6.0
+numpy>=1.26.0
+
+# HTTP & API
+requests>=2.31.0
+httpx>=0.27.0
+dashscope>=1.14.0  # Qwen API客户端
+
+# Utilities
+python-dotenv>=1.0.0
+tqdm>=4.66.0
+tenacity>=8.2.0
+
+# Development & Testing
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+black>=23.0.0
+mypy>=1.0.0
+flake8>=6.0.0
+isort>=5.12.0
+
+# Jupyter & Notebooks
+jupyter>=1.0.0
+ipython>=8.0.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Optional: For Chinese text processing
+jieba>=0.42.0
+
+# Optional: For PDF processing (if templates are PDFs)
+pypdf>=3.0.0
+pdfplumber>=0.10.0

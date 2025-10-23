@@ -1,0 +1,1709 @@
+{
+  "name": "Thing",
+  "iri": "http://www.w3.org/2002/07/owl#Thing",
+  "children": [
+    {
+      "name": "SourcedInformation",
+      "iri": "http://www.test.org/chem_ontologies/meta/SourcedInformation",
+      "children": []
+    },
+    {
+      "name": "ferrite (δ)",
+      "iri": "http://www.test.org/chem_ontologies/classes/ferrite (δ)",
+      "children": []
+    },
+    {
+      "name": "austenite (γ)",
+      "iri": "http://www.test.org/chem_ontologies/classes/austenite (γ)",
+      "children": []
+    },
+    {
+      "name": "sigma_phase (σ)",
+      "iri": "http://www.test.org/chem_ontologies/classes/sigma_phase (σ)",
+      "children": []
+    },
+    {
+      "name": "chi_phase (χ)",
+      "iri": "http://www.test.org/chem_ontologies/classes/chi_phase (χ)",
+      "children": []
+    },
+    {
+      "name": "intermetallic_phases",
+      "iri": "http://www.test.org/chem_ontologies/classes/intermetallic_phases",
+      "children": [
+        {
+          "name": "carbides",
+          "iri": "http://www.test.org/chem_ontologies/classes/carbides",
+          "children": []
+        },
+        {
+          "name": "nitrides",
+          "iri": "http://www.test.org/chem_ontologies/classes/nitrides",
+          "children": []
+        },
+        {
+          "name": "sigma_phase",
+          "iri": "http://www.test.org/chem_ontologies/classes/sigma_phase",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "duplex_stainless_steels(DSS)",
+      "iri": "http://www.test.org/chem_ontologies/classes/duplex_stainless_steels(DSS)",
+      "children": []
+    },
+    {
+      "name": "super_duplex_stainless_steels(SDSS)",
+      "iri": "http://www.test.org/chem_ontologies/classes/super_duplex_stainless_steels(SDSS)",
+      "children": []
+    },
+    {
+      "name": "stacking_fault_energy(sfe)",
+      "iri": "http://www.test.org/chem_ontologies/classes/stacking_fault_energy(sfe)",
+      "children": []
+    },
+    {
+      "name": "starting_grain_size",
+      "iri": "http://www.test.org/chem_ontologies/classes/starting_grain_size",
+      "children": []
+    },
+    {
+      "name": "thermo_mechanical_processing_conditions",
+      "iri": "http://www.test.org/chem_ontologies/classes/thermo_mechanical_processing_conditions",
+      "children": []
+    },
+    {
+      "name": "second_phase_particles",
+      "iri": "http://www.test.org/chem_ontologies/classes/second_phase_particles",
+      "children": []
+    },
+    {
+      "name": "strain_rate",
+      "iri": "http://www.test.org/chem_ontologies/classes/strain_rate",
+      "children": [
+        {
+          "name": "dynamic_recrystallization(drx)",
+          "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recrystallization(drx)",
+          "children": [
+            {
+              "name": "continuous_dynamic_recrystallization(cdrx)",
+              "iri": "http://www.test.org/chem_ontologies/classes/continuous_dynamic_recrystallization(cdrx)",
+              "children": []
+            },
+            {
+              "name": "discontinuous_dynamic_recrystallization(ddrx)",
+              "iri": "http://www.test.org/chem_ontologies/classes/discontinuous_dynamic_recrystallization(ddrx)",
+              "children": []
+            },
+            {
+              "name": "geometric_dynamic_recrystallization(gdrx)",
+              "iri": "http://www.test.org/chem_ontologies/classes/geometric_dynamic_recrystallization(gdrx)",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "duplex_stainless_steel_2205(dss_2205)",
+      "iri": "http://www.test.org/chem_ontologies/classes/duplex_stainless_steel_2205(dss_2205)",
+      "children": [
+        {
+          "name": "ferrite_phase(α)",
+          "iri": "http://www.test.org/chem_ontologies/classes/ferrite_phase(α)",
+          "children": []
+        },
+        {
+          "name": "austenite_phase(γ)",
+          "iri": "http://www.test.org/chem_ontologies/classes/austenite_phase(γ)",
+          "children": []
+        },
+        {
+          "name": "grain_refinement",
+          "iri": "http://www.test.org/chem_ontologies/classes/grain_refinement",
+          "children": []
+        },
+        {
+          "name": "dislocation_strengthening",
+          "iri": "http://www.test.org/chem_ontologies/classes/dislocation_strengthening",
+          "children": []
+        },
+        {
+          "name": "hetero_deformation_induced_strengthening",
+          "iri": "http://www.test.org/chem_ontologies/classes/hetero_deformation_induced_strengthening",
+          "children": [
+            {
+              "name": "cross_slip_systems",
+              "iri": "http://www.test.org/chem_ontologies/classes/cross_slip_systems",
+              "children": []
+            },
+            {
+              "name": "single_slip_systems",
+              "iri": "http://www.test.org/chem_ontologies/classes/single_slip_systems",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "alloying_element",
+      "iri": "http://www.test.org/chem_ontologies/classes/alloying_element",
+      "children": [
+        {
+          "name": "molybdenum(mo)",
+          "iri": "http://www.test.org/chem_ontologies/classes/molybdenum(mo)",
+          "children": []
+        },
+        {
+          "name": "nickel(ni)",
+          "iri": "http://www.test.org/chem_ontologies/classes/nickel(ni)",
+          "children": []
+        },
+        {
+          "name": "nitrogen(n)",
+          "iri": "http://www.test.org/chem_ontologies/classes/nitrogen(n)",
+          "children": []
+        },
+        {
+          "name": "carbon(c)",
+          "iri": "http://www.test.org/chem_ontologies/classes/carbon(c)",
+          "children": []
+        },
+        {
+          "name": "chromium(cr)",
+          "iri": "http://www.test.org/chem_ontologies/classes/chromium(cr)",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "hot_deformation",
+      "iri": "http://www.test.org/chem_ontologies/classes/hot_deformation",
+      "children": [
+        {
+          "name": "dynamic_recrystallization",
+          "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recrystallization",
+          "children": [
+            {
+              "name": "discontinuous_dynamic_recrystallization(DDRX)",
+              "iri": "http://www.test.org/chem_ontologies/classes/discontinuous_dynamic_recrystallization(DDRX)",
+              "children": [
+                {
+                  "name": "material_with_low_stacking_fault_energy",
+                  "iri": "http://www.test.org/chem_ontologies/classes/material_with_low_stacking_fault_energy",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "name": "continuous_dynamic_recrystallization",
+              "iri": "http://www.test.org/chem_ontologies/classes/continuous_dynamic_recrystallization",
+              "children": []
+            },
+            {
+              "name": "discontinuous_dynamic_recrystallization",
+              "iri": "http://www.test.org/chem_ontologies/classes/discontinuous_dynamic_recrystallization",
+              "children": []
+            },
+            {
+              "name": "continuous_dynamic_recrystallization(CDRX)",
+              "iri": "http://www.test.org/chem_ontologies/classes/continuous_dynamic_recrystallization(CDRX)",
+              "children": [
+                {
+                  "name": "subgrain",
+                  "iri": "http://www.test.org/chem_ontologies/classes/subgrain",
+                  "children": [
+                    {
+                      "name": "dislocation",
+                      "iri": "http://www.test.org/chem_ontologies/classes/dislocation",
+                      "children": []
+                    },
+                    {
+                      "name": "low_angle_grain_boundaries",
+                      "iri": "http://www.test.org/chem_ontologies/classes/low_angle_grain_boundaries",
+                      "children": [
+                        {
+                          "name": "high_angle_grain_boundaries",
+                          "iri": "http://www.test.org/chem_ontologies/classes/high_angle_grain_boundaries",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "name": "cell_structures",
+                  "iri": "http://www.test.org/chem_ontologies/classes/cell_structures",
+                  "children": [
+                    {
+                      "name": "dislocation",
+                      "iri": "http://www.test.org/chem_ontologies/classes/dislocation",
+                      "children": []
+                    },
+                    {
+                      "name": "low_angle_grain_boundaries",
+                      "iri": "http://www.test.org/chem_ontologies/classes/low_angle_grain_boundaries",
+                      "children": [
+                        {
+                          "name": "high_angle_grain_boundaries",
+                          "iri": "http://www.test.org/chem_ontologies/classes/high_angle_grain_boundaries",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "geometric_dynamic_recrystallization(GDRX)",
+              "iri": "http://www.test.org/chem_ontologies/classes/geometric_dynamic_recrystallization(GDRX)",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "recovery",
+          "iri": "http://www.test.org/chem_ontologies/classes/recovery",
+          "children": []
+        },
+        {
+          "name": "extrusion",
+          "iri": "http://www.test.org/chem_ontologies/classes/extrusion",
+          "children": []
+        },
+        {
+          "name": "forging",
+          "iri": "http://www.test.org/chem_ontologies/classes/forging",
+          "children": []
+        },
+        {
+          "name": "hot_rolling",
+          "iri": "http://www.test.org/chem_ontologies/classes/hot_rolling",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "grain_boundary",
+      "iri": "http://www.test.org/chem_ontologies/classes/grain_boundary",
+      "children": [
+        {
+          "name": "low_angle_grain_boundaries(LAGBs)",
+          "iri": "http://www.test.org/chem_ontologies/classes/low_angle_grain_boundaries(LAGBs)",
+          "children": []
+        },
+        {
+          "name": "high_angle_grain_boundaries(HAGBs)",
+          "iri": "http://www.test.org/chem_ontologies/classes/high_angle_grain_boundaries(HAGBs)",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "secondary_phase",
+      "iri": "http://www.test.org/chem_ontologies/classes/secondary_phase",
+      "children": []
+    },
+    {
+      "name": "microstructural_evolution",
+      "iri": "http://www.test.org/chem_ontologies/classes/microstructural_evolution",
+      "children": []
+    },
+    {
+      "name": "phase_boundary",
+      "iri": "http://www.test.org/chem_ontologies/classes/phase_boundary",
+      "children": []
+    },
+    {
+      "name": "atomic_movement",
+      "iri": "http://www.test.org/chem_ontologies/classes/atomic_movement",
+      "children": []
+    },
+    {
+      "name": "dynamically_recrystallized_microstructure",
+      "iri": "http://www.test.org/chem_ontologies/classes/dynamically_recrystallized_microstructure",
+      "children": []
+    },
+    {
+      "name": "mechanical_characteristic",
+      "iri": "http://www.test.org/chem_ontologies/classes/mechanical_characteristic",
+      "children": []
+    },
+    {
+      "name": "chromium",
+      "iri": "http://www.test.org/chem_ontologies/classes/chromium",
+      "children": [
+        {
+          "name": "corrosion_resistance",
+          "iri": "http://www.test.org/chem_ontologies/classes/corrosion_resistance",
+          "children": []
+        },
+        {
+          "name": "ferrite",
+          "iri": "http://www.test.org/chem_ontologies/classes/ferrite",
+          "children": [
+            {
+              "name": "continuous_dynamic_recrystallization",
+              "iri": "http://www.test.org/chem_ontologies/classes/continuous_dynamic_recrystallization",
+              "children": []
+            },
+            {
+              "name": "hagbs_in_ferrite",
+              "iri": "http://www.test.org/chem_ontologies/classes/hagbs_in_ferrite",
+              "children": []
+            },
+            {
+              "name": "dynamic_recovery(DRV)",
+              "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recovery(DRV)",
+              "children": []
+            },
+            {
+              "name": "slip_transfer_between_phases",
+              "iri": "http://www.test.org/chem_ontologies/classes/slip_transfer_between_phases",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "oxidation_resistance",
+          "iri": "http://www.test.org/chem_ontologies/classes/oxidation_resistance",
+          "children": []
+        },
+        {
+          "name": "secondary_phase_precipitation",
+          "iri": "http://www.test.org/chem_ontologies/classes/secondary_phase_precipitation",
+          "children": [
+            {
+              "name": "pitting_corrosion_resistance",
+              "iri": "http://www.test.org/chem_ontologies/classes/pitting_corrosion_resistance",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "duplex_alloy_2205",
+      "iri": "http://www.test.org/chem_ontologies/classes/duplex_alloy_2205",
+      "children": [
+        {
+          "name": "corrosion_resistance",
+          "iri": "http://www.test.org/chem_ontologies/classes/corrosion_resistance",
+          "children": []
+        },
+        {
+          "name": "microstructure",
+          "iri": "http://www.test.org/chem_ontologies/classes/microstructure",
+          "children": [
+            {
+              "name": "dislocations",
+              "iri": "http://www.test.org/chem_ontologies/classes/dislocations",
+              "children": []
+            },
+            {
+              "name": "grain_boundaries",
+              "iri": "http://www.test.org/chem_ontologies/classes/grain_boundaries",
+              "children": []
+            },
+            {
+              "name": "deformed_regions",
+              "iri": "http://www.test.org/chem_ontologies/classes/deformed_regions",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "grain_boundaries",
+          "iri": "http://www.test.org/chem_ontologies/classes/grain_boundaries",
+          "children": []
+        },
+        {
+          "name": "deformation_behaviour",
+          "iri": "http://www.test.org/chem_ontologies/classes/deformation_behaviour",
+          "children": []
+        },
+        {
+          "name": "oil_and_gas",
+          "iri": "http://www.test.org/chem_ontologies/classes/oil_and_gas",
+          "children": []
+        },
+        {
+          "name": "chemical_processing",
+          "iri": "http://www.test.org/chem_ontologies/classes/chemical_processing",
+          "children": []
+        },
+        {
+          "name": "pulp_and_paper",
+          "iri": "http://www.test.org/chem_ontologies/classes/pulp_and_paper",
+          "children": []
+        },
+        {
+          "name": "desalination_facilities",
+          "iri": "http://www.test.org/chem_ontologies/classes/desalination_facilities",
+          "children": []
+        },
+        {
+          "name": "maritime_chemical_tankers",
+          "iri": "http://www.test.org/chem_ontologies/classes/maritime_chemical_tankers",
+          "children": []
+        },
+        {
+          "name": "civil_and_construction_industries",
+          "iri": "http://www.test.org/chem_ontologies/classes/civil_and_construction_industries",
+          "children": []
+        },
+        {
+          "name": "bio_medical_applications",
+          "iri": "http://www.test.org/chem_ontologies/classes/bio_medical_applications",
+          "children": []
+        },
+        {
+          "name": "plate_heat_exchangers",
+          "iri": "http://www.test.org/chem_ontologies/classes/plate_heat_exchangers",
+          "children": []
+        },
+        {
+          "name": "weldability",
+          "iri": "http://www.test.org/chem_ontologies/classes/weldability",
+          "children": []
+        },
+        {
+          "name": "machinability",
+          "iri": "http://www.test.org/chem_ontologies/classes/machinability",
+          "children": []
+        },
+        {
+          "name": "surfacing_properties",
+          "iri": "http://www.test.org/chem_ontologies/classes/surfacing_properties",
+          "children": []
+        },
+        {
+          "name": "intrinsic_properties",
+          "iri": "http://www.test.org/chem_ontologies/classes/intrinsic_properties",
+          "children": []
+        },
+        {
+          "name": "functional_properties",
+          "iri": "http://www.test.org/chem_ontologies/classes/functional_properties",
+          "children": []
+        },
+        {
+          "name": "subsea_hydraulic_control_lines",
+          "iri": "http://www.test.org/chem_ontologies/classes/subsea_hydraulic_control_lines",
+          "children": []
+        },
+        {
+          "name": "phosphoric_acid",
+          "iri": "http://www.test.org/chem_ontologies/classes/phosphoric_acid",
+          "children": []
+        },
+        {
+          "name": "organic_acid",
+          "iri": "http://www.test.org/chem_ontologies/classes/organic_acid",
+          "children": []
+        },
+        {
+          "name": "wet_phosphoric_acid",
+          "iri": "http://www.test.org/chem_ontologies/classes/wet_phosphoric_acid",
+          "children": []
+        },
+        {
+          "name": "sulfuric_acid",
+          "iri": "http://www.test.org/chem_ontologies/classes/sulfuric_acid",
+          "children": []
+        },
+        {
+          "name": "hydrogen_sulfide",
+          "iri": "http://www.test.org/chem_ontologies/classes/hydrogen_sulfide",
+          "children": []
+        },
+        {
+          "name": "free_halides",
+          "iri": "http://www.test.org/chem_ontologies/classes/free_halides",
+          "children": []
+        },
+        {
+          "name": "chlorides",
+          "iri": "http://www.test.org/chem_ontologies/classes/chlorides",
+          "children": []
+        },
+        {
+          "name": "yield_properties",
+          "iri": "http://www.test.org/chem_ontologies/classes/yield_properties",
+          "children": []
+        },
+        {
+          "name": "phase_composition",
+          "iri": "http://www.test.org/chem_ontologies/classes/phase_composition",
+          "children": []
+        },
+        {
+          "name": "mechanical_properties",
+          "iri": "http://www.test.org/chem_ontologies/classes/mechanical_properties",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "dislocation_density",
+      "iri": "http://www.test.org/chem_ontologies/classes/dislocation_density",
+      "children": []
+    },
+    {
+      "name": "stacking_fault_energy(SFE)",
+      "iri": "http://www.test.org/chem_ontologies/classes/stacking_fault_energy(SFE)",
+      "children": []
+    },
+    {
+      "name": "recrystallized_grains",
+      "iri": "http://www.test.org/chem_ontologies/classes/recrystallized_grains",
+      "children": [
+        {
+          "name": "strain_free_grains",
+          "iri": "http://www.test.org/chem_ontologies/classes/strain_free_grains",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "ferrite_phase(ferrite)",
+      "iri": "http://www.test.org/chem_ontologies/classes/ferrite_phase(ferrite)",
+      "children": []
+    },
+    {
+      "name": "austenite_phase(austenite)",
+      "iri": "http://www.test.org/chem_ontologies/classes/austenite_phase(austenite)",
+      "children": []
+    },
+    {
+      "name": "phase_transition",
+      "iri": "http://www.test.org/chem_ontologies/classes/phase_transition",
+      "children": []
+    },
+    {
+      "name": "dynamic_recovery(drv)",
+      "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recovery(drv)",
+      "children": [
+        {
+          "name": "extrusion",
+          "iri": "http://www.test.org/chem_ontologies/classes/extrusion",
+          "children": []
+        },
+        {
+          "name": "forging",
+          "iri": "http://www.test.org/chem_ontologies/classes/forging",
+          "children": []
+        },
+        {
+          "name": "dislocation",
+          "iri": "http://www.test.org/chem_ontologies/classes/dislocation",
+          "children": []
+        },
+        {
+          "name": "rolling",
+          "iri": "http://www.test.org/chem_ontologies/classes/rolling",
+          "children": []
+        },
+        {
+          "name": "metal_creep",
+          "iri": "http://www.test.org/chem_ontologies/classes/metal_creep",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "molybdenum(Mo)",
+      "iri": "http://www.test.org/chem_ontologies/classes/molybdenum(Mo)",
+      "children": []
+    },
+    {
+      "name": "nickel(Ni)",
+      "iri": "http://www.test.org/chem_ontologies/classes/nickel(Ni)",
+      "children": []
+    },
+    {
+      "name": "chromium(Cr)",
+      "iri": "http://www.test.org/chem_ontologies/classes/chromium(Cr)",
+      "children": []
+    },
+    {
+      "name": "pitting_corrosion",
+      "iri": "http://www.test.org/chem_ontologies/classes/pitting_corrosion",
+      "children": []
+    },
+    {
+      "name": "crevice_corrosion",
+      "iri": "http://www.test.org/chem_ontologies/classes/crevice_corrosion",
+      "children": []
+    },
+    {
+      "name": "critical_pitting_temperature(CPT)",
+      "iri": "http://www.test.org/chem_ontologies/classes/critical_pitting_temperature(CPT)",
+      "children": []
+    },
+    {
+      "name": "stress_corrosion_cracking",
+      "iri": "http://www.test.org/chem_ontologies/classes/stress_corrosion_cracking",
+      "children": []
+    },
+    {
+      "name": "high_temperature_oxidation",
+      "iri": "http://www.test.org/chem_ontologies/classes/high_temperature_oxidation",
+      "children": []
+    },
+    {
+      "name": "embrittlement",
+      "iri": "http://www.test.org/chem_ontologies/classes/embrittlement",
+      "children": []
+    },
+    {
+      "name": "annealing_process",
+      "iri": "http://www.test.org/chem_ontologies/classes/annealing_process",
+      "children": [
+        {
+          "name": "recrystallized_soft_zone",
+          "iri": "http://www.test.org/chem_ontologies/classes/recrystallized_soft_zone",
+          "children": []
+        },
+        {
+          "name": "non_recrystallized_hard_zone",
+          "iri": "http://www.test.org/chem_ontologies/classes/non_recrystallized_hard_zone",
+          "children": []
+        },
+        {
+          "name": "gradient_structure",
+          "iri": "http://www.test.org/chem_ontologies/classes/gradient_structure",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "quenching",
+      "iri": "http://www.test.org/chem_ontologies/classes/quenching",
+      "children": []
+    },
+    {
+      "name": "petrochemical_industry",
+      "iri": "http://www.test.org/chem_ontologies/classes/petrochemical_industry",
+      "children": []
+    },
+    {
+      "name": "chemical_processing_facility",
+      "iri": "http://www.test.org/chem_ontologies/classes/chemical_processing_facility",
+      "children": []
+    },
+    {
+      "name": "food_processing",
+      "iri": "http://www.test.org/chem_ontologies/classes/food_processing",
+      "children": []
+    },
+    {
+      "name": "oil_distillation",
+      "iri": "http://www.test.org/chem_ontologies/classes/oil_distillation",
+      "children": []
+    },
+    {
+      "name": "bleach_washer",
+      "iri": "http://www.test.org/chem_ontologies/classes/bleach_washer",
+      "children": []
+    },
+    {
+      "name": "heat_exchanger",
+      "iri": "http://www.test.org/chem_ontologies/classes/heat_exchanger",
+      "children": []
+    },
+    {
+      "name": "tube_and_pipeline",
+      "iri": "http://www.test.org/chem_ontologies/classes/tube_and_pipeline",
+      "children": []
+    },
+    {
+      "name": "naval_construction",
+      "iri": "http://www.test.org/chem_ontologies/classes/naval_construction",
+      "children": []
+    },
+    {
+      "name": "fracture_toughness",
+      "iri": "http://www.test.org/chem_ontologies/classes/fracture_toughness",
+      "children": []
+    },
+    {
+      "name": "duplex_stainless_steel(DSS)",
+      "iri": "http://www.test.org/chem_ontologies/classes/duplex_stainless_steel(DSS)",
+      "children": [
+        {
+          "name": "carbon(C)",
+          "iri": "http://www.test.org/chem_ontologies/classes/carbon(C)",
+          "children": []
+        },
+        {
+          "name": "ferrite",
+          "iri": "http://www.test.org/chem_ontologies/classes/ferrite",
+          "children": [
+            {
+              "name": "continuous_dynamic_recrystallization",
+              "iri": "http://www.test.org/chem_ontologies/classes/continuous_dynamic_recrystallization",
+              "children": []
+            },
+            {
+              "name": "hagbs_in_ferrite",
+              "iri": "http://www.test.org/chem_ontologies/classes/hagbs_in_ferrite",
+              "children": []
+            },
+            {
+              "name": "dynamic_recovery(DRV)",
+              "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recovery(DRV)",
+              "children": []
+            },
+            {
+              "name": "slip_transfer_between_phases",
+              "iri": "http://www.test.org/chem_ontologies/classes/slip_transfer_between_phases",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "austenite",
+          "iri": "http://www.test.org/chem_ontologies/classes/austenite",
+          "children": [
+            {
+              "name": "dynamic_recrystallization(DRX)",
+              "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recrystallization(DRX)",
+              "children": []
+            },
+            {
+              "name": "slip_transfer_between_phases",
+              "iri": "http://www.test.org/chem_ontologies/classes/slip_transfer_between_phases",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "precipitate",
+      "iri": "http://www.test.org/chem_ontologies/classes/precipitate",
+      "children": [
+        {
+          "name": "M23C6_carbide",
+          "iri": "http://www.test.org/chem_ontologies/classes/M23C6_carbide",
+          "children": []
+        },
+        {
+          "name": "gamma_2_phase(γ2_phase)",
+          "iri": "http://www.test.org/chem_ontologies/classes/gamma_2_phase(γ2_phase)",
+          "children": []
+        },
+        {
+          "name": "sigma_phase(σ_phase)",
+          "iri": "http://www.test.org/chem_ontologies/classes/sigma_phase(σ_phase)",
+          "children": []
+        },
+        {
+          "name": "chi_phase(χ_phase)",
+          "iri": "http://www.test.org/chem_ontologies/classes/chi_phase(χ_phase)",
+          "children": []
+        },
+        {
+          "name": "R_phase",
+          "iri": "http://www.test.org/chem_ontologies/classes/R_phase",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "duplex_stainless_steel(dss)",
+      "iri": "http://www.test.org/chem_ontologies/classes/duplex_stainless_steel(dss)",
+      "children": [
+        {
+          "name": "ferrite_phase",
+          "iri": "http://www.test.org/chem_ontologies/classes/ferrite_phase",
+          "children": [
+            {
+              "name": "dynamic_recrystallization(drx)",
+              "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recrystallization(drx)",
+              "children": [
+                {
+                  "name": "continuous_dynamic_recrystallization(cdrx)",
+                  "iri": "http://www.test.org/chem_ontologies/classes/continuous_dynamic_recrystallization(cdrx)",
+                  "children": []
+                },
+                {
+                  "name": "discontinuous_dynamic_recrystallization(ddrx)",
+                  "iri": "http://www.test.org/chem_ontologies/classes/discontinuous_dynamic_recrystallization(ddrx)",
+                  "children": []
+                },
+                {
+                  "name": "geometric_dynamic_recrystallization(gdrx)",
+                  "iri": "http://www.test.org/chem_ontologies/classes/geometric_dynamic_recrystallization(gdrx)",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "sigma_phase(σ_phase)",
+          "iri": "http://www.test.org/chem_ontologies/classes/sigma_phase(σ_phase)",
+          "children": []
+        },
+        {
+          "name": "chi_phase(χ_phase)",
+          "iri": "http://www.test.org/chem_ontologies/classes/chi_phase(χ_phase)",
+          "children": []
+        },
+        {
+          "name": "ferrite",
+          "iri": "http://www.test.org/chem_ontologies/classes/ferrite",
+          "children": [
+            {
+              "name": "continuous_dynamic_recrystallization",
+              "iri": "http://www.test.org/chem_ontologies/classes/continuous_dynamic_recrystallization",
+              "children": []
+            },
+            {
+              "name": "hagbs_in_ferrite",
+              "iri": "http://www.test.org/chem_ontologies/classes/hagbs_in_ferrite",
+              "children": []
+            },
+            {
+              "name": "dynamic_recovery(DRV)",
+              "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recovery(DRV)",
+              "children": []
+            },
+            {
+              "name": "slip_transfer_between_phases",
+              "iri": "http://www.test.org/chem_ontologies/classes/slip_transfer_between_phases",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "austenite",
+          "iri": "http://www.test.org/chem_ontologies/classes/austenite",
+          "children": [
+            {
+              "name": "dynamic_recrystallization(DRX)",
+              "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recrystallization(DRX)",
+              "children": []
+            },
+            {
+              "name": "slip_transfer_between_phases",
+              "iri": "http://www.test.org/chem_ontologies/classes/slip_transfer_between_phases",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "cr2n",
+          "iri": "http://www.test.org/chem_ontologies/classes/cr2n",
+          "children": []
+        },
+        {
+          "name": "alpha_prime_phase(α′_phase)",
+          "iri": "http://www.test.org/chem_ontologies/classes/alpha_prime_phase(α′_phase)",
+          "children": []
+        },
+        {
+          "name": "austenite_phase",
+          "iri": "http://www.test.org/chem_ontologies/classes/austenite_phase",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "carbide",
+      "iri": "http://www.test.org/chem_ontologies/classes/carbide",
+      "children": []
+    },
+    {
+      "name": "strain_partitioning",
+      "iri": "http://www.test.org/chem_ontologies/classes/strain_partitioning",
+      "children": []
+    },
+    {
+      "name": "low_angle_grain_boundaries(LAGB)",
+      "iri": "http://www.test.org/chem_ontologies/classes/low_angle_grain_boundaries(LAGB)",
+      "children": []
+    },
+    {
+      "name": "high_angle_grain_boundaries(HAGB)",
+      "iri": "http://www.test.org/chem_ontologies/classes/high_angle_grain_boundaries(HAGB)",
+      "children": []
+    },
+    {
+      "name": "duplex_stainless_steel_2205(DSS_2205)",
+      "iri": "http://www.test.org/chem_ontologies/classes/duplex_stainless_steel_2205(DSS_2205)",
+      "children": [
+        {
+          "name": "ferrite",
+          "iri": "http://www.test.org/chem_ontologies/classes/ferrite",
+          "children": [
+            {
+              "name": "continuous_dynamic_recrystallization",
+              "iri": "http://www.test.org/chem_ontologies/classes/continuous_dynamic_recrystallization",
+              "children": []
+            },
+            {
+              "name": "hagbs_in_ferrite",
+              "iri": "http://www.test.org/chem_ontologies/classes/hagbs_in_ferrite",
+              "children": []
+            },
+            {
+              "name": "dynamic_recovery(DRV)",
+              "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recovery(DRV)",
+              "children": []
+            },
+            {
+              "name": "slip_transfer_between_phases",
+              "iri": "http://www.test.org/chem_ontologies/classes/slip_transfer_between_phases",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "austenite",
+          "iri": "http://www.test.org/chem_ontologies/classes/austenite",
+          "children": [
+            {
+              "name": "dynamic_recrystallization(DRX)",
+              "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recrystallization(DRX)",
+              "children": []
+            },
+            {
+              "name": "slip_transfer_between_phases",
+              "iri": "http://www.test.org/chem_ontologies/classes/slip_transfer_between_phases",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "grain_refinement",
+          "iri": "http://www.test.org/chem_ontologies/classes/grain_refinement",
+          "children": []
+        },
+        {
+          "name": "dislocation_multiplication",
+          "iri": "http://www.test.org/chem_ontologies/classes/dislocation_multiplication",
+          "children": []
+        },
+        {
+          "name": "strain_induced_martensite_formation",
+          "iri": "http://www.test.org/chem_ontologies/classes/strain_induced_martensite_formation",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "nickel",
+      "iri": "http://www.test.org/chem_ontologies/classes/nickel",
+      "children": [
+        {
+          "name": "austenite",
+          "iri": "http://www.test.org/chem_ontologies/classes/austenite",
+          "children": [
+            {
+              "name": "dynamic_recrystallization(DRX)",
+              "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recrystallization(DRX)",
+              "children": []
+            },
+            {
+              "name": "slip_transfer_between_phases",
+              "iri": "http://www.test.org/chem_ontologies/classes/slip_transfer_between_phases",
+              "children": []
+            }
+          ]
+        },
+        {
+          "name": "ferrite_austenite_ratio",
+          "iri": "http://www.test.org/chem_ontologies/classes/ferrite_austenite_ratio",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "union_of_chi_phase(χ_phase)_or_R_phase",
+      "iri": "http://www.test.org/chem_ontologies/classes/union_of_chi_phase(χ_phase)_or_R_phase",
+      "children": []
+    },
+    {
+      "name": "copper(cu)",
+      "iri": "http://www.test.org/chem_ontologies/classes/copper(cu)",
+      "children": []
+    },
+    {
+      "name": "stacking_fault_energy",
+      "iri": "http://www.test.org/chem_ontologies/classes/stacking_fault_energy",
+      "children": []
+    },
+    {
+      "name": "strength_and_hardness",
+      "iri": "http://www.test.org/chem_ontologies/classes/strength_and_hardness",
+      "children": []
+    },
+    {
+      "name": "pitting_resistance_equivalent_number(pren)",
+      "iri": "http://www.test.org/chem_ontologies/classes/pitting_resistance_equivalent_number(pren)",
+      "children": []
+    },
+    {
+      "name": "carbon",
+      "iri": "http://www.test.org/chem_ontologies/classes/carbon",
+      "children": []
+    },
+    {
+      "name": "carbide(M23C6_M7C3)",
+      "iri": "http://www.test.org/chem_ontologies/classes/carbide(M23C6_M7C3)",
+      "children": []
+    },
+    {
+      "name": "solid_solution_strengthening",
+      "iri": "http://www.test.org/chem_ontologies/classes/solid_solution_strengthening",
+      "children": []
+    },
+    {
+      "name": "nitrogen",
+      "iri": "http://www.test.org/chem_ontologies/classes/nitrogen",
+      "children": []
+    },
+    {
+      "name": "chromium_nitride",
+      "iri": "http://www.test.org/chem_ontologies/classes/chromium_nitride",
+      "children": []
+    },
+    {
+      "name": "TRIP_effect",
+      "iri": "http://www.test.org/chem_ontologies/classes/TRIP_effect",
+      "children": []
+    },
+    {
+      "name": "TWIP_effect",
+      "iri": "http://www.test.org/chem_ontologies/classes/TWIP_effect",
+      "children": []
+    },
+    {
+      "name": "stress_corrosion",
+      "iri": "http://www.test.org/chem_ontologies/classes/stress_corrosion",
+      "children": []
+    },
+    {
+      "name": "duplex_stainless_steel",
+      "iri": "http://www.test.org/chem_ontologies/classes/duplex_stainless_steel",
+      "children": []
+    },
+    {
+      "name": "molybdenum",
+      "iri": "http://www.test.org/chem_ontologies/classes/molybdenum",
+      "children": [
+        {
+          "name": "secondary_phase_precipitation",
+          "iri": "http://www.test.org/chem_ontologies/classes/secondary_phase_precipitation",
+          "children": [
+            {
+              "name": "pitting_corrosion_resistance",
+              "iri": "http://www.test.org/chem_ontologies/classes/pitting_corrosion_resistance",
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "silicon",
+      "iri": "http://www.test.org/chem_ontologies/classes/silicon",
+      "children": []
+    },
+    {
+      "name": "austenitic_phase",
+      "iri": "http://www.test.org/chem_ontologies/classes/austenitic_phase",
+      "children": []
+    },
+    {
+      "name": "ductile_fracture",
+      "iri": "http://www.test.org/chem_ontologies/classes/ductile_fracture",
+      "children": []
+    },
+    {
+      "name": "cleavage",
+      "iri": "http://www.test.org/chem_ontologies/classes/cleavage",
+      "children": []
+    },
+    {
+      "name": "micro_cracking",
+      "iri": "http://www.test.org/chem_ontologies/classes/micro_cracking",
+      "children": []
+    },
+    {
+      "name": "intermetallic_phase",
+      "iri": "http://www.test.org/chem_ontologies/classes/intermetallic_phase",
+      "children": [
+        {
+          "name": "sigma_phase",
+          "iri": "http://www.test.org/chem_ontologies/classes/sigma_phase",
+          "children": []
+        },
+        {
+          "name": "chi_phase",
+          "iri": "http://www.test.org/chem_ontologies/classes/chi_phase",
+          "children": []
+        },
+        {
+          "name": "r_phase",
+          "iri": "http://www.test.org/chem_ontologies/classes/r_phase",
+          "children": []
+        },
+        {
+          "name": "alpha_prime_phase",
+          "iri": "http://www.test.org/chem_ontologies/classes/alpha_prime_phase",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "copper_bearing_2205_duplex_stainless_steel(2205-cu_dss)",
+      "iri": "http://www.test.org/chem_ontologies/classes/copper_bearing_2205_duplex_stainless_steel(2205-cu_dss)",
+      "children": [
+        {
+          "name": "ferrite_phase",
+          "iri": "http://www.test.org/chem_ontologies/classes/ferrite_phase",
+          "children": [
+            {
+              "name": "dynamic_recrystallization(drx)",
+              "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recrystallization(drx)",
+              "children": [
+                {
+                  "name": "continuous_dynamic_recrystallization(cdrx)",
+                  "iri": "http://www.test.org/chem_ontologies/classes/continuous_dynamic_recrystallization(cdrx)",
+                  "children": []
+                },
+                {
+                  "name": "discontinuous_dynamic_recrystallization(ddrx)",
+                  "iri": "http://www.test.org/chem_ontologies/classes/discontinuous_dynamic_recrystallization(ddrx)",
+                  "children": []
+                },
+                {
+                  "name": "geometric_dynamic_recrystallization(gdrx)",
+                  "iri": "http://www.test.org/chem_ontologies/classes/geometric_dynamic_recrystallization(gdrx)",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "sigma_phase",
+          "iri": "http://www.test.org/chem_ontologies/classes/sigma_phase",
+          "children": []
+        },
+        {
+          "name": "secondary_austenite_phase(gamma_2)",
+          "iri": "http://www.test.org/chem_ontologies/classes/secondary_austenite_phase(gamma_2)",
+          "children": []
+        },
+        {
+          "name": "austenite_phase",
+          "iri": "http://www.test.org/chem_ontologies/classes/austenite_phase",
+          "children": []
+        },
+        {
+          "name": "intermetallic_precipitates",
+          "iri": "http://www.test.org/chem_ontologies/classes/intermetallic_precipitates",
+          "children": []
+        },
+        {
+          "name": "activation_energy_for_hot_deformation",
+          "iri": "http://www.test.org/chem_ontologies/classes/activation_energy_for_hot_deformation",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "heat_affected_zone",
+      "iri": "http://www.test.org/chem_ontologies/classes/heat_affected_zone",
+      "children": []
+    },
+    {
+      "name": "hardness",
+      "iri": "http://www.test.org/chem_ontologies/classes/hardness",
+      "children": []
+    },
+    {
+      "name": "aging",
+      "iri": "http://www.test.org/chem_ontologies/classes/aging",
+      "children": []
+    },
+    {
+      "name": "intersection_of_chromium_and_molybdenum",
+      "iri": "http://www.test.org/chem_ontologies/classes/intersection_of_chromium_and_molybdenum",
+      "children": []
+    },
+    {
+      "name": "toughness",
+      "iri": "http://www.test.org/chem_ontologies/classes/toughness",
+      "children": []
+    },
+    {
+      "name": "nitrogen(N)",
+      "iri": "http://www.test.org/chem_ontologies/classes/nitrogen(N)",
+      "children": []
+    },
+    {
+      "name": "oxygen(O)",
+      "iri": "http://www.test.org/chem_ontologies/classes/oxygen(O)",
+      "children": []
+    },
+    {
+      "name": "hydrogen(H)",
+      "iri": "http://www.test.org/chem_ontologies/classes/hydrogen(H)",
+      "children": []
+    },
+    {
+      "name": "grain_size",
+      "iri": "http://www.test.org/chem_ontologies/classes/grain_size",
+      "children": []
+    },
+    {
+      "name": "annealing_temperature",
+      "iri": "http://www.test.org/chem_ontologies/classes/annealing_temperature",
+      "children": []
+    },
+    {
+      "name": "cooling_rate",
+      "iri": "http://www.test.org/chem_ontologies/classes/cooling_rate",
+      "children": []
+    },
+    {
+      "name": "yield_strength",
+      "iri": "http://www.test.org/chem_ontologies/classes/yield_strength",
+      "children": []
+    },
+    {
+      "name": "tensile_strength",
+      "iri": "http://www.test.org/chem_ontologies/classes/tensile_strength",
+      "children": []
+    },
+    {
+      "name": "manganese(mn)",
+      "iri": "http://www.test.org/chem_ontologies/classes/manganese(mn)",
+      "children": []
+    },
+    {
+      "name": "oxidizing_agent",
+      "iri": "http://www.test.org/chem_ontologies/classes/oxidizing_agent",
+      "children": []
+    },
+    {
+      "name": "nitrogen_solubility",
+      "iri": "http://www.test.org/chem_ontologies/classes/nitrogen_solubility",
+      "children": []
+    },
+    {
+      "name": "strength",
+      "iri": "http://www.test.org/chem_ontologies/classes/strength",
+      "children": []
+    },
+    {
+      "name": "sigma_phase_precipitation",
+      "iri": "http://www.test.org/chem_ontologies/classes/sigma_phase_precipitation",
+      "children": []
+    },
+    {
+      "name": "pitting_resistance",
+      "iri": "http://www.test.org/chem_ontologies/classes/pitting_resistance",
+      "children": []
+    },
+    {
+      "name": "impact_energy",
+      "iri": "http://www.test.org/chem_ontologies/classes/impact_energy",
+      "children": []
+    },
+    {
+      "name": "elongation",
+      "iri": "http://www.test.org/chem_ontologies/classes/elongation",
+      "children": []
+    },
+    {
+      "name": "trip_effect",
+      "iri": "http://www.test.org/chem_ontologies/classes/trip_effect",
+      "children": []
+    },
+    {
+      "name": "high_temperature_oxidation_resistance",
+      "iri": "http://www.test.org/chem_ontologies/classes/high_temperature_oxidation_resistance",
+      "children": []
+    },
+    {
+      "name": "protective_cr2o3_layer",
+      "iri": "http://www.test.org/chem_ontologies/classes/protective_cr2o3_layer",
+      "children": []
+    },
+    {
+      "name": "austenitic_stainless_steel",
+      "iri": "http://www.test.org/chem_ontologies/classes/austenitic_stainless_steel",
+      "children": []
+    },
+    {
+      "name": "low_angle_grain_boundary(LAGB)",
+      "iri": "http://www.test.org/chem_ontologies/classes/low_angle_grain_boundary(LAGB)",
+      "children": [
+        {
+          "name": "twist_low_angle_grain_boundary",
+          "iri": "http://www.test.org/chem_ontologies/classes/twist_low_angle_grain_boundary",
+          "children": []
+        },
+        {
+          "name": "tilt_low_angle_grain_boundary",
+          "iri": "http://www.test.org/chem_ontologies/classes/tilt_low_angle_grain_boundary",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "dislocation_structure",
+      "iri": "http://www.test.org/chem_ontologies/classes/dislocation_structure",
+      "children": [
+        {
+          "name": "screw_dislocation",
+          "iri": "http://www.test.org/chem_ontologies/classes/screw_dislocation",
+          "children": []
+        },
+        {
+          "name": "edge_dislocation",
+          "iri": "http://www.test.org/chem_ontologies/classes/edge_dislocation",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "bulk_diffusion",
+      "iri": "http://www.test.org/chem_ontologies/classes/bulk_diffusion",
+      "children": []
+    },
+    {
+      "name": "misorientation",
+      "iri": "http://www.test.org/chem_ontologies/classes/misorientation",
+      "children": []
+    },
+    {
+      "name": "burgers_vector",
+      "iri": "http://www.test.org/chem_ontologies/classes/burgers_vector",
+      "children": []
+    },
+    {
+      "name": "union_of_edge_dislocation_or_screw_dislocation",
+      "iri": "http://www.test.org/chem_ontologies/classes/union_of_edge_dislocation_or_screw_dislocation",
+      "children": []
+    },
+    {
+      "name": "high_angle_grain_boundary(hgb)",
+      "iri": "http://www.test.org/chem_ontologies/classes/high_angle_grain_boundary(hgb)",
+      "children": [
+        {
+          "name": "single_grain_boundary",
+          "iri": "http://www.test.org/chem_ontologies/classes/single_grain_boundary",
+          "children": []
+        },
+        {
+          "name": "vicinal_grain_boundary",
+          "iri": "http://www.test.org/chem_ontologies/classes/vicinal_grain_boundary",
+          "children": []
+        },
+        {
+          "name": "general_grain_boundary",
+          "iri": "http://www.test.org/chem_ontologies/classes/general_grain_boundary",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "atomic_structure",
+      "iri": "http://www.test.org/chem_ontologies/classes/atomic_structure",
+      "children": []
+    },
+    {
+      "name": "energy_level",
+      "iri": "http://www.test.org/chem_ontologies/classes/energy_level",
+      "children": []
+    },
+    {
+      "name": "structural_unit",
+      "iri": "http://www.test.org/chem_ontologies/classes/structural_unit",
+      "children": []
+    },
+    {
+      "name": "heat_treatment",
+      "iri": "http://www.test.org/chem_ontologies/classes/heat_treatment",
+      "children": []
+    },
+    {
+      "name": "harmful_sigma_phase",
+      "iri": "http://www.test.org/chem_ontologies/classes/harmful_sigma_phase",
+      "children": []
+    },
+    {
+      "name": "harmful_chi_phase",
+      "iri": "http://www.test.org/chem_ontologies/classes/harmful_chi_phase",
+      "children": []
+    },
+    {
+      "name": "nitriding",
+      "iri": "http://www.test.org/chem_ontologies/classes/nitriding",
+      "children": []
+    },
+    {
+      "name": "alloying",
+      "iri": "http://www.test.org/chem_ontologies/classes/alloying",
+      "children": []
+    },
+    {
+      "name": "forming",
+      "iri": "http://www.test.org/chem_ontologies/classes/forming",
+      "children": []
+    },
+    {
+      "name": "deformation",
+      "iri": "http://www.test.org/chem_ontologies/classes/deformation",
+      "children": [
+        {
+          "name": "grain_boundary_serrations",
+          "iri": "http://www.test.org/chem_ontologies/classes/grain_boundary_serrations",
+          "children": [
+            {
+              "name": "pinching_off_process",
+              "iri": "http://www.test.org/chem_ontologies/classes/pinching_off_process",
+              "children": [
+                {
+                  "name": "equiaxed_grains",
+                  "iri": "http://www.test.org/chem_ontologies/classes/equiaxed_grains",
+                  "children": [
+                    {
+                      "name": "high_angle_grain_boundaries",
+                      "iri": "http://www.test.org/chem_ontologies/classes/high_angle_grain_boundaries",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "chemical_energy",
+      "iri": "http://www.test.org/chem_ontologies/classes/chemical_energy",
+      "children": []
+    },
+    {
+      "name": "strain_energy",
+      "iri": "http://www.test.org/chem_ontologies/classes/strain_energy",
+      "children": []
+    },
+    {
+      "name": "elastic_energy",
+      "iri": "http://www.test.org/chem_ontologies/classes/elastic_energy",
+      "children": []
+    },
+    {
+      "name": "grain_boundary_migration",
+      "iri": "http://www.test.org/chem_ontologies/classes/grain_boundary_migration",
+      "children": []
+    },
+    {
+      "name": "atomic_diffusion",
+      "iri": "http://www.test.org/chem_ontologies/classes/atomic_diffusion",
+      "children": []
+    },
+    {
+      "name": "high_angle_grain_boundary",
+      "iri": "http://www.test.org/chem_ontologies/classes/high_angle_grain_boundary",
+      "children": [
+        {
+          "name": "twin_boundary",
+          "iri": "http://www.test.org/chem_ontologies/classes/twin_boundary",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "ordinary_random_boundary",
+      "iri": "http://www.test.org/chem_ontologies/classes/ordinary_random_boundary",
+      "children": []
+    },
+    {
+      "name": "boundary_plane",
+      "iri": "http://www.test.org/chem_ontologies/classes/boundary_plane",
+      "children": []
+    },
+    {
+      "name": "crystal_lattice",
+      "iri": "http://www.test.org/chem_ontologies/classes/crystal_lattice",
+      "children": []
+    },
+    {
+      "name": "interatomic_bond_distortion",
+      "iri": "http://www.test.org/chem_ontologies/classes/interatomic_bond_distortion",
+      "children": []
+    },
+    {
+      "name": "twinning",
+      "iri": "http://www.test.org/chem_ontologies/classes/twinning",
+      "children": []
+    },
+    {
+      "name": "twinning_axis",
+      "iri": "http://www.test.org/chem_ontologies/classes/twinning_axis",
+      "children": []
+    },
+    {
+      "name": "grain_boundary_sliding",
+      "iri": "http://www.test.org/chem_ontologies/classes/grain_boundary_sliding",
+      "children": []
+    },
+    {
+      "name": "superplastic_deformation",
+      "iri": "http://www.test.org/chem_ontologies/classes/superplastic_deformation",
+      "children": []
+    },
+    {
+      "name": "precipitation",
+      "iri": "http://www.test.org/chem_ontologies/classes/precipitation",
+      "children": []
+    },
+    {
+      "name": "austenite(γ)",
+      "iri": "http://www.test.org/chem_ontologies/classes/austenite(γ)",
+      "children": [
+        {
+          "name": "secondary_austenite(γ')",
+          "iri": "http://www.test.org/chem_ontologies/classes/secondary_austenite(γ')",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "ferrite(δ)",
+      "iri": "http://www.test.org/chem_ontologies/classes/ferrite(δ)",
+      "children": []
+    },
+    {
+      "name": "dynamic_recovery",
+      "iri": "http://www.test.org/chem_ontologies/classes/dynamic_recovery",
+      "children": []
+    },
+    {
+      "name": "high_stacking_fault_energy",
+      "iri": "http://www.test.org/chem_ontologies/classes/high_stacking_fault_energy",
+      "children": []
+    },
+    {
+      "name": "hardening",
+      "iri": "http://www.test.org/chem_ontologies/classes/hardening",
+      "children": []
+    },
+    {
+      "name": "micro_nano_crystalline_composite_structure",
+      "iri": "http://www.test.org/chem_ontologies/classes/micro_nano_crystalline_composite_structure",
+      "children": []
+    },
+    {
+      "name": "hydrogen_embrittlement",
+      "iri": "http://www.test.org/chem_ontologies/classes/hydrogen_embrittlement",
+      "children": []
+    },
+    {
+      "name": "rolling_process",
+      "iri": "http://www.test.org/chem_ontologies/classes/rolling_process",
+      "children": [
+        {
+          "name": "recrystallized_soft_zone",
+          "iri": "http://www.test.org/chem_ontologies/classes/recrystallized_soft_zone",
+          "children": []
+        },
+        {
+          "name": "non_recrystallized_hard_zone",
+          "iri": "http://www.test.org/chem_ontologies/classes/non_recrystallized_hard_zone",
+          "children": []
+        },
+        {
+          "name": "gradient_structure",
+          "iri": "http://www.test.org/chem_ontologies/classes/gradient_structure",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "union_of_grain_refinement_or_dislocation_strengthening_or_hetero_deformation_induced_strengthening",
+      "iri": "http://www.test.org/chem_ontologies/classes/union_of_grain_refinement_or_dislocation_strengthening_or_hetero_deformation_induced_strengthening",
+      "children": []
+    },
+    {
+      "name": "union_of_cross_slip_systems_or_single_slip_systems",
+      "iri": "http://www.test.org/chem_ontologies/classes/union_of_cross_slip_systems_or_single_slip_systems",
+      "children": []
+    },
+    {
+      "name": "union_of_rolling_process_or_annealing_process",
+      "iri": "http://www.test.org/chem_ontologies/classes/union_of_rolling_process_or_annealing_process",
+      "children": []
+    },
+    {
+      "name": "intersection_of_deformation_and_grain_boundary_serrations",
+      "iri": "http://www.test.org/chem_ontologies/classes/intersection_of_deformation_and_grain_boundary_serrations",
+      "children": []
+    },
+    {
+      "name": "deformation_temperature",
+      "iri": "http://www.test.org/chem_ontologies/classes/deformation_temperature",
+      "children": []
+    },
+    {
+      "name": "cdrx",
+      "iri": "http://www.test.org/chem_ontologies/classes/cdrx",
+      "children": []
+    },
+    {
+      "name": "ddrx",
+      "iri": "http://www.test.org/chem_ontologies/classes/ddrx",
+      "children": []
+    },
+    {
+      "name": "luster_morris_value",
+      "iri": "http://www.test.org/chem_ontologies/classes/luster_morris_value",
+      "children": []
+    },
+    {
+      "name": "slip_transfer",
+      "iri": "http://www.test.org/chem_ontologies/classes/slip_transfer",
+      "children": []
+    },
+    {
+      "name": "hot_ductility",
+      "iri": "http://www.test.org/chem_ontologies/classes/hot_ductility",
+      "children": []
+    },
+    {
+      "name": "microcrack_creation",
+      "iri": "http://www.test.org/chem_ontologies/classes/microcrack_creation",
+      "children": []
+    },
+    {
+      "name": "chromium_nitride_or_chi_phase_precipitates",
+      "iri": "http://www.test.org/chem_ontologies/classes/chromium_nitride_or_chi_phase_precipitates",
+      "children": []
+    },
+    {
+      "name": "two_stage_solution_heat_treatment(TSS)",
+      "iri": "http://www.test.org/chem_ontologies/classes/two_stage_solution_heat_treatment(TSS)",
+      "children": []
+    },
+    {
+      "name": "dss_2205",
+      "iri": "http://www.test.org/chem_ontologies/classes/dss_2205",
+      "children": []
+    }
+  ]
+}
