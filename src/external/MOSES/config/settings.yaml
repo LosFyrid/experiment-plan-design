@@ -1,9 +1,9 @@
 ontology:
-  directory_path: ${PROJECT_ROOT}data/ontology/
+  directory_path: data/ontology/  # 相对于MOSES根目录
   ontology_file_name: "chem_ontology.owl"
   base_iri: "http://www.test.org/chem_ontologies/"
   # closed_ontology_file_name: "closed_chem_ontology.owl"
-  java_exe: "C:/Program Files/Java/jdk-23/bin/java.exe"
+  java_exe: ""  # 留空让owlready2自动检测Java路径
 
 entity_retrieval:
   top_k: 5
@@ -13,7 +13,8 @@ entity_retrieval:
   min_score_threshold: 0.1
 
 LLM:
-  model: "gpt-4.1-nano"
+  model: "qwen3-max"  # 改为qwen模型（与CLAUDE.md一致）
+  # model: "gpt-4.1-nano"
   # model: "o1-preview"
   # model: "o1-mini"
   streaming: false

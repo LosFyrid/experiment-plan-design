@@ -42,19 +42,34 @@ def list_playbook_versions() -> List[Dict[str, Any]]:
         with open(version_file) as f:
             data = json.load(f)
 
-        # Extract metadata
-        metadata = data.get("metadata", {})
-        playbook = data.get("playbook", {})
+        # Determine file type and extract appropriate data
+        # Type 1: playbook_*.json - full snapshot with bullets
+        # Type 2: meta_*.json - metadata only
 
-        version_info = {
-            "version_id": metadata.get("version_id"),
-            "timestamp": metadata.get("timestamp"),
-            "trigger": metadata.get("trigger"),
-            "run_id": metadata.get("run_id"),
-            "size": playbook.get("size", 0),
-            "bullets_count": len(playbook.get("bullets", [])),
-            "path": str(version_file)
-        }
+        if "bullets" in data:
+            # Full playbook snapshot
+            version_info = {
+                "version_id": version_file.stem,
+                "timestamp": data.get("last_updated", ""),
+                "trigger": None,  # Not in snapshot format
+                "run_id": None,
+                "size": len(data.get("bullets", [])),
+                "bullets_count": len(data.get("bullets", [])),
+                "path": str(version_file),
+                "file_type": "snapshot"
+            }
+        else:
+            # Metadata file
+            version_info = {
+                "version_id": data.get("version", version_file.stem),
+                "timestamp": data.get("timestamp", ""),
+                "trigger": data.get("trigger"),
+                "run_id": data.get("run_id"),
+                "size": data.get("size", 0),
+                "bullets_count": data.get("size", 0),
+                "path": str(version_file),
+                "file_type": "metadata"
+            }
 
         versions.append(version_info)
 
@@ -66,7 +81,7 @@ def load_playbook_version(version_id: str) -> Optional[Dict[str, Any]]:
     Load a specific playbook version.
 
     Args:
-        version_id: Version identifier
+        version_id: Version identifier (filename without .json extension)
 
     Returns:
         Playbook version data or None
@@ -77,7 +92,28 @@ def load_playbook_version(version_id: str) -> Optional[Dict[str, Any]]:
     version_file = versions_dir / f"{version_id}.json"
     if version_file.exists():
         with open(version_file) as f:
-            return json.load(f)
+            data = json.load(f)
+
+        # Wrap metadata files to provide consistent interface
+        if "bullets" not in data:
+            # Metadata file - convert to playbook-like structure
+            return {
+                "playbook": {
+                    "bullets": [],  # Metadata files don't have full bullets
+                    "size": data.get("size", 0)
+                },
+                "metadata": data
+            }
+        else:
+            # Full snapshot - wrap it
+            return {
+                "playbook": data,
+                "metadata": {
+                    "version_id": version_id,
+                    "timestamp": data.get("last_updated", ""),
+                    "trigger": "snapshot"
+                }
+            }
 
     return None
 
@@ -88,24 +124,29 @@ def print_versions_list(versions: List[Dict[str, Any]]):
         print("No playbook versions found.")
         return
 
-    print("\n" + "=" * 100)
+    print("\n" + "=" * 110)
     print("PLAYBOOK VERSIONS")
-    print("=" * 100)
+    print("=" * 110)
 
-    print(f"\n{'Version ID':<25} {'Timestamp':<20} {'Trigger':<15} {'Size':<8} {'Run ID':<20}")
-    print("-" * 100)
+    print(f"\n{'Version ID':<30} {'Timestamp':<20} {'Trigger':<15} {'Size':<8} {'Type':<10} {'Run ID':<15}")
+    print("-" * 110)
 
     for v in versions:
-        version_id = v["version_id"][:24]
+        version_id = v["version_id"][:29]
         timestamp = v["timestamp"][:19] if v["timestamp"] else "N/A"
-        trigger = v.get("trigger", "unknown")[:14]
+        trigger = (v.get("trigger") or "N/A")[:14]
         size = v["bullets_count"]
-        run_id = v.get("run_id", "N/A")[:19]
+        file_type = v.get("file_type", "unknown")[:9]
+        run_id = (v.get("run_id") or "N/A")[:14]
 
-        print(f"{version_id:<25} {timestamp:<20} {trigger:<15} {size:<8} {run_id:<20}")
+        print(f"{version_id:<30} {timestamp:<20} {trigger:<15} {size:<8} {file_type:<10} {run_id:<15}")
 
-    print(f"\nTotal versions: {len(versions)}")
-    print("=" * 100)
+    # Summary statistics
+    meta_count = sum(1 for v in versions if v.get("file_type") == "metadata")
+    snapshot_count = sum(1 for v in versions if v.get("file_type") == "snapshot")
+
+    print(f"\nTotal versions: {len(versions)} (metadata: {meta_count}, snapshots: {snapshot_count})")
+    print("=" * 110)
 
 
 def compare_versions(version1_id: str, version2_id: str):
@@ -208,45 +249,65 @@ def analyze_growth_stats(versions: List[Dict[str, Any]]):
     print(f"\nTotal Versions: {len(versions)}")
     print(f"Initial Size: {sizes[0]} bullets")
     print(f"Current Size: {sizes[-1]} bullets")
-    print(f"Net Growth: {sizes[-1] - sizes[0]} bullets ({(sizes[-1] - sizes[0]) / sizes[0] * 100:.1f}%)")
+
+    # Calculate growth percentage (handle zero initial size)
+    net_growth = sizes[-1] - sizes[0]
+    if sizes[0] > 0:
+        growth_pct = (net_growth / sizes[0]) * 100
+        print(f"Net Growth: {net_growth} bullets ({growth_pct:.1f}%)")
+    else:
+        print(f"Net Growth: {net_growth} bullets (from empty playbook)")
 
     # Growth by trigger
     trigger_counts = defaultdict(int)
     for v in versions:
-        trigger = v.get("trigger", "unknown")
+        trigger = v.get("trigger") or "snapshot"
         trigger_counts[trigger] += 1
 
     print("\nVersions by Trigger:")
     for trigger, count in sorted(trigger_counts.items()):
         print(f"  - {trigger}: {count}")
 
-    # Analyze section distribution (load latest version)
-    latest = load_playbook_version(sorted_versions[-1]["version_id"])
-    if latest:
-        playbook = latest.get("playbook", {})
-        bullets = playbook.get("bullets", [])
+    # Find the most recent full snapshot for detailed analysis
+    snapshot_versions = [v for v in sorted_versions if v.get("file_type") == "snapshot"]
 
-        section_counts = defaultdict(int)
-        for bullet in bullets:
-            section = bullet.get("section", "unknown")
-            section_counts[section] += 1
+    if snapshot_versions:
+        latest_snapshot = snapshot_versions[-1]
+        latest = load_playbook_version(latest_snapshot["version_id"])
 
-        print("\nCurrent Section Distribution:")
-        for section, count in sorted(section_counts.items()):
-            pct = count / len(bullets) * 100 if bullets else 0
-            print(f"  - {section}: {count} bullets ({pct:.1f}%)")
+        if latest:
+            playbook = latest.get("playbook", {})
+            bullets = playbook.get("bullets", [])
 
-        # Quality statistics
-        helpful_scores = [b.get("metadata", {}).get("helpful_count", 0) for b in bullets]
-        harmful_scores = [b.get("metadata", {}).get("harmful_count", 0) for b in bullets]
+            if bullets:
+                section_counts = defaultdict(int)
+                for bullet in bullets:
+                    section = bullet.get("section", "unknown")
+                    section_counts[section] += 1
 
-        print("\nQuality Metrics:")
-        print(f"  - Avg Helpful Count: {sum(helpful_scores) / len(helpful_scores):.2f}")
-        print(f"  - Avg Harmful Count: {sum(harmful_scores) / len(harmful_scores):.2f}")
+                print(f"\nCurrent Section Distribution (from latest snapshot {latest_snapshot['version_id']}):")
+                for section, count in sorted(section_counts.items()):
+                    pct = count / len(bullets) * 100 if bullets else 0
+                    print(f"  - {section}: {count} bullets ({pct:.1f}%)")
 
-        # High-quality bullets
-        high_quality = [b for b in bullets if b.get("metadata", {}).get("helpful_count", 0) >= 3]
-        print(f"  - High Quality Bullets (helpful_count >= 3): {len(high_quality)} ({len(high_quality) / len(bullets) * 100:.1f}%)")
+                # Quality statistics
+                helpful_scores = [b.get("metadata", {}).get("helpful_count", 0) for b in bullets]
+                harmful_scores = [b.get("metadata", {}).get("harmful_count", 0) for b in bullets]
+
+                print("\nQuality Metrics:")
+                if helpful_scores:
+                    print(f"  - Avg Helpful Count: {sum(helpful_scores) / len(helpful_scores):.2f}")
+                    print(f"  - Avg Harmful Count: {sum(harmful_scores) / len(harmful_scores):.2f}")
+
+                    # High-quality bullets
+                    high_quality = [b for b in bullets if b.get("metadata", {}).get("helpful_count", 0) >= 3]
+                    pct = len(high_quality) / len(bullets) * 100 if bullets else 0
+                    print(f"  - High Quality Bullets (helpful_count >= 3): {len(high_quality)} ({pct:.1f}%)")
+            else:
+                print("\nNo bullets found in latest snapshot.")
+    else:
+        print("\nNo full snapshots available for detailed analysis.")
+        print("Note: Only metadata files exist, which don't contain full bullet information.")
 
     print("\n" + "=" * 80)
 

@@ -38,6 +38,7 @@ from utils.embedding_utils import (
     EmbeddingManager,
     deduplicate_with_quality_scores
 )
+from utils.section_manager import SectionManager
 from .prompts import (
     CURATOR_SYSTEM_PROMPT,
     build_curation_prompt,
@@ -63,7 +64,8 @@ class PlaybookCurator:
         embedding_manager: Optional[EmbeddingManager] = None,
         logger: Optional[StructuredLogger] = None,
         perf_monitor: Optional[PerformanceMonitor] = None,
-        llm_tracker: Optional[LLMCallTracker] = None
+        llm_tracker: Optional[LLMCallTracker] = None,
+        allow_new_sections: Optional[bool] = None
     ):
         """
         Args:
@@ -74,10 +76,15 @@ class PlaybookCurator:
             logger: Optional structured logger (created if None)
             perf_monitor: Optional performance monitor
             llm_tracker: Optional LLM call tracker
+            allow_new_sections: 运行时覆盖是否允许添加新sections
+                               如果为None，则使用playbook_sections.yaml中的配置
         """
         self.playbook_manager = playbook_manager
         self.llm = llm_provider
         self.config = config
+
+        # Section manager for section validation and management
+        self.section_manager = SectionManager(allow_new_sections=allow_new_sections)
 
         # Embedding manager for deduplication
         if embedding_manager is None:
@@ -105,7 +112,7 @@ class PlaybookCurator:
 
         Args:
             reflection_result: Result from Reflector with insights and bullet tags
-            id_prefixes: Section name -> ID prefix mapping (from config)
+            id_prefixes: (Deprecated) Section name -> ID prefix mapping - now loaded from SectionManager
 
         Returns:
             PlaybookUpdateResult with updated playbook and delta operations
@@ -129,11 +136,8 @@ class PlaybookCurator:
         # Step 1: Update bullet metadata based on tags
         self._update_bullet_metadata(reflection_result.bullet_tags)
 
-        # Step 2: Load id_prefixes from config if not provided
-        if id_prefixes is None:
-            from utils.config_loader import get_ace_config
-            ace_config = get_ace_config()
-            id_prefixes = ace_config.playbook.id_prefixes
+        # Step 2: Get id_prefixes from SectionManager (replaces old config loading)
+        id_prefixes = self.section_manager.get_id_prefixes()
 
         # Step 3: Generate delta operations from insights
         if self.perf_monitor:
@@ -275,13 +279,17 @@ class PlaybookCurator:
         # Get current playbook state organized by section
         current_section_bullets = self._get_bullets_by_section()
 
+        # Get sections information from SectionManager
+        sections_info = self.section_manager.format_sections_for_prompt()
+
         # Build prompt
         prompt = build_curation_prompt(
             insights=insights,
             current_section_bullets=current_section_bullets,
             id_prefixes=id_prefixes,
             max_playbook_size=self.config.max_playbook_size,
-            current_size=self.playbook_manager.playbook.size
+            current_size=self.playbook_manager.playbook.size,
+            sections_info=sections_info
         )
 
         # Track LLM call
@@ -335,8 +343,6 @@ class PlaybookCurator:
 
         # Convert to DeltaOperation objects
         delta_operations = []
-        # Get valid sections from config
-        valid_sections = set(id_prefixes.keys())
 
         for op_data in operations_data:
             try:
@@ -347,18 +353,48 @@ class PlaybookCurator:
                     section = bullet_data["section"]
                     content = bullet_data["content"]
 
-                    # ✅ FIX: Validate section
-                    if section not in valid_sections:
-                        # Map invalid sections to closest valid one
-                        section_mapping = {
-                            "waste_disposal": "safety_protocols",
-                            "reaction_conditions": "procedure_design",
-                            "cost_optimization": "procedure_design",
-                            "equipment": "material_selection"
-                        }
-                        original_section = section
-                        section = section_mapping.get(section, "safety_protocols")  # Default to safety
-                        print(f"Warning: Invalid section '{original_section}' mapped to '{section}'")
+                    # Validate section using SectionManager
+                    if not self.section_manager.is_section_valid(section):
+                        # Handle invalid section
+                        if self.section_manager.is_new_section_allowed() and op_data["operation"] == "ADD":
+                            # Check if LLM provided new section proposal
+                            new_section_proposal = op_data.get("new_section_proposal")
+                            if new_section_proposal:
+                                # Attempt to add new custom section
+                                success = self.section_manager.add_custom_section(
+                                    name=section,
+                                    id_prefix=new_section_proposal.get('id_prefix', section[:3]),
+                                    description=new_section_proposal.get('description', ''),
+                                    creation_reason=new_section_proposal.get('justification', 'Curator proposal'),
+                                    examples=new_section_proposal.get('examples', [])
+                                )
+                                if success:
+                                    # Reload id_prefixes after adding new section
+                                    id_prefixes = self.section_manager.get_id_prefixes()
+
+                                    # 🔧 FIX: Update playbook's sections list
+                                    if section not in self.playbook_manager.playbook.sections:
+                                        self.playbook_manager.playbook.sections.append(section)
+                                        self.logger.info(
+                                            f"Added section '{section}' to playbook.sections",
+                                            extra={
+                                                "section": section,
+                                                "total_sections": len(self.playbook_manager.playbook.sections)
+                                            }
+                                        )
+
+                                    print(f"✅ Added new section: {section}")
+                                else:
+                                    print(f"⚠️  Failed to add section '{section}', skipping operation")
+                                    continue
+                            else:
+                                # No proposal provided for new section
+                                print(f"⚠️  Invalid section '{section}' without proposal, skipping operation")
+                                continue
+                        else:
+                            # New sections not allowed, skip operation
+                            print(f"⚠️  Invalid section '{section}', skipping operation (new sections not allowed)")
+                            continue
 
                     # Generate ID if adding new bullet
                     if op_data["operation"] == "ADD":
@@ -755,7 +791,8 @@ def create_curator(
     playbook_manager: PlaybookManager,
     llm_provider: BaseLLMProvider,
     config: Optional[CuratorConfig] = None,
-    embedding_manager: Optional[EmbeddingManager] = None
+    embedding_manager: Optional[EmbeddingManager] = None,
+    allow_new_sections: Optional[bool] = None
 ) -> PlaybookCurator:
     """
     Factory function to create PlaybookCurator.
@@ -765,6 +802,7 @@ def create_curator(
         llm_provider: LLM provider instance
         config: Curator configuration (uses default if None)
         embedding_manager: Embedding manager for deduplication (creates if None)
+        allow_new_sections: 运行时覆盖是否允许添加新sections
 
     Returns:
         Configured PlaybookCurator instance
@@ -781,5 +819,6 @@ def create_curator(
         playbook_manager=playbook_manager,
         llm_provider=llm_provider,
         config=config,
-        embedding_manager=embedding_manager
+        embedding_manager=embedding_manager,
+        allow_new_sections=allow_new_sections
     )

@@ -18,13 +18,18 @@ class ToolPlannerAgent(AgentTemplate):
     """Generates a tool execution plan based on a normalized query using an LLM."""
     def __init__(self, model: BaseLanguageModel):
         system_prompt = """You are an expert planner for ontology tool execution.
-Given a normalized query description and a list of available tools with their descriptions, create a sequential execution plan (a list of JSON objects) to fulfill the query.
-Each step in the plan should be a JSON object with 'tool' (the tool name) and 'params' (a dictionary of parameters for the tool).
-Only use the provided tools. Ensure the parameters match the tool's requirements based on its description.
-Output ONLY the JSON list of plan steps, without any other text or explanation.
+Given a normalized query description and a list of available tools with their descriptions, create a sequential execution plan to fulfill the query.
+
+IMPORTANT: Pay close attention to the exact parameter names in the tool descriptions below. Use the parameter names EXACTLY as shown in the function signatures.
 
 Available tools:
 {tool_descriptions}
+
+Guidelines:
+- Select appropriate tools based on the query intent and required information
+- Order the tool calls logically to build upon previous results
+- Verify parameter names match the function signatures exactly
+- Use multiple tool calls if needed to gather comprehensive information
 """
         super().__init__(
             model=model,
@@ -81,7 +86,7 @@ Available tools:
         user_message = f"""Generate an execution plan for the following normalized query:
 {normalized_query_str}
 
-Output the plan as a JSON list of steps matching the ToolCallStep structure."""
+Create a sequence of tool calls to fulfill this query using the available tools listed above."""
 
         # NEW: 如果有tool hints，添加到用户消息中
         if tool_hints:
@@ -107,12 +112,37 @@ Please incorporate these hints when generating the tool plan. Use the suggested 
         try:
             # Use the helper method to get the structured LLM
             structured_llm = self._get_structured_llm(ToolPlan)
-            plan: ToolPlan = structured_llm.invoke(messages)
+            raw_plan = structured_llm.invoke(messages)
 
-            # Basic validation: check if it's a list (LangChain should handle Pydantic validation)
-            if not isinstance(plan, ToolPlan):
-                # This case might indicate an issue with the LLM or LangChain's parsing
-                raise ValueError("LLM did not return a list structure as expected for the plan.")
+            # Fallback parsing: Handle both wrapped object and bare list formats
+            if raw_plan is None:
+                # LLM returned None - likely API failure or structured output parsing failed
+                print("[ERROR] LLM returned None - possible causes:")
+                print("  1. LLM API call failed (check API key, quota, network)")
+                print("  2. Structured output parsing failed (LLM returned unparseable content)")
+                print("  3. Model doesn't support function calling for ToolPlan schema")
+                print("[FALLBACK] Attempting to use simple_answer strategy instead of tool_sequence")
+                # Return a special error that workflow can detect and switch strategies
+                return {"error": "llm_returned_none", "fallback_strategy": "simple_answer"}
+
+            if isinstance(raw_plan, ToolPlan):
+                # Already in correct format
+                plan = raw_plan
+            elif isinstance(raw_plan, dict):
+                # LLM returned dict - try to construct ToolPlan
+                if "steps" in raw_plan:
+                    # Wrapped format: {steps: [...]}
+                    plan = ToolPlan(**raw_plan)
+                else:
+                    # Unexpected dict format
+                    raise ValueError(f"LLM returned dict without 'steps' key: {raw_plan}")
+            elif isinstance(raw_plan, list):
+                # LLM returned bare list - wrap it in ToolPlan
+                print(f"[ToolPlanner] LLM returned bare list, auto-wrapping in ToolPlan.steps")
+                plan = ToolPlan(steps=raw_plan)
+            else:
+                # Completely unexpected format
+                raise ValueError(f"LLM returned unexpected type {type(raw_plan).__name__}: {raw_plan}")
 
             # NEW: 验证和自动修正toolcall参数中的类名
             if isinstance(normalized_query, NormalizedQuery) and normalized_query.relevant_entities:
@@ -124,9 +154,9 @@ Please incorporate these hints when generating the tool plan. Use the suggested 
             # Catch errors during structured output generation/parsing or validation
             error_msg = f"Failed to generate or parse structured tool plan: {str(e)}"
             print(f"{error_msg}") # Log the error
-            # Consider logging the raw response if available and helpful for debugging
-            # raw_response = getattr(e, 'response', None) # Example, actual attribute might differ
-            # print(f"Raw LLM response (if available): {raw_response}")
+            print(f"[DEBUG] Raw LLM output type: {type(raw_plan) if 'raw_plan' in locals() else 'not captured'}")
+            if 'raw_plan' in locals():
+                print(f"[DEBUG] Raw LLM output: {raw_plan}")
             return {"error": error_msg} # Return error dictionary
 
     def _validate_and_fix_plan_entities(self, plan: ToolPlan, available_entities: List[str]) -> ToolPlan:
@@ -355,8 +385,7 @@ Please consider these hints when selecting relevant_entities. Try to choose diff
             print(f"[DEBUG-CLASS-HINTS] class_hints is falsy")
 
         user_content += f"\n\nAvailable classes: {class_list_str}"
-        user_content += "\n\nOutput *only* the JSON object conforming to the NormalizedQueryBody schema."
-        
+
         return [
             ("system", self.system_prompt_main_body),
             ("user", user_content)
@@ -414,11 +443,10 @@ Please consider these hints when selecting relevant_entities. Try to choose diff
             if has_hypo_info:
                 user_content += "".join(hypo_content_parts)
                 user_content += "\n--- END OF HYPOTHETICAL DOCUMENT INSIGHTS ---"
-        
+
         user_content += f"\n\nAvailable data properties: {data_prop_list_str}"
         user_content += f"\nAvailable object properties: {obj_prop_list_str}"
-        user_content += "\n\nOutput *only* the JSON object conforming to the ExtractedProperties schema (i.e., a JSON with a single key 'relevant_properties' which is a list of strings)."
-        
+
         return [
             ("system", self.system_prompt_properties),
             ("user", user_content)
@@ -1412,10 +1440,10 @@ Please provide:
    - Important properties or relationships being asked about
    - Chemistry-specific terminology that needs to be understood
 
-Please format your response as a JSON object with these sections:
-"interpretation": Your chemistry expert's understanding of the query
-"hypothetical_answer": What a complete answer would look like
-"key_concepts": List of essential chemistry concepts, entities and properties
+Provide your interpretation including:
+- Your chemistry expert's understanding of the query
+- What a complete answer would look like
+- List of essential chemistry concepts, entities and properties
 """
 
         # Call the model
@@ -1635,11 +1663,11 @@ Please provide both key findings and background information that enhances unders
 
 When the output information in the QUERY RESULTS is associated with a DOI in the same sourcedInformation, please include the DOI reference in your output for proper citation.
 
-Format your response as a JSON object with:
-"summary": A direct answer to the query
-"key_points": An array of core information points
-"background_information": An array of broader contextual information 
-"relationships": Any significant relationships or patterns (if applicable)
+Provide a comprehensive response including:
+- summary: A direct answer to the query
+- key_points: An array of core information points
+- background_information: An array of broader contextual information
+- relationships: Any significant relationships or patterns (if applicable)
 
 DO NOT wrap your response in ```json```.
 """

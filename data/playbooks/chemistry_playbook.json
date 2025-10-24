@@ -19,11 +19,11 @@
       "section": "material_selection",
       "content": "Always verify reagent purity and expiration dates before use. Degraded or contaminated reagents can lead to failed reactions or unexpected side products.",
       "metadata": {
-        "helpful_count": 0,
+        "helpful_count": 1,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-01-22T00:00:00",
-        "last_updated": "2025-01-22T00:00:00",
+        "last_updated": "2025-10-24T14:08:48.636520",
         "source": "seed",
         "embedding": null
       }
@@ -61,11 +61,11 @@
       "section": "procedure_design",
       "content": "When adding reagents dropwise or portion-wise, maintain consistent addition rate and monitor reaction temperature. Rapid addition can cause thermal runaway in exothermic reactions.",
       "metadata": {
-        "helpful_count": 0,
+        "helpful_count": 1,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-01-22T00:00:00",
-        "last_updated": "2025-01-22T00:00:00",
+        "last_updated": "2025-10-24T14:08:48.636522",
         "source": "seed",
         "embedding": null
       }
@@ -89,11 +89,11 @@
       "section": "procedure_design",
       "content": "Include specific stirring speed or agitation method in procedure. Mass transfer limitations can significantly affect reaction rates, especially for heterogeneous reactions.",
       "metadata": {
-        "helpful_count": 0,
+        "helpful_count": 1,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-01-22T00:00:00",
-        "last_updated": "2025-01-22T00:00:00",
+        "last_updated": "2025-10-24T14:08:48.636528",
         "source": "seed",
         "embedding": null
       }
@@ -103,11 +103,11 @@
       "section": "safety_protocols",
       "content": "When working with pyrophoric reagents (e.g., n-BuLi, Grignard reagents), use syringe techniques under inert atmosphere. Have dry ice/sand available for emergency quenching, not water.",
       "metadata": {
-        "helpful_count": 0,
+        "helpful_count": 1,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-01-22T00:00:00",
-        "last_updated": "2025-01-22T00:00:00",
+        "last_updated": "2025-10-24T14:08:48.636529",
         "source": "seed",
         "embedding": null
       }
@@ -117,11 +117,11 @@
       "section": "safety_protocols",
       "content": "Always add acid to water, never water to acid, to avoid violent splattering from heat of dilution. Use ice bath to control temperature during acid/base dilutions.",
       "metadata": {
-        "helpful_count": 0,
+        "helpful_count": 1,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-01-22T00:00:00",
-        "last_updated": "2025-01-22T00:00:00",
+        "last_updated": "2025-10-24T14:08:48.636524",
         "source": "seed",
         "embedding": null
       }
@@ -145,11 +145,11 @@
       "section": "quality_control",
       "content": "Use TLC to monitor reaction progress before work-up. Document Rf values and visualization methods (UV, stain) for reproducibility.",
       "metadata": {
-        "helpful_count": 0,
+        "helpful_count": 1,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-01-22T00:00:00",
-        "last_updated": "2025-01-22T00:00:00",
+        "last_updated": "2025-10-24T14:08:48.636518",
         "source": "seed",
         "embedding": null
       }
@@ -159,11 +159,11 @@
       "section": "quality_control",
       "content": "Record physical properties of products (melting point, boiling point, color, odor) and compare with literature values. Significant deviations indicate impurities or incorrect product.",
       "metadata": {
-        "helpful_count": 0,
+        "helpful_count": 1,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-01-22T00:00:00",
-        "last_updated": "2025-01-22T00:00:00",
+        "last_updated": "2025-10-24T14:08:48.636507",
         "source": "seed",
         "embedding": null
       }
@@ -243,12 +243,96 @@
       "section": "common_mistakes",
       "content": "Common mistake: Forgetting to account for volume changes during heating/cooling. Use reaction vessels with adequate headspace (typically fill to 2/3 capacity max).",
       "metadata": {
-        "helpful_count": 0,
+        "helpful_count": 1,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-01-22T00:00:00",
-        "last_updated": "2025-01-22T00:00:00",
+        "last_updated": "2025-10-24T14:08:48.636527",
         "source": "seed",
+        "embedding": null
+      }
+    },
+    {
+      "id": "safe-00004",
+      "section": "safety_protocols",
+      "content": "Include detailed emergency procedures for handling spills, fires, and other accidents. Provide a spill kit, fire extinguisher, and first aid kit, and specify their locations and usage. Additionally, include a step-by-step guide on how to use these items in case of an emergency, and conduct regular safety drills to ensure familiarity with the procedures.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-24T13:04:39.511665",
+        "last_updated": "2025-10-24T13:04:39.511667",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "proc-00005",
+      "section": "procedure_design",
+      "content": "For temperature-sensitive reactions, specify a precise temperature range (e.g., 20-25°C) and include a method for continuous monitoring. Use a thermometer or temperature probe and set up a feedback loop to maintain the temperature within the specified range. Provide a diagram or setup instructions for the monitoring equipment, and include a troubleshooting section for common temperature-related issues, such as overheating or underheating. For example, specify the type of thermometer (e.g., digital thermometer) and the method for adjusting the temperature (e.g., using a thermostat).",
+      "metadata": {
+        "helpful_count": 1,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-24T13:04:39.511731",
+        "last_updated": "2025-10-24T14:09:12.225998",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "qc-00004",
+      "section": "quality_control",
+      "content": "Provide detailed instructions for performing quality control tests, including the exact methods and standards. Specify the Rf value determination method, the melting point measurement procedure, and the acceptable ranges for these values. Include a checklist or flowchart for the quality control process, and provide examples of acceptable and unacceptable results to help in interpretation. Additionally, include a section on the frequency of quality control checks (e.g., after every batch) and the criteria for retesting if initial results are unsatisfactory (e.g., repeat the test if the Rf value is outside the 0.4-0.6 range).",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-24T13:04:39.511742",
+        "last_updated": "2025-10-24T13:04:39.511743",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "safe-00005",
+      "section": "safety_protocols",
+      "content": "Always include a detailed waste disposal procedure, specifying the neutralization method (e.g., using sodium bicarbonate), the disposal method (e.g., hazardous waste container), and any necessary safety precautions (e.g., wearing gloves and goggles). Ensure that the procedure complies with local regulations and guidelines. For example, specify the amount of sodium bicarbonate needed per volume of acid (e.g., 1 g NaHCO3 per 10 mL HCl) and the appropriate container for disposal (e.g., 5 L hazardous waste container).",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-24T14:09:08.158257",
+        "last_updated": "2025-10-24T14:09:08.158260",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "proc-00006",
+      "section": "procedure_design",
+      "content": "When describing steps that involve critical operations, provide specific details such as the rate of pouring (e.g., dropwise over 5 minutes), stirring speed (e.g., 300 RPM), and other relevant parameters (e.g., temperature of the ice bath). Include diagrams or setup instructions if necessary. For example, specify the type of stirrer (e.g., magnetic stirrer) and the size of the ice bath (e.g., 1 L beaker).",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-24T14:09:08.158300",
+        "last_updated": "2025-10-24T14:09:08.158300",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "proc-00006",
+      "section": "procedure_design",
+      "content": "Specify the criteria for neutralizing excess acid, including the target pH range (e.g., pH 7-8) and the method for monitoring the pH (e.g., using a pH meter or pH paper). Include a step-by-step procedure for neutralization and verification. For example, specify the amount of base (e.g., 1 M NaOH) to add and the endpoint (e.g., color change from red to yellow).",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-24T14:09:08.158309",
+        "last_updated": "2025-10-24T14:09:08.158309",
+        "source": "reflection",
         "embedding": null
       }
     }
@@ -262,6 +346,6 @@
     "common_mistakes"
   ],
   "version": "1.0.0",
-  "last_updated": "2025-10-23T20:34:57.276820",
-  "total_generations": 1
+  "last_updated": "2025-10-24T14:09:18.392006",
+  "total_generations": 3
 }

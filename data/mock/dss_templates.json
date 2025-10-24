@@ -1,0 +1,122 @@
+[
+  {
+    "title": "DSS 2205双相不锈钢固溶处理工艺",
+    "procedure_summary": "通过1020-1100°C固溶处理，优化DSS 2205的两相组织平衡，获得最佳的力学性能和耐腐蚀性能。包括加热、保温、快速冷却等关键步骤。",
+    "key_points": [
+      "加热速率控制在5-10°C/min，避免相变不均匀",
+      "固溶温度建议1050-1080°C，保温时间根据厚度计算（1mm≈1min）",
+      "必须快速冷却（水淬），防止有害相析出",
+      "固溶后铁素体相体积分数应在40-60%范围",
+      "显微组织检查确认无σ相、χ相等有害相"
+    ],
+    "source": "双相不锈钢热处理手册",
+    "reaction_type": "固溶处理",
+    "difficulty": "intermediate",
+    "estimated_time": "3-4小时（含升温降温）"
+  },
+  {
+    "title": "DSS点腐蚀电位测试（ASTM G61）",
+    "procedure_summary": "在FeCl3溶液中测定双相不锈钢的临界点蚀温度（CPT），评估其耐点蚀性能。标准ASTM G61方法。",
+    "key_points": [
+      "试样表面打磨至800#，丙酮超声清洗15分钟",
+      "使用6% FeCl3溶液（pH=1.0-1.2），溶液温度每次升高2°C",
+      "每个温度保持24小时，光学显微镜检查表面",
+      "CPT定义为出现稳定点蚀坑的最低温度",
+      "平行样品至少3个，取平均值"
+    ],
+    "source": "ASTM G61-86 标准",
+    "reaction_type": "腐蚀测试",
+    "difficulty": "advanced",
+    "estimated_time": "72-96小时（含多温度点）"
+  },
+  {
+    "title": "DSS显微组织金相分析",
+    "procedure_summary": "通过金相腐蚀和显微镜观察，定量分析DSS的铁素体/奥氏体相比例、晶粒尺寸和有害相析出情况。",
+    "key_points": [
+      "机械抛光至1μm金刚石研磨膏，获得镜面",
+      "电解腐蚀：20% NaOH水溶液，3V直流，5-10秒",
+      "或化学腐蚀：Beraha试剂，室温浸泡10-30秒",
+      "使用Image-Pro Plus软件定量测量相比例",
+      "至少5个视野，统计分析取平均值±标准差"
+    ],
+    "source": "金属显微组织分析标准",
+    "reaction_type": "组织分析",
+    "difficulty": "intermediate",
+    "estimated_time": "4-6小时"
+  },
+  {
+    "title": "DSS热变形实验（Gleeble模拟）",
+    "procedure_summary": "使用Gleeble热模拟试验机研究DSS在不同温度和应变速率下的热变形行为，获得流变应力曲线和组织演化规律。",
+    "key_points": [
+      "试样尺寸Φ10×15mm，表面氧化层需去除",
+      "变形温度范围950-1150°C，间隔50°C",
+      "应变速率0.01-10 s⁻¹，真应变0.6-0.8",
+      "加热速率10°C/s，保温3分钟均热",
+      "变形后水淬保留高温组织，沿轴向剖开做金相"
+    ],
+    "source": "热加工工艺研究方法",
+    "reaction_type": "热模拟",
+    "difficulty": "advanced",
+    "estimated_time": "2-3天（多组参数）"
+  },
+  {
+    "title": "DSS焊接接头力学性能测试",
+    "procedure_summary": "评估DSS焊接接头的拉伸性能、冲击韧性和硬度分布，验证焊接工艺的可靠性。",
+    "key_points": [
+      "拉伸试样按GB/T 228.1制备，标距50mm",
+      "冲击试样V型缺口，缺口分别位于焊缝、热影响区和母材",
+      "冲击测试温度-40°C，液氮预冷30分钟",
+      "显微硬度测试：HV0.5，焊缝中心至母材，间距0.5mm",
+      "断口形貌SEM分析，判断断裂机制"
+    ],
+    "source": "焊接接头力学性能测试标准",
+    "reaction_type": "力学测试",
+    "difficulty": "intermediate",
+    "estimated_time": "1-2天"
+  },
+  {
+    "title": "DSS晶间腐蚀敏感性评价（DL-EPR法）",
+    "procedure_summary": "采用双环动电位再活化（DL-EPR）方法快速评估DSS的晶间腐蚀敏感性，定量计算再活化率。",
+    "key_points": [
+      "工作电极面积1cm²，其余环氧树脂封装",
+      "电解液：0.5M H2SO4 + 0.01M KSCN，除氧30分钟",
+      "扫描速率1.67 mV/s，正向扫描至+300mV(SCE)",
+      "反向扫描至-500mV(SCE)，记录再活化峰电流",
+      "再活化率Ir/Ia < 1%为合格（不敏感）"
+    ],
+    "source": "ASTM G108 标准方法",
+    "reaction_type": "电化学测试",
+    "difficulty": "advanced",
+    "estimated_time": "4-6小时"
+  },
+  {
+    "title": "DSS应力腐蚀开裂测试（U型弯试样）",
+    "procedure_summary": "在模拟海洋环境（3.5% NaCl）中评估DSS的应力腐蚀开裂（SCC）敏感性，U型弯曲试样法。",
+    "key_points": [
+      "试样尺寸100×20×2mm，U型弯曲至内径20mm",
+      "螺栓固定保持弯曲应力，应力约为屈服强度的90%",
+      "浸泡在沸腾的3.5% NaCl溶液中",
+      "每24小时目视检查裂纹，光学显微镜确认",
+      "测试持续时间至少720小时（30天）"
+    ],
+    "source": "应力腐蚀开裂测试标准",
+    "reaction_type": "应力腐蚀测试",
+    "difficulty": "intermediate",
+    "estimated_time": "30天（长期测试）"
+  },
+  {
+    "title": "DSS析出相XRD物相分析",
+    "procedure_summary": "使用X射线衍射（XRD）技术鉴定DSS中的析出相类型（σ相、χ相等），定量分析相含量。",
+    "key_points": [
+      "试样表面电解抛光或机械抛光至镜面",
+      "XRD参数：Cu Kα射线，40kV/40mA，扫描范围20-100°",
+      "步长0.02°，扫描速率2°/min",
+      "使用Jade或HighScore软件进行物相检索",
+      "Rietveld精修定量计算各相含量"
+    ],
+    "source": "X射线衍射分析方法",
+    "reaction_type": "物相分析",
+    "difficulty": "advanced",
+    "estimated_time": "1天"
+  }
+]

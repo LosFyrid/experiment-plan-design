@@ -105,7 +105,8 @@ def build_curation_prompt(
     current_section_bullets: Dict[str, List[PlaybookBullet]],
     id_prefixes: Dict[str, str],
     max_playbook_size: int,
-    current_size: int
+    current_size: int,
+    sections_info: str = None
 ) -> str:
     """
     Build curation prompt for delta update generation.
@@ -118,11 +119,16 @@ def build_curation_prompt(
         id_prefixes: Section name -> ID prefix mapping
         max_playbook_size: Maximum allowed bullets
         current_size: Current total bullet count
+        sections_info: Formatted sections information from SectionManager
 
     Returns:
         Curation prompt string
     """
     sections = []
+
+    # Available sections (if provided)
+    if sections_info:
+        sections.append(sections_info)
 
     # Insights to process
     sections.append("## Insights from Reflection")

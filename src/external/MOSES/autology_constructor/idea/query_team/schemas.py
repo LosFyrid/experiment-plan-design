@@ -29,6 +29,14 @@ class NormalizedQuery(BaseModel):
             return []
         return value
 
+    @field_validator('filters', mode='before')
+    @classmethod
+    def convert_empty_string_to_none(cls, value):
+        """Convert empty string to None for filters field to handle LLM output inconsistencies."""
+        if value == "" or value == {}:
+            return None
+        return value
+
 class NormalizedQueryBody(BaseModel):
     """Represents the main body of a structured query, excluding properties."""
     intent: str = Field(description="The main goal or action of the query, e.g., 'find information', 'compare entities', 'get property'.")
@@ -41,6 +49,14 @@ class NormalizedQueryBody(BaseModel):
     def convert_none_to_empty_list(cls, value):
         if value is None:
             return []
+        return value
+
+    @field_validator('filters', mode='before')
+    @classmethod
+    def convert_empty_string_to_none(cls, value):
+        """Convert empty string to None for filters field to handle LLM output inconsistencies."""
+        if value == "" or value == {}:
+            return None
         return value
 
 class ToolCallStep(BaseModel):

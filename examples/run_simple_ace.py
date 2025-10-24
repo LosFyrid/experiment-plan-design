@@ -325,13 +325,20 @@ print("  → 正在更新Playbook...")
 from ace_framework.curator.curator import PlaybookCurator
 from utils.config_loader import CuratorConfig
 
+# 是否允许Curator提议新的sections
+# - True: Curator可以根据insights提议新的section类别
+# - False: 只能使用预定义的6个core sections
+# - None: 使用配置文件(playbook_sections.yaml)中的设置
+allow_new_sections = None  # 默认使用配置文件
+
 curator = PlaybookCurator(
     playbook_manager=playbook_manager,
     llm_provider=llm_provider,
     config=CuratorConfig(),
     logger=curator_logger,
     perf_monitor=perf_monitor,
-    llm_tracker=curator_llm_tracker
+    llm_tracker=curator_llm_tracker,
+    allow_new_sections=True  # 运行时控制是否允许新sections
 )
 
 size_before = playbook_manager.playbook.size
@@ -395,6 +402,13 @@ run_dir = logs_manager.get_run_dir(run_id)
 for file in run_dir.iterdir():
     print(f"  - {file.name}")
 
+print("\n性能概览:")
+perf_monitor.print_summary()
+
+print("\n" + "=" * 80)
+print("完成！查看上方的分析脚本命令来探索观测数据。")
+print("=" * 80)
+
 print("\n下一步: 使用分析脚本查询数据")
 print("-" * 80)
 print(f"# 查看这次运行的详情")
@@ -409,10 +423,3 @@ print()
 print(f"# 查看playbook演化")
 print(f"python scripts/analysis/analyze_playbook_evolution.py --growth-stats")
 print("-" * 80)
-
-print("\n性能概览:")
-perf_monitor.print_summary()
-
-print("\n" + "=" * 80)
-print("完成！查看上方的分析脚本命令来探索观测数据。")
-print("=" * 80)

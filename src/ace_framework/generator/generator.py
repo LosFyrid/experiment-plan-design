@@ -485,7 +485,7 @@ def create_generator(
     playbook_path: str,
     llm_provider: BaseLLMProvider,
     config: Optional[GeneratorConfig] = None,
-    embedding_model: str = "BAAI/bge-small-zh-v1.5"
+    embedding_model: str = "text-embedding-v4"
 ) -> PlanGenerator:
     """
     Factory function to create PlanGenerator.
@@ -499,7 +499,7 @@ def create_generator(
     Returns:
         Configured PlanGenerator instance
     """
-    from ...utils.config_loader import get_ace_config
+    from utils.config_loader import get_ace_config
 
     if config is None:
         config = get_ace_config().generator

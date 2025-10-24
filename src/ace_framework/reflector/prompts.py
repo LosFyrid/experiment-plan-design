@@ -214,7 +214,7 @@ Analyze the above information and provide:
 2. **Root Cause Analysis**: Why did these errors occur?
 3. **Correct Approach**: What should have been done instead?
 4. **Key Insights**: What generalizable lessons can be extracted?
-5. **Bullet Tagging**: For each bullet referenced, was it helpful, harmful, or neutral?
+5. **Bullet Tagging**: For each bullet referenced above, was it helpful, harmful, or neutral?
 
 Output as JSON:
 ```json
@@ -237,6 +237,12 @@ Output as JSON:
   }
 }
 ```
+
+**IMPORTANT for bullet_tags**:
+- Keys MUST be the bullet IDs from "Playbook Bullets Referenced" section (e.g., "proc-00001", "qc-00002")
+- Keys are NOT insight types (not "safety_issue", "temperature_control", etc.)
+- Tag each bullet ID as "helpful", "harmful", or "neutral"
+- If no bullets were referenced, use an empty dict: "bullet_tags": {}
 """)
 
     return "\n\n".join(sections)
@@ -263,7 +269,9 @@ def build_refinement_prompt(
     previous_insights: List[Dict],
     previous_analysis: str,
     round_number: int,
-    max_rounds: int
+    max_rounds: int,
+    bullets_used: Optional[List[str]] = None,
+    bullet_contents: Optional[Dict[str, str]] = None
 ) -> str:
     """
     Build refinement prompt for iterative improvement.
@@ -275,6 +283,8 @@ def build_refinement_prompt(
         previous_analysis: Error analysis from previous round
         round_number: Current round (2-5)
         max_rounds: Maximum refinement rounds
+        bullets_used: List of bullet IDs used (for bullet tagging context)
+        bullet_contents: Mapping of bullet_id -> content
 
     Returns:
         Refinement prompt string
@@ -294,35 +304,58 @@ def build_refinement_prompt(
         if "suggested_bullet" in insight:
             sections.append(f"- Suggested Bullet: {insight['suggested_bullet']}")
 
+    # 🔧 FIX: Add bullets_used context for bullet tagging
+    if bullets_used and bullet_contents:
+        sections.append("\n### Playbook Bullets Referenced (for tagging)")
+        sections.append("Remember to tag each of these bullets as helpful/harmful/neutral:")
+        for bullet_id in bullets_used:
+            content = bullet_contents.get(bullet_id, "Content not found")
+            sections.append(f"- **[{bullet_id}]**: {content[:100]}...")
+
     sections.append("\n### Your Task")
-    sections.append("""
+
+    # Build bullet_tags example with actual IDs if available
+    bullet_tags_example = "    \"...\": \"...\""
+    if bullets_used:
+        # Use first 2 bullet IDs as examples
+        example_ids = bullets_used[:2]
+        bullet_tags_example = "\n".join([
+            f'    "{bid}": "helpful/harmful/neutral",' for bid in example_ids
+        ])
+        if len(bullets_used) > 2:
+            bullet_tags_example += "\n    // ... tag all bullets referenced above"
+
+    sections.append(f"""
 Refine the above analysis and insights by:
 1. Making insights more specific and actionable
 2. Adding important details that were missed
 3. Improving the clarity and usefulness of suggested bullets
 4. Ensuring root causes are correctly identified
 5. Removing redundant or low-value insights
+6. **Tag each playbook bullet** listed above as helpful/harmful/neutral
 
 Output the **improved** analysis and insights in the same JSON format:
 ```json
-{
+{{
   "error_identification": "Refined error description...",
   "root_cause_analysis": "Deeper root cause...",
   "correct_approach": "More specific approach...",
   "insights": [
-    {
+    {{
       "type": "...",
       "description": "Improved insight...",
       "suggested_bullet": "Better bullet content...",
       "target_section": "...",
       "priority": "..."
-    }
+    }}
   ],
-  "bullet_tags": {
-    "...": "..."
-  }
-}
+  "bullet_tags": {{
+{bullet_tags_example}
+  }}
+}}
 ```
+
+**IMPORTANT**: bullet_tags keys MUST be the bullet IDs from "Playbook Bullets Referenced" section above (e.g., "proc-00001", "qc-00002"), NOT insight types!
 """)
 
     return "\n\n".join(sections)

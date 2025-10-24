@@ -96,8 +96,8 @@ def setup_dspy_lm():
     """Sets up and configures the DSPy Language Model."""
     try:
         logger.info("Setting up DSPy LM...")
-        # lm = dspy.LM('openai/qwen3-next-80b-a3b-thinking', temperature=0, max_tokens=8192, api_key=os.getenv("DASHSCOPE_API_KEY"), api_base="https://dashscope.aliyuncs.com/compatible-mode/v1")
-        lm = dspy.LM("openai/gpt-5",temperature=0,max_tokens=10000)
+        lm = dspy.LM('openai/qwen3-max', temperature=0, max_tokens=8192, api_key=os.getenv("DASHSCOPE_API_KEY"), api_base="https://dashscope.aliyuncs.com/compatible-mode/v1")
+        # lm = dspy.LM("openai/gpt-5",temperature=0,max_tokens=10000)
         dspy.configure(lm=lm)
         teacher = dspy.LM("dashscope/qwen-turbo",temperature=1)
     except Exception as e:

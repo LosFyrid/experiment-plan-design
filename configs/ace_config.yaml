@@ -40,22 +40,9 @@ ace:
   # Playbook Configuration
   playbook:
     default_path: "data/playbooks/chemistry_playbook.json"
-    sections:
-      - material_selection
-      - procedure_design
-      - safety_protocols
-      - quality_control
-      - troubleshooting
-      - common_mistakes
 
-    # Bullet ID prefix by section
-    id_prefixes:
-      material_selection: "mat"
-      procedure_design: "proc"
-      safety_protocols: "safe"
-      quality_control: "qc"
-      troubleshooting: "ts"
-      common_mistakes: "err"
+    # Section configuration (managed separately)
+    sections_config: "configs/playbook_sections.yaml"
 
   # Training Configuration (Offline Adaptation)
   training:

@@ -1,0 +1,84 @@
+# Playbook Sections Configuration
+# 管理ACE playbook的section结构
+
+# Core sections - 核心sections，预定义且稳定
+core_sections:
+  material_selection:
+    id_prefix: "mat"
+    description: "选择实验材料、试剂、溶剂的指导原则"
+    examples:
+      - "验证试剂纯度和规格"
+      - "选择合适的溶剂体系"
+      - "评估材料的稳定性和兼容性"
+
+  procedure_design:
+    id_prefix: "proc"
+    description: "实验流程设计、操作步骤优化"
+    examples:
+      - "反应温度和时间控制策略"
+      - "搅拌速率和反应器选择"
+      - "加料顺序和速率控制"
+
+  safety_protocols:
+    id_prefix: "safe"
+    description: "安全操作规范、应急处理措施"
+    examples:
+      - "个人防护装备要求"
+      - "化学品泄漏应急处理"
+      - "废弃物安全处置方法"
+
+  quality_control:
+    id_prefix: "qc"
+    description: "质量检测方法、标准和验收准则"
+    examples:
+      - "产物纯度检测方法"
+      - "收率计算和验证标准"
+      - "中间体质量控制要点"
+
+  troubleshooting:
+    id_prefix: "ts"
+    description: "常见问题诊断和解决方案"
+    examples:
+      - "反应不发生的排查步骤"
+      - "产物颜色异常的原因分析"
+      - "收率低下的改进方法"
+
+  common_mistakes:
+    id_prefix: "err"
+    description: "需要避免的错误和注意事项"
+    examples:
+      - "常见操作失误和预防"
+      - "数据记录易漏点"
+      - "样品保存注意事项"
+
+# Custom sections - 动态添加的sections（初始为空）
+# 由Curator在运行时根据需要添加
+custom_sections: {}
+  # 示例格式（不要取消注释）:
+  # environmental_impact:
+  #   id_prefix: "env"
+  #   description: "环境影响评估和绿色化学实践"
+  #   created_at: "2025-10-23T20:45:00"
+  #   created_by: "curator"
+  #   creation_reason: "多次出现环保相关insights，需要独立分类"
+  #   examples: []
+
+# Section management settings
+settings:
+  # 🎛️ 主开关：是否允许Curator提议新sections
+  allow_new_sections: false
+
+  # Curator提议新section时的引导原则（会被插入到prompt中）
+  new_section_guidelines: |
+    You may propose a new section ONLY if ALL of the following conditions are met:
+
+    1. **Semantic Distinction**: The new category is semantically distinct from all existing sections
+    2. **Fundamental Domain**: The category represents a fundamental knowledge domain,
+       not a temporary pattern or subcategory
+    3. **Clear Definition**: You can provide:
+       - A clear, actionable description (20+ characters)
+       - A unique 2-4 letter ID prefix (not already used)
+       - 3+ example bullets that belong to this section
+       - Strong justification explaining why existing sections are insufficient
+
+    Think very carefully before proposing a new section. Prefer using existing sections when possible.

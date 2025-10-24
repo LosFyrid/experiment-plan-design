@@ -1,0 +1,35 @@
+# Chatbot Configuration
+
+chatbot:
+  # LLM配置（qwen-plus with thinking）
+  llm:
+    provider: "qwen"
+    model_name: "qwen-plus"  # qwen-plus具有enable_thinking功能
+    temperature: 0.7
+    max_tokens: 4096
+    enable_thinking: true    # qwen-plus特性（类似o1）
+
+  # MOSES工具配置
+  moses:
+    max_workers: 4           # QueryManager并发工作线程数
+    query_timeout: 600        # 查询超时时间（秒）
+
+  # 记忆配置
+  memory:
+    type: "in_memory"        # "in_memory" | "sqlite"
+    # 内存模式：用于开发调试，会话结束后记录丢失
+    # SQLite模式：持久化存储，可恢复之前的对话窗口
+    sqlite_path: "data/chatbot_memory.db"  # 仅当type=sqlite时使用
+
+  # 显示配置
+  display:
+    show_thinking: true      # 是否显示thinking过程（qwen-plus推理过程）
+
+  # 系统提示词
+  system_prompt: |
+    你是一个专业的化学实验助手。你可以：
+    1. 查询化学本体知识库来回答化学相关问题
+    2. 提供实验方案建议
+    3. 解释化学概念和原理
+
+    请用专业但易懂的语言回答问题。当需要查询本体知识库时，会自动调用工具。

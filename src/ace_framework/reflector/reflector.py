@@ -154,7 +154,9 @@ class PlanReflector:
         if self.config.enable_iterative and self.config.max_refinement_rounds > 1:
             refined_output = self._perform_iterative_refinement(
                 initial_output=initial_output,
-                max_rounds=self.config.max_refinement_rounds
+                max_rounds=self.config.max_refinement_rounds,
+                bullets_used=playbook_bullets_used,
+                bullet_contents=bullet_contents
             )
             refinement_rounds_completed = self.config.max_refinement_rounds
         else:
@@ -304,7 +306,9 @@ class PlanReflector:
     def _perform_iterative_refinement(
         self,
         initial_output: Dict,
-        max_rounds: int
+        max_rounds: int,
+        bullets_used: List[str],
+        bullet_contents: Dict[str, str]
     ) -> Dict:
         """
         Perform iterative refinement to improve insight quality.
@@ -314,6 +318,8 @@ class PlanReflector:
         Args:
             initial_output: Output from initial reflection
             max_rounds: Maximum refinement rounds (typically 5)
+            bullets_used: List of bullet IDs used (for bullet tagging)
+            bullet_contents: Mapping of bullet_id -> content
 
         Returns:
             Refined output dict
@@ -327,12 +333,14 @@ class PlanReflector:
 
             round_start = time.time()
 
-            # Build refinement prompt
+            # Build refinement prompt with bullets context
             prompt = build_refinement_prompt(
                 previous_insights=current_output.get("insights", []),
                 previous_analysis=current_output.get("error_identification", ""),
                 round_number=round_num,
-                max_rounds=max_rounds
+                max_rounds=max_rounds,
+                bullets_used=bullets_used,
+                bullet_contents=bullet_contents
             )
 
             # Track LLM call

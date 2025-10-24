@@ -1363,7 +1363,7 @@ class OntologyTools:
 
 class OntologyAnalyzer:
     """本体分析工具 - 专注于本体结构分析"""
-    
+
     def __init__(self, ontology_settings: Optional[OntologySettings] = None):
         # Store settings or use global default
         if ontology_settings is None:
@@ -1371,12 +1371,11 @@ class OntologyAnalyzer:
             self.settings = global_settings
         else:
             self.settings = ontology_settings
-            
-        # Initialize LLM
-        # Ensure OPENAI_API_KEY is loaded if ChatOpenAI relies on it implicitly
-        # from config.settings import OPENAI_API_KEY 
-        self.llm = ChatOpenAI(temperature=0) 
-        
+
+        # Initialize LLM - 使用统一的LLM Provider（支持Qwen OpenAI兼容模式）
+        from autology_constructor.idea.common.llm_provider import get_cached_default_llm
+        self.llm = get_cached_default_llm()
+
         # Initialize tools with the determined settings
         self.tools = OntologyTools(self.settings)
         

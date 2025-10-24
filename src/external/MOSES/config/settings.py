@@ -144,6 +144,14 @@ class OntologySettings:
 # Ensure it's still the case or adjust if the dict is re-read
 _ontology_settings_data = yaml_settings.get("ontology", {})
 _ontology_settings_data.pop('java_exe', None) # Pop again to be safe
+
+# 将相对路径转换为绝对路径（相对于MOSES根目录）
+_moses_root = Path(__file__).parent.parent  # config/settings.py -> MOSES根目录
+_directory_path = _ontology_settings_data.get('directory_path', '')
+if _directory_path and not Path(_directory_path).is_absolute():
+    # 相对路径，转换为绝对路径
+    _ontology_settings_data['directory_path'] = str((_moses_root / _directory_path).resolve())
+
 ONTOLOGY_SETTINGS = OntologySettings(**_ontology_settings_data)
 
 

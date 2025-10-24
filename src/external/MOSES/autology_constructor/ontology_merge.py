@@ -222,24 +222,37 @@ def _merge_data_properties(data_properties: List[base_data_structures.DataProper
                                     owner_class = domain_class
 
 
-                            info_instance = _instantiate_sourced_information(source, "data_property", file_path, property=dp.name, information=value if not isinstance(value, list) else f"({', '.join(value)})")
+                            # 将value转换为字符串格式，处理int/float类型
+                            if isinstance(value, list):
+                                info_str = f"({', '.join(str(v) for v in value)})"
+                            else:
+                                info_str = str(value)
+
+                            info_instance = _instantiate_sourced_information(source, "data_property", file_path, property=dp.name, information=info_str)
                             owner_class.has_information.append(info_instance)
 
                             # 获取当前值，如果不存在则初始化为空列表
                             current_values = getattr(owner_class, dp.name, [])
-                            
+
                             # 如果当前值不是列表，创建一个包含当前值的新列表
                             if not isinstance(current_values, list):
                                 current_values = [current_values] if current_values is not None else []
-                            # 如果新值不在当前值列表中，添加它
+
+                            # 确保所有值都是字符串类型（转换int/float为str）
+                            current_values = [str(v) for v in current_values]
+
+                            # 如果新值不在当前值列表中，添加它（转换为字符串）
                             if value is not None:
                                 if isinstance(value, list):
                                     for v in value:
-                                        if v not in current_values:
-                                            current_values.append(v)
-                                elif value not in current_values:
-                                    current_values.append(value)
-                                
+                                        v_str = str(v)
+                                        if v_str not in current_values:
+                                            current_values.append(v_str)
+                                else:
+                                    v_str = str(value)
+                                    if v_str not in current_values:
+                                        current_values.append(v_str)
+
                             # 更新属性值
                             setattr(owner_class, dp.name, current_values)
                         except Exception as e:
