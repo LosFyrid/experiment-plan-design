@@ -9,6 +9,9 @@
   python scripts/inspect_tasks.py --log <id>          # 查看任务日志
   python scripts/inspect_tasks.py --requirements <id> # 查看需求
   python scripts/inspect_tasks.py --plan <id>         # 查看方案
+  python scripts/inspect_tasks.py --resumable         # 列出可恢复的任务
+  python scripts/inspect_tasks.py --resume            # 交互式恢复任务
+  python scripts/inspect_tasks.py --resume <id>       # 恢复指定任务
 """
 
 import sys
@@ -22,6 +25,10 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root / "src"))
 
 from workflow.task_manager import get_task_manager, TaskStatus
+from workflow.task_utils import (
+    display_resumable_tasks,
+    resume_task_interactive
+)
 
 
 def list_tasks():
@@ -276,6 +283,56 @@ def show_plan(task_id: str):
     print()
 
 
+def show_resumable_tasks():
+    """显示所有可恢复的任务
+
+    调用 task_utils.display_resumable_tasks() 显示所有
+    处于 AWAITING_CONFIRM 状态的任务。
+    """
+    display_resumable_tasks()
+
+
+def resume_task_cmd(task_id: str = None):
+    """恢复任务
+
+    Args:
+        task_id: 任务ID（可选）。如果不提供，则交互式选择
+
+    Notes:
+        - 如果提供task_id，直接恢复指定任务
+        - 如果不提供task_id，调用交互式选择
+        - 只能恢复AWAITING_CONFIRM状态的任务
+        - 恢复后Worker会自动启动（如果未运行）
+    """
+    if task_id:
+        # 直接恢复指定任务
+        tm = get_task_manager()
+        success = tm.resume_task(task_id)
+
+        if success:
+            print(f"\n✅ 已恢复任务 {task_id}")
+            print(f"   Worker将在后台继续执行")
+            print(f"\n💡 使用以下命令监控进度:")
+            print(f"     python scripts/inspect_tasks.py --watch {task_id}")
+            print(f"     python scripts/inspect_tasks.py --log {task_id}\n")
+        else:
+            print(f"\n❌ 恢复失败")
+            print(f"   任务可能不存在或不在AWAITING_CONFIRM状态")
+            print(f"\n💡 查看可恢复的任务:")
+            print(f"     python scripts/inspect_tasks.py --resumable\n")
+
+    else:
+        # 交互式选择
+        success = resume_task_interactive()
+
+        if success:
+            print("\n✅ 任务已恢复")
+            print("\n💡 后续操作:")
+            print("   python scripts/inspect_tasks.py --list           # 查看所有任务")
+            print("   python scripts/inspect_tasks.py --watch <id>     # 监控进度")
+            print("   python scripts/inspect_tasks.py --log <id>       # 查看日志\n")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="任务检查工具 - 独立运行，可在新终端中使用",
@@ -299,6 +356,15 @@ def main():
 
   # 查看方案
   python scripts/inspect_tasks.py --plan abc123
+
+  # 列出可恢复的任务
+  python scripts/inspect_tasks.py --resumable
+
+  # 交互式恢复任务
+  python scripts/inspect_tasks.py --resume
+
+  # 恢复指定任务
+  python scripts/inspect_tasks.py --resume abc123
         """
     )
 
@@ -308,12 +374,14 @@ def main():
     parser.add_argument("--log", type=str, metavar="ID", help="查看任务日志（实时追踪）")
     parser.add_argument("--requirements", type=str, metavar="ID", help="查看需求")
     parser.add_argument("--plan", type=str, metavar="ID", help="查看方案")
+    parser.add_argument("--resumable", action="store_true", help="列出所有可恢复的任务（AWAITING_CONFIRM状态）")
+    parser.add_argument("--resume", nargs="?", const=None, metavar="ID", help="恢复任务（不指定ID则交互式选择）")
     parser.add_argument("--no-follow", action="store_true", help="日志不实时追踪")
 
     args = parser.parse_args()
 
     # 至少需要一个参数
-    if not any([args.list, args.task, args.watch, args.log, args.requirements, args.plan]):
+    if not any([args.list, args.task, args.watch, args.log, args.requirements, args.plan, args.resumable, args.resume is not None]):
         parser.print_help()
         return
 
@@ -329,6 +397,11 @@ def main():
         show_requirements(args.requirements)
     elif args.plan:
         show_plan(args.plan)
+    elif args.resumable:
+        show_resumable_tasks()
+    elif args.resume is not None:
+        # args.resume 可能是 None（交互式）或 task_id（直接恢复）
+        resume_task_cmd(args.resume)
 
 
 if __name__ == "__main__":

@@ -46,13 +46,17 @@ class MOSESToolWrapper:
             self.start_init()
 
     def start_init(self):
-        """启动后台初始化（可以在主线程初始化完成后调用）"""
-        print("[MOSES] 后台初始化已启动...")
+        """启动后台初始化（静默模式，输出重定向到日志文件）"""
         init_thread = threading.Thread(target=self._background_init, daemon=True)
         init_thread.start()
 
     def _background_init(self):
-        """后台线程初始化QueryManager（不捕获输出，让MOSES正常输出）"""
+        """后台线程初始化QueryManager（捕获输出到日志文件）"""
+        # 创建日志目录
+        log_dir = Path("logs")
+        log_dir.mkdir(exist_ok=True)
+        log_file = log_dir / "moses_init.log"
+
         try:
             import os
 
@@ -62,27 +66,46 @@ class MOSESToolWrapper:
             if moses_root_str not in sys.path:
                 sys.path.insert(0, moses_root_str)
 
-            # 全局屏蔽警告（但不捕获stdout，避免影响主线程）
+            # 全局屏蔽警告
             warnings.filterwarnings('ignore', category=DeprecationWarning)
             warnings.filterwarnings('ignore', message='.*java_exe.*')
 
-            # 导入和初始化（正常输出到终端）
-            from autology_constructor.idea.query_team import QueryManager
-            from config.settings import ONTOLOGY_SETTINGS
+            # 重定向stdout/stderr到日志文件
+            original_stdout = sys.stdout
+            original_stderr = sys.stderr
 
-            self.query_manager = QueryManager(
-                max_workers=self.config.get("max_workers", 4),
-                ontology_settings=ONTOLOGY_SETTINGS
-            )
-            self.query_manager.start()
-            self._initialized = True
+            with open(log_file, 'w', encoding='utf-8') as f:
+                # 重定向输出
+                sys.stdout = f
+                sys.stderr = f
 
-            # 从本体对象中读取统计信息（而不是解析输出）
-            self._print_summary_from_ontology(ONTOLOGY_SETTINGS)
+                try:
+                    # 导入和初始化（输出被重定向到日志文件）
+                    from autology_constructor.idea.query_team import QueryManager
+                    from config.settings import ONTOLOGY_SETTINGS
+
+                    self.query_manager = QueryManager(
+                        max_workers=self.config.get("max_workers", 4),
+                        ontology_settings=ONTOLOGY_SETTINGS
+                    )
+                    self.query_manager.start()
+                    self._initialized = True
+
+                finally:
+                    # 恢复stdout/stderr
+                    sys.stdout = original_stdout
+                    sys.stderr = original_stderr
+
+            # 初始化完成，打印简洁摘要（使用恢复后的stdout）
+            self._print_summary_from_ontology(ONTOLOGY_SETTINGS if 'ONTOLOGY_SETTINGS' in locals() else None)
 
         except Exception as e:
+            # 恢复stdout（如果异常发生在重定向期间）
+            sys.stdout = original_stdout if 'original_stdout' in locals() else sys.stdout
+            sys.stderr = original_stderr if 'original_stderr' in locals() else sys.stderr
+
             self._init_error = e
-            print(f"[MOSES] ✗ 初始化失败: {e}")
+            # 不打印错误信息，保持静默
         finally:
             self._init_event.set()
 
@@ -131,7 +154,6 @@ class MOSESToolWrapper:
         Returns:
             装饰后的tool函数，可直接传给create_react_agent
         """
-        print("[DEBUG] get_tool() called")
         # 闭包捕获self，避免tool装饰器问题
         wrapper_instance = self
 
@@ -155,8 +177,6 @@ class MOSESToolWrapper:
             wrapper_instance._ensure_manager()
 
             try:
-                print(f"[MOSES] 查询本体: {query}")
-
                 # 提交查询并获取Future
                 future: Future = wrapper_instance.query_manager.submit_query(
                     query_text=query,
@@ -173,21 +193,15 @@ class MOSESToolWrapper:
                 # 提取格式化结果
                 if result.get("formatted_results"):
                     formatted = result["formatted_results"]
-                    print(f"[MOSES] 查询成功，返回 {len(formatted)} 字符")
                     return formatted
                 else:
                     return "本体知识库中未找到相关信息。"
 
             except TimeoutError:
-                error_msg = f"本体查询超时（{timeout}秒）"
-                print(f"[MOSES] {error_msg}")
-                return error_msg
+                return f"本体查询超时（{timeout}秒）"
             except Exception as e:
-                error_msg = f"本体查询出错: {str(e)}"
-                print(f"[MOSES] {error_msg}")
-                return error_msg
+                return f"本体查询出错: {str(e)}"
 
-        print("[DEBUG] get_tool() returning tool")
         return query_chemistry_knowledge
 
     def cleanup(self):

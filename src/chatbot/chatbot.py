@@ -53,37 +53,33 @@ class Chatbot:
             FileNotFoundError: 配置文件不存在
             ValueError: 配置验证失败
         """
-        print("[Chatbot] 正在初始化...")
-        print("[DEBUG] Step 1: Loading config...")
+        # 加载配置
         self.config = load_config(config_path)
-        print("[DEBUG] Step 2: Initializing LLM...")
+
+        # 初始化LLM
         self.llm = self._init_llm()
-        print("[DEBUG] Step 3: Creating MOSES wrapper (no auto-init)...")
-        # 创建wrapper但不启动后台初始化
+
+        # 创建MOSES wrapper（不启动后台初始化）
         self.moses_wrapper = MOSESToolWrapper(self.config["chatbot"]["moses"], auto_init=False)
-        print("[DEBUG] Step 4: Initializing checkpointer...")
+
+        # 初始化checkpointer
         self.checkpointer = self._init_checkpointer()
 
-        # 使用LangGraph预制agent（核心一行代码）
+        # 使用LangGraph预制agent
         system_prompt = self.config["chatbot"].get(
             "system_prompt",
             "你是一个专业的化学实验助手，可以查询化学本体知识库来回答问题。"
         )
 
-        print("[DEBUG] Step 5: Getting tool from MOSES wrapper...")
         moses_tool = self.moses_wrapper.get_tool()
-        print("[DEBUG] Step 6: Creating react agent...")
         self.agent = create_react_agent(
             model=self.llm,
             tools=[moses_tool],
             checkpointer=self.checkpointer,
-            state_modifier=system_prompt  # 使用state_modifier而不是prompt
+            state_modifier=system_prompt
         )
 
-        print("[Chatbot] 初始化完成")
-
-        # 主线程初始化完成后，启动MOSES后台初始化
-        print("[DEBUG] Step 7: Starting MOSES background init...")
+        # 启动MOSES后台初始化（静默）
         self.moses_wrapper.start_init()
 
     def _init_llm(self):
@@ -93,7 +89,6 @@ class Chatbot:
             ChatTongyi实例
         """
         llm_config = self.config["chatbot"]["llm"]
-        print(f"[Chatbot] 使用模型: {llm_config['model_name']}")
 
         # qwen-plus的thinking功能需要特殊配置
         model_kwargs = {
@@ -126,18 +121,14 @@ class Chatbot:
 
         if memory_type == "sqlite":
             if not SQLITE_AVAILABLE:
-                print("[Chatbot] ⚠️  SQLite checkpointer不可用，降级为内存模式")
-                print("[Chatbot] 提示: 安装 langgraph-checkpoint-sqlite 以启用持久化")
-                print("[Chatbot] 使用内存记忆（会话结束后丢失）")
+                # 静默降级为内存模式
                 return MemorySaver()
 
             sqlite_path = memory_config["sqlite_path"]
             # 确保目录存在
             Path(sqlite_path).parent.mkdir(parents=True, exist_ok=True)
-            print(f"[Chatbot] 使用SQLite持久化记忆: {sqlite_path}")
             return SqliteSaver.from_conn_string(sqlite_path)
         else:
-            print("[Chatbot] 使用内存记忆（会话结束后丢失）")
             return MemorySaver()
 
     def chat(self, message: str, session_id: str = "default") -> str:
@@ -260,7 +251,7 @@ class Chatbot:
 
             return history
         except Exception as e:
-            print(f"[Chatbot] 获取历史失败: {e}")
+            # 静默失败，返回空历史
             return []
 
     def list_sessions(self) -> List[str]:
@@ -281,11 +272,9 @@ class Chatbot:
                 cursor = conn.execute("SELECT DISTINCT thread_id FROM checkpoints")
                 return [row[0] for row in cursor.fetchall()]
             except Exception as e:
-                print(f"[Chatbot] 列出会话失败: {e}")
                 return []
         else:
             # 内存模式：无法持久化查询
-            print("[Chatbot] 内存模式不支持列出会话")
             return []
 
     def cleanup(self):
@@ -293,6 +282,4 @@ class Chatbot:
 
         停止MOSES QueryManager，释放资源
         """
-        print("[Chatbot] 正在清理资源...")
         self.moses_wrapper.cleanup()
-        print("[Chatbot] 清理完成")

@@ -126,19 +126,38 @@ class GenerationTask:
 
 
 class LogWriter:
-    """线程安全的日志写入器"""
+    """线程安全的日志写入器（双重输出：文件 + stdout）
 
-    def __init__(self, log_file: Path):
+    设计理念：
+    - 在子进程架构中（write_to_file=False）：只输出到stdout，由TaskScheduler统一写文件
+    - 在直接使用时（write_to_file=True）：同时写文件和输出stdout
+
+    这样避免了LogWriter和TaskScheduler双重写入同一个文件。
+    """
+
+    def __init__(self, log_file: Path, write_to_file: bool = True):
         self.log_file = log_file
-        self.file = open(log_file, 'w', encoding='utf-8')
+        self.write_to_file = write_to_file
+        self.file = None
+
+        if self.write_to_file:
+            self.file = open(log_file, 'w', encoding='utf-8')
+
         self.lock = threading.Lock()
 
     def write(self, message: str):
-        """写入日志（带时间戳）"""
+        """写入日志（带时间戳）并输出到stdout（管道捕获）"""
         with self.lock:
             timestamp = datetime.now().strftime("%H:%M:%S.%f")[:-3]
-            self.file.write(f"[{timestamp}] {message}\n")
-            self.file.flush()
+            log_line = f"[{timestamp}] {message}"
+
+            # 1. 写入文件（持久化）- 仅在非子进程模式
+            if self.write_to_file and self.file:
+                self.file.write(log_line + "\n")
+                self.file.flush()
+
+            # 2. 输出到stdout（被管道捕获）
+            print(log_line)
 
     def close(self):
         """关闭日志文件"""
@@ -222,6 +241,35 @@ class TaskManager:
         self.worker_thread.start()
 
         print(f"[TaskManager] Worker线程已启动 (daemon={as_daemon}, pid={os.getpid()})")
+
+    def ensure_worker_running(self):
+        """确保Worker线程运行中（惰性启动）
+
+        用于多任务场景：在提交任务前检查Worker状态，如果不存在或已退出则重新启动
+        """
+        # 检查是否需要（重新）启动
+        needs_start = False
+
+        if not self.running:
+            needs_start = True
+            reason = "Worker未启动"
+        elif self.worker_thread is None:
+            needs_start = True
+            reason = "Worker线程不存在"
+        elif not self.worker_thread.is_alive():
+            needs_start = True
+            reason = "Worker线程已退出"
+
+        if needs_start:
+            print(f"[TaskManager] {reason}，正在启动Worker...")
+            # 清理旧状态
+            if self.worker_thread and not self.worker_thread.is_alive():
+                self._release_lock()
+            # 启动新Worker
+            self.start(as_daemon=False)
+        else:
+            # Worker运行正常，更新活动时间防止空闲超时
+            self.last_activity_time = time.time()
 
     def stop(self):
         """停止工作线程（优雅关闭）"""
@@ -412,6 +460,71 @@ class TaskManager:
         """获取会话的所有任务"""
         all_tasks = self.get_all_tasks()
         return [t for t in all_tasks if t.session_id == session_id]
+
+    def get_resumable_tasks(self) -> List[GenerationTask]:
+        """获取所有可恢复的任务
+
+        只返回 AWAITING_CONFIRM 状态的任务（用户离开导致Worker超时退出的场景）
+
+        Returns:
+            可恢复的任务列表
+        """
+        all_tasks = self.get_all_tasks()
+        return [
+            task for task in all_tasks
+            if task.status == TaskStatus.AWAITING_CONFIRM
+        ]
+
+    def resume_task(self, task_id: str) -> bool:
+        """恢复已中断的任务（仅支持 AWAITING_CONFIRM 状态）
+
+        场景：用户离开后Worker在AWAITING_CONFIRM轮询期间超时退出，
+              用户返回时通过此方法跳过确认步骤，直接继续执行
+
+        Args:
+            task_id: 任务ID
+
+        Returns:
+            是否成功恢复
+        """
+        task = self.get_task(task_id)
+        if not task:
+            print(f"[TaskManager] 任务 {task_id} 不存在")
+            return False
+
+        # 只支持恢复 AWAITING_CONFIRM 状态的任务
+        if task.status == TaskStatus.AWAITING_CONFIRM:
+            print(f"[TaskManager] 恢复任务 {task_id}（自动确认需求，继续生成）")
+
+            # 验证需求文件存在
+            if not task.requirements_file.exists():
+                print(f"[TaskManager] 需求文件不存在，无法恢复")
+                return False
+
+            # 自动确认：修改状态为 RETRIEVING（等同于用户执行 /confirm）
+            task.status = TaskStatus.RETRIEVING
+            self._save_task(task)
+
+            # 确保Worker运行（惰性启动）
+            self.ensure_worker_running()
+
+            print(f"[TaskManager] 任务 {task_id} 已恢复，Worker将继续执行")
+            return True
+
+        elif task.status in [TaskStatus.COMPLETED, TaskStatus.CANCELLED]:
+            print(f"[TaskManager] 任务 {task_id} 已结束（{task.status.value}），无需恢复")
+            return False
+
+        elif task.status == TaskStatus.FAILED:
+            print(f"[TaskManager] 任务 {task_id} 已失败，无法恢复")
+            return False
+
+        else:
+            # 其他状态（EXTRACTING, RETRIEVING, GENERATING）不需要恢复
+            # 因为这些阶段都有活动，不会导致Worker超时退出
+            print(f"[TaskManager] 任务 {task_id} 状态为 {task.status.value}，无需恢复")
+            print(f"[TaskManager] 提示: 只有 AWAITING_CONFIRM 状态的任务需要恢复")
+            return False
 
     def _save_task(self, task: GenerationTask):
         """保存任务状态到磁盘"""

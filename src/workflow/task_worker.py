@@ -1,0 +1,385 @@
+"""任务工作进程 - 独立运行
+
+用法:
+    python -m workflow.task_worker <task_id>
+    python -m workflow.task_worker <task_id> --resume
+
+特性:
+- 作为独立进程运行（可脱离主CLI）
+- 所有print输出被父进程管道捕获
+- 状态更新写入文件系统（task.json）
+- 支持断点恢复（状态机模式）
+
+设计理念：
+- 任务执行变成"状态机 + 幂等步骤"
+- 每个步骤独立、可恢复
+- 统一了"首次启动"和"断点恢复"
+"""
+
+import sys
+import json
+import time
+import argparse
+import os
+from pathlib import Path
+
+# 确保 src 在 Python 路径中（支持作为模块运行）
+# 当前文件：src/workflow/task_worker.py
+# 需要将 src 目录加入 sys.path
+current_file = Path(__file__).resolve()
+src_dir = current_file.parent.parent  # src/workflow -> src
+project_root = src_dir.parent  # src -> 项目根
+
+if str(src_dir) not in sys.path:
+    sys.path.insert(0, str(src_dir))
+
+from dotenv import load_dotenv
+load_dotenv(project_root / ".env")
+
+
+def main():
+    """工作进程主入口"""
+    # 解析参数
+    parser = argparse.ArgumentParser(description="任务工作进程")
+    parser.add_argument("task_id", help="任务ID")
+    parser.add_argument("--resume", action="store_true", help="断点恢复模式")
+    args = parser.parse_args()
+
+    task_id = args.task_id
+    resume_mode = args.resume
+
+    print("=" * 70)
+    print("🔧 Task Worker Started")
+    print("=" * 70)
+    print(f"  Task ID: {task_id}")
+    print(f"  Mode: {'Resume' if resume_mode else 'New'}")
+    print(f"  PID: {os.getpid()}")
+    print()
+
+    try:
+        # 执行任务工作流
+        run_task_workflow(task_id, resume_mode)
+
+    except Exception as e:
+        import traceback
+        print()
+        print("=" * 70)
+        print(f"❌ Worker异常: {e}")
+        print("=" * 70)
+        traceback.print_exc()
+
+        # 更新任务状态为失败
+        try:
+            from workflow.task_manager import get_task_manager, TaskStatus
+            tm = get_task_manager()
+            task = tm.get_task(task_id)
+            if task:
+                task.status = TaskStatus.FAILED
+                task.error = str(e)
+                tm._save_task(task)
+        except:
+            pass
+
+        sys.exit(1)
+
+
+def run_task_workflow(task_id: str, resume_mode: bool):
+    """运行任务工作流（状态机模式）
+
+    Args:
+        task_id: 任务ID
+        resume_mode: 是否为断点恢复模式
+
+    Notes:
+        根据任务当前状态，决定从哪个步骤开始执行
+    """
+    import os
+    from workflow.task_manager import get_task_manager, TaskStatus
+
+    # 加载任务
+    task_manager = get_task_manager()
+
+    if resume_mode:
+        # 断点恢复模式：从磁盘加载任务
+        task = task_manager.get_task(task_id)
+        if not task:
+            print(f"❌ 任务 {task_id} 不存在")
+            sys.exit(1)
+
+        print(f"[Worker] 断点恢复模式，当前状态: {task.status.value}")
+
+    else:
+        # 首次启动模式：从config.json加载配置
+        task_dir = Path(f"logs/generation_tasks/{task_id}")
+        config_file = task_dir / "config.json"
+
+        if not config_file.exists():
+            print(f"❌ 配置文件不存在: {config_file}")
+            sys.exit(1)
+
+        with open(config_file, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+
+        # 创建新任务对象
+        from workflow.task_manager import GenerationTask
+        from datetime import datetime
+
+        task = GenerationTask(
+            task_id=task_id,
+            session_id=config['session_id'],
+            task_dir=task_dir,
+            log_file=task_dir / "task.log",
+            created_at=datetime.fromisoformat(config['created_at'])
+        )
+
+        # 保存初始状态
+        task_manager._save_task(task)
+
+        print(f"[Worker] 新建任务，会话ID: {config['session_id']}")
+
+    # ========================================================================
+    # 初始化组件（只在需要时初始化）
+    # ========================================================================
+
+    generator = None
+    llm_provider = None
+
+    def ensure_components_initialized():
+        """惰性初始化组件"""
+        nonlocal generator, llm_provider
+
+        if generator is not None and llm_provider is not None:
+            return
+
+        print()
+        print("=" * 70)
+        print("初始化组件")
+        print("=" * 70)
+
+        print("[1/2] 正在初始化LLM Provider...")
+        from utils.llm_provider import QwenProvider
+        llm_provider = QwenProvider(
+            model_name="qwen-max",
+            temperature=0.7,
+            max_tokens=4096
+        )
+
+        print("[2/2] 正在初始化Generator...")
+        from ace_framework.generator.generator import create_generator
+        generator = create_generator(
+            playbook_path="data/playbooks/chemistry_playbook.json",
+            llm_provider=llm_provider
+        )
+
+        print("✅ 组件初始化完成")
+        print()
+
+    # ========================================================================
+    # 状态机：根据当前状态决定执行哪些步骤
+    # ========================================================================
+
+    if task.status == TaskStatus.PENDING:
+        # Step 1: 提取需求
+        print()
+        print("=" * 70)
+        print("STEP 1: 提取需求")
+        print("=" * 70)
+
+        ensure_components_initialized()
+
+        # 加载对话历史
+        if resume_mode:
+            # 从任务目录加载
+            config_file = task.task_dir / "config.json"
+            with open(config_file, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+            history = config['history']
+        else:
+            # 已在外层加载
+            config_file = task.task_dir / "config.json"
+            with open(config_file, 'r', encoding='utf-8') as f:
+                config = json.load(f)
+            history = config['history']
+
+        # 提取需求
+        task.status = TaskStatus.EXTRACTING
+        task_manager._save_task(task)
+
+        from workflow.command_handler import GenerateCommandHandler
+        from workflow.task_manager import LogWriter
+
+        # 子进程模式：只print，不写文件（TaskScheduler负责写文件）
+        log_writer = LogWriter(task.log_file, write_to_file=False)
+
+        try:
+            requirements = GenerateCommandHandler._extract_requirements(
+                history, llm_provider, log_writer
+            )
+
+            # 验证必需字段
+            if not requirements.get("target_compound") and not requirements.get("objective"):
+                raise ValueError("无法提取足够信息（缺少target_compound和objective）")
+
+            # 保存需求到文件
+            task.save_requirements(requirements)
+            print(f"✅ 需求已提取: {task.requirements_file}")
+            print(f"   - objective: {requirements.get('objective', 'N/A')}")
+            print(f"   - target_compound: {requirements.get('target_compound', 'N/A')}")
+
+            log_writer.write(f"需求已提取并保存: {task.requirements_file}")
+
+        except Exception as e:
+            task.status = TaskStatus.FAILED
+            task.error = f"需求提取失败: {str(e)}"
+            task_manager._save_task(task)
+            log_writer.write(f"失败: {task.error}")
+            log_writer.close()
+            sys.exit(1)
+        finally:
+            log_writer.close()
+
+        # 进入等待确认状态
+        task.status = TaskStatus.AWAITING_CONFIRM
+        task_manager._save_task(task)
+
+        print()
+        print("=" * 70)
+        print("⏸️  等待用户确认")
+        print("=" * 70)
+        print(f"需求文件: {task.requirements_file}")
+        print()
+        print("💡 用户可以:")
+        print(f"   1. 查看需求: cat {task.requirements_file}")
+        print(f"   2. 修改需求: nano/vim {task.requirements_file}")
+        print(f"   3. 在CLI中执行 /confirm 继续")
+        print(f"   4. 在CLI中执行 /cancel 取消")
+        print()
+        print("[Worker] 子进程退出，等待用户确认...")
+        print()
+
+        # 正常退出（等待用户确认后重新启动）
+        sys.exit(0)
+
+    elif task.status == TaskStatus.AWAITING_CONFIRM:
+        # 用户已确认，从Step 2继续（RAG检索）
+        print("[Worker] 用户已确认需求，继续执行...")
+        # 继续往下执行
+
+    elif task.status == TaskStatus.RETRIEVING:
+        # 从Step 3继续（生成方案）
+        print("[Worker] 从RAG检索步骤继续...")
+        # 继续往下执行
+
+    elif task.status == TaskStatus.GENERATING:
+        # 从Step 4继续
+        print("[Worker] 从生成步骤继续...")
+        # 继续往下执行
+
+    elif task.status in [TaskStatus.COMPLETED, TaskStatus.FAILED, TaskStatus.CANCELLED]:
+        print(f"⚠️  任务已结束（{task.status.value}），无需执行")
+        sys.exit(0)
+
+    # ========================================================================
+    # Step 2: RAG检索（如果状态 >= AWAITING_CONFIRM）
+    # ========================================================================
+
+    if task.status in [TaskStatus.AWAITING_CONFIRM, TaskStatus.RETRIEVING]:
+        print()
+        print("=" * 70)
+        print("STEP 2: RAG检索模板")
+        print("=" * 70)
+
+        task.status = TaskStatus.RETRIEVING
+        task_manager._save_task(task)
+
+        # 加载需求
+        requirements = task.load_requirements()
+        if not requirements:
+            task.status = TaskStatus.FAILED
+            task.error = "需求文件不存在或已损坏"
+            task_manager._save_task(task)
+            print(f"❌ {task.error}")
+            sys.exit(1)
+
+        # 使用Mock RAG检索
+        try:
+            from workflow.mock_rag import create_mock_rag_retriever
+            mock_rag = create_mock_rag_retriever()
+            templates = mock_rag.retrieve(requirements, top_k=3)
+            print(f"✅ 检索到 {len(templates)} 个模板（使用Mock RAG）")
+        except Exception as e:
+            print(f"⚠️  Mock RAG失败: {e}，使用空模板列表")
+            templates = []
+
+        # 保存templates到文件
+        task.save_templates(templates)
+        print(f"✅ 检索结果已保存: {task.templates_file}")
+
+    # ========================================================================
+    # Step 3: 生成方案（如果状态 >= RETRIEVING）
+    # ========================================================================
+
+    if task.status in [TaskStatus.RETRIEVING, TaskStatus.GENERATING]:
+        print()
+        print("=" * 70)
+        print("STEP 3: 生成实验方案")
+        print("=" * 70)
+
+        ensure_components_initialized()
+
+        task.status = TaskStatus.GENERATING
+        task_manager._save_task(task)
+
+        # 加载需求和模板
+        requirements = task.load_requirements()
+        with open(task.templates_file, 'r', encoding='utf-8') as f:
+            templates = json.load(f)
+
+        try:
+            start_time = time.time()
+
+            generation_result = generator.generate(
+                requirements=requirements,
+                templates=templates
+            )
+
+            duration = time.time() - start_time
+
+            # 保存方案到文件
+            task.save_plan(generation_result.generated_plan)
+            task.metadata = generation_result.generation_metadata
+            task.metadata['duration'] = duration
+
+            print(f"✅ 方案已生成: {task.plan_file}")
+            print(f"   标题: {generation_result.generated_plan.title}")
+            print(f"   耗时: {duration:.2f}s")
+            print(f"   Tokens: {task.metadata.get('total_tokens', 0)}")
+
+            # 完成
+            task.status = TaskStatus.COMPLETED
+            task_manager._save_task(task)
+
+            print()
+            print("=" * 70)
+            print("✅ 任务完成！")
+            print("=" * 70)
+            print(f"方案文件: {task.plan_file}")
+            print()
+
+            sys.exit(0)
+
+        except Exception as e:
+            import traceback
+            task.status = TaskStatus.FAILED
+            task.error = f"生成失败: {str(e)}"
+            task_manager._save_task(task)
+
+            print(f"❌ 生成失败: {e}")
+            traceback.print_exc()
+
+            sys.exit(1)
+
+
+if __name__ == "__main__":
+    import os
+    main()

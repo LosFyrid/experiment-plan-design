@@ -29,11 +29,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from chatbot.chatbot import Chatbot
-from workflow.command_handler import GenerateCommandHandler
+from workflow.task_scheduler import TaskScheduler
 from workflow.task_manager import get_task_manager, TaskStatus, GenerationTask
-from ace_framework.generator.generator import create_generator
 from ace_framework.playbook.schemas import ExperimentPlan
-from utils.llm_provider import QwenProvider
 
 
 # ============================================================================
@@ -61,8 +59,9 @@ def print_help():
 ╚════════════════════════════════════════════════════════════╝
 
 📋 命令列表:
-  /generate, /gen  - 根据对话历史生成实验方案（后台执行）
+  /generate, /gen  - 根据对话历史生成实验方案（后台子进程）
   /status          - 查看当前任务状态和文件路径
+  /logs [task_id]  - 查看任务日志（实时缓冲区）
   /confirm         - 确认需求，继续生成方案
   /cancel          - 取消当前任务
   /view <task_id>  - 查看生成的方案（格式化显示）
@@ -70,27 +69,30 @@ def print_help():
   /history         - 查看当前会话对话历史
   /clear           - 清屏
   /help            - 显示此帮助信息
-  /quit, /exit     - 退出程序（任务继续在后台运行）
+  /quit, /exit     - 退出程序（子进程继续在后台运行）
 
 💡 工作流程:
   1. 与助手自然对话，描述你的实验需求
-  2. 输入 /generate 触发方案生成（后台执行）
-  3. 系统提取需求后会提醒你确认
+  2. 输入 /generate 触发方案生成（后台子进程执行）
+  3. 系统提取需求后会自动暂停
   4. 查看需求文件，如需修改可直接编辑
   5. 输入 /confirm 确认，系统继续生成方案
-  6. 使用 /status 或 /view 查看结果
+  6. 使用 /logs 查看实时日志
+  7. 使用 /view 查看最终结果
 
 🎯 示例对话:
   你: 我想合成阿司匹林
   助手: 好的！让我了解一些细节...
   你: 用水杨酸和乙酸酐，2小时内完成
   助手: 明白了。还有其他要求吗？
-  你: /generate              ← 触发生成
-  [系统后台提取需求]
-  [系统提醒需要确认]
-  你: /status                ← 查看需求文件路径
-  你: /confirm               ← 确认继续
-  [系统生成方案]
+  你: /generate              ← 触发生成（启动子进程）
+  [子进程后台提取需求并暂停]
+  你: /logs                  ← 查看日志
+  [显示实时日志输出]
+  你: /status                ← 查看状态（AWAITING_CONFIRM）
+  你: /confirm               ← 确认继续（重新启动子进程）
+  [子进程生成方案]
+  你: /logs                  ← 实时查看生成进度
   你: /view <task_id>        ← 查看方案
   你: 第3步的温度可以调低吗？  ← 继续对话
     """)
@@ -196,33 +198,6 @@ def print_task_status(task: GenerationTask):
     print()
 
 
-def check_and_notify_pending_tasks(task_manager, current_task_id):
-    """检查并主动提醒待确认的任务"""
-    if not current_task_id:
-        return
-
-    task = task_manager.get_task(current_task_id)
-    if not task:
-        return
-
-    # 如果任务进入AWAITING_CONFIRM状态，主动提醒
-    if task.status == TaskStatus.AWAITING_CONFIRM:
-        # 使用颜色高亮提示
-        print("\n" + "=" * 70)
-        print("\033[93m⏸️  任务需要确认！\033[0m")  # 黄色
-        print("=" * 70)
-        print(f"  任务ID: {task.task_id}")
-        print(f"  状态: {task.status.value}")
-        print(f"\n📋 需求已提取，文件路径:")
-        print(f"  {task.requirements_file}")
-        print(f"\n💡 接下来可以:")
-        print(f"  1. 查看需求: cat {task.requirements_file}")
-        print(f"  2. 修改需求: nano/vim {task.requirements_file}")
-        print(f"  3. 确认继续: /confirm")
-        print(f"  4. 取消任务: /cancel")
-        print("=" * 70 + "\n")
-
-
 def format_plan_output(plan: ExperimentPlan, metadata: dict) -> str:
     """格式化实验方案输出"""
     lines = []
@@ -303,54 +278,52 @@ def main():
     print_banner()
 
     try:
-        # 初始化组件
+        # 初始化组件（只需要Chatbot和Scheduler）
         print("正在初始化系统...")
 
-        # 1. Chatbot
-        print("  [1/3] 初始化Chatbot...")
-        bot = Chatbot(config_path="configs/chatbot_config.yaml")
+        # 创建日志目录
+        log_dir = Path("logs")
+        log_dir.mkdir(exist_ok=True)
 
-        # 2. LLM Provider
-        print("  [2/3] 初始化LLM Provider...")
-        llm_provider = QwenProvider(
-            model_name="qwen-max",
-            temperature=0.7,
-            max_tokens=4096
-        )
+        # 1. Chatbot（重定向输出到日志文件）
+        print("  [1/2] 初始化Chatbot...")
+        chatbot_log = log_dir / "chatbot_init.log"
 
-        # 3. Generator
-        print("  [3/3] 初始化Generator...")
-        generator = create_generator(
-            playbook_path="data/playbooks/chemistry_playbook.json",
-            llm_provider=llm_provider
-        )
+        # 保存原始stdout/stderr
+        import sys
+        original_stdout = sys.stdout
+        original_stderr = sys.stderr
 
-        # 4. Command Handler
-        cmd_handler = GenerateCommandHandler(
-            chatbot=bot,
-            generator=generator,
-            llm_provider=llm_provider
-        )
+        try:
+            # 重定向到日志文件
+            with open(chatbot_log, 'w', encoding='utf-8') as f:
+                sys.stdout = f
+                sys.stderr = f
 
-        # 5. Task Manager
+                # 初始化Chatbot（所有输出被重定向）
+                bot = Chatbot(config_path="configs/chatbot_config.yaml")
+
+        finally:
+            # 恢复原始stdout/stderr
+            sys.stdout = original_stdout
+            sys.stderr = original_stderr
+
+        # 2. TaskScheduler（替换原来的Generator和LLM）
+        print("  [2/2] 初始化TaskScheduler...")
+        scheduler = TaskScheduler()
+
+        # 3. Task Manager（用于查询任务状态）
         task_manager = get_task_manager()
 
         print("\n✅ 初始化完成！输入 /help 查看使用说明。\n")
 
         session_id = "cli_session"
         current_task_id = None
-        last_notification_check = 0
 
         # 主循环
         while True:
             try:
-                # ============================================================
-                # 定期检查任务状态（每隔5秒检查一次，避免过于频繁）
-                # ============================================================
-                current_time = time.time()
-                if current_task_id and (current_time - last_notification_check > 5):
-                    check_and_notify_pending_tasks(task_manager, current_task_id)
-                    last_notification_check = current_time
+                # 移除轮询检查（改为被动查询）
 
                 # 获取用户输入
                 user_input = input("\n👤 你: ").strip()
@@ -396,14 +369,19 @@ def main():
 
                     # /generate, /gen
                     elif cmd in ["/generate", "/gen"]:
-                        print("\n🚀 已提交生成任务（后台执行）")
+                        print("\n🚀 已提交生成任务（后台子进程）")
 
-                        task_id = cmd_handler.handle(session_id)
+                        # 启动子进程
+                        task_id = scheduler.submit_task(
+                            session_id=session_id,
+                            history=bot.get_history(session_id)
+                        )
                         current_task_id = task_id
 
                         print(f"   任务ID: {task_id}")
-                        print(f"   使用 /status 查看进度")
-                        print(f"   日志: logs/generation_tasks/{task_id}/task.log\n")
+                        print(f"   使用 /logs 查看实时日志")
+                        print(f"   使用 /status 查看任务状态")
+                        print(f"   日志文件: logs/generation_tasks/{task_id}/task.log\n")
                         continue
 
                     # /status
@@ -420,6 +398,50 @@ def main():
                             continue
 
                         print_task_status(task)
+
+                        # 显示子进程状态
+                        proc_status = scheduler.get_process_status(current_task_id)
+                        print(f"  子进程状态: {proc_status}")
+                        print()
+                        continue
+
+                    # /logs [task_id] [--tail N]
+                    elif cmd == "/logs":
+                        # 默认查看当前任务，可指定task_id
+                        target_task = cmd_parts[1] if len(cmd_parts) > 1 and not cmd_parts[1].startswith("--") else current_task_id
+
+                        if not target_task:
+                            print("\n❌ 没有活跃的任务")
+                            print("   使用 /generate 创建新任务\n")
+                            continue
+
+                        # 解析 --tail 参数
+                        tail = 50
+                        if "--tail" in cmd_parts:
+                            try:
+                                tail_idx = cmd_parts.index("--tail")
+                                tail = int(cmd_parts[tail_idx + 1])
+                            except (IndexError, ValueError):
+                                print("⚠️  --tail 参数格式错误，使用默认值50")
+
+                        # 查看日志
+                        logs = scheduler.get_logs(target_task, tail=tail)
+
+                        print(f"\n📄 任务日志 (最后{tail}行): {target_task}")
+                        print("=" * 70)
+                        for log in logs:
+                            print(log)
+                        print("=" * 70)
+
+                        # 显示任务状态
+                        task = task_manager.get_task(target_task)
+                        if task:
+                            print(f"任务状态: {task.status.value}")
+
+                        # 显示子进程状态
+                        proc_status = scheduler.get_process_status(target_task)
+                        print(f"子进程: {proc_status}")
+                        print()
                         continue
 
                     # /confirm
@@ -437,10 +459,17 @@ def main():
                             print(f"\n❌ 任务状态为 {task.status.value}，无需确认\n")
                             continue
 
-                        # 确认需求，继续生成（通过修改任务状态）
-                        task.status = TaskStatus.RETRIEVING  # 解除暂停
-                        task_manager._save_task(task)
-                        print("\n✅ 已确认需求，任务继续执行...\n")
+                        # 确认需求，重新启动子进程（resume模式）
+                        print("\n✅ 已确认需求，重新启动子进程...\n")
+
+                        # 使用 scheduler.resume_task() 而非直接修改状态
+                        success = scheduler.resume_task(current_task_id)
+
+                        if success:
+                            print(f"   子进程已启动，使用 /logs 查看进度\n")
+                        else:
+                            print(f"   启动失败，请检查日志\n")
+
                         continue
 
                     # /cancel
@@ -451,8 +480,13 @@ def main():
 
                         task = task_manager.get_task(current_task_id)
                         if task and task.status not in [TaskStatus.COMPLETED, TaskStatus.FAILED, TaskStatus.CANCELLED]:
+                            # 终止子进程（如果正在运行）
+                            scheduler.terminate_task(current_task_id)
+
+                            # 更新任务状态
                             task.status = TaskStatus.CANCELLED
                             task_manager._save_task(task)
+
                             print(f"\n✅ 已取消任务 {current_task_id}\n")
                             current_task_id = None
                         else:
@@ -592,6 +626,11 @@ def main():
         # 清理资源
         try:
             bot.cleanup()
+        except:
+            pass
+
+        try:
+            scheduler.cleanup()
         except:
             pass
 

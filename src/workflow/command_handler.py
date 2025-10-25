@@ -5,11 +5,16 @@
 2. 等待用户确认
 3. RAG检索（保存到文件）
 4. Generator生成（保存到文件）
+
+设计原则：
+- 依赖抽象而非具体实现（使用 history_provider 函数而非 chatbot 实例）
+- Web 友好（可通过传入不同的 history_provider 适配不同数据源）
+- 易于测试（可传入 mock 函数）
 """
 
 import time
 import json
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, Callable, List
 
 from workflow.task_manager import (
     get_task_manager,
@@ -17,42 +22,92 @@ from workflow.task_manager import (
     GenerationTask,
     LogWriter
 )
-from chatbot.chatbot import Chatbot
 from ace_framework.generator.generator import PlanGenerator
 from utils.llm_provider import BaseLLMProvider, extract_json_from_text
 
 
 class GenerateCommandHandler:
-    """处理/generate命令"""
+    """处理/generate命令（解耦版本）
+
+    不再依赖具体的 chatbot 实例，而是通过 history_provider 函数获取对话历史。
+    这使得该类可以被多种场景复用：
+    - Chatbot CLI: history_provider = lambda sid: chatbot.get_history(sid)
+    - Web API: history_provider = lambda sid: db.query_messages(sid)
+    - 测试: history_provider = lambda sid: mock_history
+    """
 
     def __init__(
         self,
-        chatbot: Chatbot,
         generator: PlanGenerator,
         llm_provider: BaseLLMProvider
     ):
-        self.chatbot = chatbot
+        """初始化命令处理器
+
+        Args:
+            generator: PlanGenerator 实例（用于生成实验方案）
+            llm_provider: BaseLLMProvider 实例（用于提取需求）
+
+        Notes:
+            不再需要 chatbot 参数，对话历史通过 handle() 方法的 history_provider 获取
+        """
         self.generator = generator
         self.llm = llm_provider
         self.task_manager = get_task_manager()
 
-        # 确保任务管理器已启动
-        self.task_manager.start(as_daemon=False)
+        # Worker将在首次提交任务时惰性启动（不在初始化时启动）
 
-    def handle(self, session_id: str) -> str:
+    def handle(
+        self,
+        session_id: str,
+        history_provider: Callable[[str], List[Dict[str, str]]]
+    ) -> str:
         """处理/generate命令（非阻塞）
 
         Args:
             session_id: 会话ID
+            history_provider: 对话历史提供函数
+                              接收 session_id，返回对话历史列表
+                              格式：[{"role": "user", "content": "..."}, ...]
 
         Returns:
-            task_id
+            task_id: 后台任务ID
+
+        Examples:
+            # Chatbot CLI 场景
+            >>> task_id = handler.handle(
+            ...     session_id="cli_session",
+            ...     history_provider=lambda sid: chatbot.get_history(sid)
+            ... )
+
+            # Web API 场景
+            >>> task_id = handler.handle(
+            ...     session_id="web_session_123",
+            ...     history_provider=lambda sid: db.get_messages(sid)
+            ... )
+
+            # 测试场景
+            >>> mock_history = [
+            ...     {"role": "user", "content": "我想合成阿司匹林"},
+            ...     {"role": "assistant", "content": "好的..."}
+            ... ]
+            >>> task_id = handler.handle(
+            ...     session_id="test_session",
+            ...     history_provider=lambda sid: mock_history
+            ... )
+
+        Notes:
+            - 此方法立即返回，任务在后台线程执行
+            - Worker 会自动启动（如果未运行）
+            - 任务状态持久化到磁盘，CLI 退出后继续运行
         """
+        # 惰性启动Worker（如果未运行）
+        self.task_manager.ensure_worker_running()
+
         # 提交后台任务
         task_id = self.task_manager.submit_task(
             session_id=session_id,
             handler=self._generate_workflow,
-            chatbot=self.chatbot,
+            history_provider=history_provider,  # 传入函数而非chatbot实例
             generator=self.generator,
             llm=self.llm
         )
@@ -63,7 +118,7 @@ class GenerateCommandHandler:
     def _generate_workflow(
         task: GenerationTask,
         log: LogWriter,
-        chatbot: Chatbot,
+        history_provider: Callable[[str], List[Dict[str, str]]],
         generator: PlanGenerator,
         llm: BaseLLMProvider
     ):
@@ -72,9 +127,17 @@ class GenerateCommandHandler:
         Args:
             task: 任务对象
             log: 日志写入器
-            chatbot: Chatbot实例
+            history_provider: 对话历史提供函数（接收session_id，返回对话历史）
             generator: Generator实例
             llm: LLM Provider实例
+
+        Notes:
+            此方法在后台Worker线程中执行，执行完整的生成流程：
+            1. 调用 history_provider 获取对话历史
+            2. 使用 LLM 提取需求
+            3. 等待用户确认（轮询任务状态）
+            4. RAG 检索相关模板
+            5. Generator 生成实验方案
         """
         task_manager = get_task_manager()
 
@@ -88,8 +151,15 @@ class GenerateCommandHandler:
         log.write("STEP 1: 提取需求")
         log.write("=" * 60)
 
-        # 获取对话历史
-        history = chatbot.get_history(task.session_id)
+        # 获取对话历史（通过传入的 history_provider 函数）
+        try:
+            history = history_provider(task.session_id)
+        except Exception as e:
+            task.status = TaskStatus.FAILED
+            task.error = f"获取对话历史失败: {str(e)}"
+            task_manager._save_task(task)
+            log.write(f"失败: {task.error}")
+            return
 
         if len(history) < 2:
             task.status = TaskStatus.FAILED
