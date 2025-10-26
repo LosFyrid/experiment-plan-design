@@ -1,0 +1,75 @@
+# LargeRAG 配置文件
+# 注意：敏感信息（API Key）从 .env 读取，不写在此文件
+
+# ============ 数据路径配置 ============
+# 临时使用文献数据作为测试（未来替换为实验方案模板）
+data:
+  templates_dir: "${PROJECT_ROOT}src/external/rag/data/test_papers"  # 索引数据源路径（配置变量）
+
+# ============ Embedding 配置 ============
+embedding:
+  provider: "dashscope"                          # 固定值，不可修改
+  model: "text-embedding-v3"                    # Qwen embedding 模型
+  text_type: "document"                         # document 或 query
+  batch_size: 10                                # 批处理大小（减小以避免API限流）
+  dimension: 1024                               # 向量维度
+
+# ============ 向量存储配置 ============
+vector_store:
+  type: "chroma"                                # 固定值，不可修改
+  persist_directory: "${PROJECT_ROOT}src/external/rag/data/chroma_db"
+  collection_name: "experiment_plan_templates_v1"
+  distance_metric: "cosine"                     # cosine, l2, ip
+
+# ============ 文档处理配置 ============
+document_processing:
+  splitter_type: "token"                        # 分块策略: token / semantic / sentence
+  chunk_size: 512                               # 分块大小（token，仅 token 模式）
+  chunk_overlap: 50                             # 重叠大小（token，仅 token 模式）
+  separator: "\n\n"                             # 分块分隔符（仅 token 模式）
+
+  # Semantic 切分配置（当 splitter_type=semantic 时生效）
+  semantic_breakpoint_threshold: 0.5            # 语义断点阈值 (0-1)
+  semantic_buffer_size: 1                       # 缓冲区大小
+
+# ============ 检索配置 ============
+retrieval:
+  similarity_top_k: 30                          # 向量检索召回数量（增加候选池）
+  rerank_top_n: 8                               # Reranker 最终返回数量（实验计划需要更多模板）
+  similarity_threshold: 0.5                     # 相似度阈值（过滤低质量文档）
+                                                 # 启用后，只返回分数 >= 阈值的结果
+                                                 # 推荐值：0.6-0.8（宁缺毋滥）
+
+# ============ Reranker 配置 ============
+reranker:
+  provider: "dashscope"                         # 固定值
+  model: "gte-rerank-v2"                           # Qwen reranker 模型
+  enabled: true                                 # 是否启用 reranker
+
+# ============ LLM 配置 ============
+llm:
+  provider: "dashscope"                         # 固定值
+  model: "qwen-plus"                            # qwen-plus (成本优化) 或 qwen-max
+  temperature: 0
+  max_tokens: 2000
+
+# ============ 缓存配置 ============
+cache:
+  enabled: true                                 # 是否启用缓存
+  type: "local"                                 # local（推荐，无需额外服务） 或 redis
+
+  # 本地文件缓存配置（默认）
+  local_cache_dir: "${PROJECT_ROOT}src/external/rag/data/cache"
+
+  # Redis 缓存配置（可选，需要 redis-server 服务）
+  redis_host: "localhost"
+  redis_port: 6379
+
+  collection_name: "largerag_embedding_cache"
+  ttl: 86400                                    # 缓存过期时间（秒，仅Redis使用）
+
+# ============ 日志配置 ============
+logging:
+  level: "INFO"                                 # DEBUG, INFO, WARNING, ERROR
+  file_path: "${PROJECT_ROOT}logs/largerag.log"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

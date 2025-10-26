@@ -46,17 +46,12 @@ class MOSESToolWrapper:
             self.start_init()
 
     def start_init(self):
-        """启动后台初始化（静默模式，输出重定向到日志文件）"""
+        """启动后台初始化（输出自然显示）"""
         init_thread = threading.Thread(target=self._background_init, daemon=True)
         init_thread.start()
 
     def _background_init(self):
-        """后台线程初始化QueryManager（捕获输出到日志文件）"""
-        # 创建日志目录
-        log_dir = Path("logs")
-        log_dir.mkdir(exist_ok=True)
-        log_file = log_dir / "moses_init.log"
-
+        """后台线程初始化QueryManager（正常输出，不重定向）"""
         try:
             import os
 
@@ -70,42 +65,23 @@ class MOSESToolWrapper:
             warnings.filterwarnings('ignore', category=DeprecationWarning)
             warnings.filterwarnings('ignore', message='.*java_exe.*')
 
-            # 重定向stdout/stderr到日志文件
-            original_stdout = sys.stdout
-            original_stderr = sys.stderr
+            # 直接初始化，输出自然显示
+            from autology_constructor.idea.query_team import QueryManager
+            from config.settings import ONTOLOGY_SETTINGS
 
-            with open(log_file, 'w', encoding='utf-8') as f:
-                # 重定向输出
-                sys.stdout = f
-                sys.stderr = f
+            self.query_manager = QueryManager(
+                max_workers=self.config.get("max_workers", 4),
+                ontology_settings=ONTOLOGY_SETTINGS
+            )
+            self.query_manager.start()
+            self._initialized = True
 
-                try:
-                    # 导入和初始化（输出被重定向到日志文件）
-                    from autology_constructor.idea.query_team import QueryManager
-                    from config.settings import ONTOLOGY_SETTINGS
-
-                    self.query_manager = QueryManager(
-                        max_workers=self.config.get("max_workers", 4),
-                        ontology_settings=ONTOLOGY_SETTINGS
-                    )
-                    self.query_manager.start()
-                    self._initialized = True
-
-                finally:
-                    # 恢复stdout/stderr
-                    sys.stdout = original_stdout
-                    sys.stderr = original_stderr
-
-            # 初始化完成，打印简洁摘要（使用恢复后的stdout）
-            self._print_summary_from_ontology(ONTOLOGY_SETTINGS if 'ONTOLOGY_SETTINGS' in locals() else None)
+            # 初始化完成，打印简洁摘要
+            self._print_summary_from_ontology(ONTOLOGY_SETTINGS)
 
         except Exception as e:
-            # 恢复stdout（如果异常发生在重定向期间）
-            sys.stdout = original_stdout if 'original_stdout' in locals() else sys.stdout
-            sys.stderr = original_stderr if 'original_stderr' in locals() else sys.stderr
-
             self._init_error = e
-            # 不打印错误信息，保持静默
+            print(f"[MOSES] 初始化失败: {e}")
         finally:
             self._init_event.set()
 
@@ -205,7 +181,7 @@ class MOSESToolWrapper:
         return query_chemistry_knowledge
 
     def cleanup(self):
-        """清理资源，停止QueryManager（不捕获输出，避免卡死）"""
+        """清理资源，停止QueryManager"""
         if self.query_manager and self._initialized:
             print("[MOSES] 停止查询管理器...")
             try:

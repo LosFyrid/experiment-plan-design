@@ -301,14 +301,34 @@ def run_task_workflow(task_id: str, resume_mode: bool):
             print(f"❌ {task.error}")
             sys.exit(1)
 
-        # 使用Mock RAG检索
+        # 使用真实 RAG 检索
         try:
-            from workflow.mock_rag import create_mock_rag_retriever
-            mock_rag = create_mock_rag_retriever()
-            templates = mock_rag.retrieve(requirements, top_k=3)
-            print(f"✅ 检索到 {len(templates)} 个模板（使用Mock RAG）")
+            from workflow.rag_adapter import RAGAdapter
+
+            print("[Worker] 初始化 RAG 适配器...")
+
+            # 创建 RAG 适配器（惰性初始化）
+            rag_adapter = RAGAdapter()
+
+            # 检索相关文档（使用配置的 top_k，默认 5）
+            templates = rag_adapter.retrieve_templates(
+                requirements=requirements,
+                top_k=5  # 可以从配置读取
+            )
+
+            print(f"✅ 检索到 {len(templates)} 个相关文档")
+
+            # 打印前3个结果预览
+            for i, t in enumerate(templates[:3], 1):
+                score = t.get('score', 0)
+                title = t.get('title', 'Unknown')
+                print(f"  {i}. [{score:.3f}] {title}")
+
         except Exception as e:
-            print(f"⚠️  Mock RAG失败: {e}，使用空模板列表")
+            import traceback
+            print(f"⚠️  RAG 检索失败: {e}")
+            traceback.print_exc()
+            print("⚠️  回退到空模板列表（Generator 将仅使用 Playbook）")
             templates = []
 
         # 保存templates到文件

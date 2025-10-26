@@ -1,0 +1,164 @@
+[
+  {
+    "type": "text",
+    "text": "Revue de Métallurgie\n110\n, 185-197 (2013)\nc\n©\nEDP Sciences, 2013\nDOI: 10.1051/metal/2013062\nwww.revue-metallurgie.org",
+    "text_level": 2,
+    "page_idx": 0
+  },
+  {
+    "type": "text",
+    "text": "- 1 Total S.A., Exploration & Production, Technology Division, Pau, France e-mail: freddy.busschaert@total.com\n- 2 Total S.A., Exploration & Production, Stavanger, Norway",
+    "text_level": 2,
+    "page_idx": 1
+  },
+  {
+    "type": "text",
+    "text": "Duplex stainless steels; toughness; gas tungsten arc welding; low temperature\nReceived 30 November 2011 Accepted 4 April 2013\nAbstract Duplex stainless steels are often used today in the oil and gas industry because of their high strength and good corrosion resistance. New developments in arctic conditions and at high pressure require the qualification of these materials at very low temperatures. This paper will present the results of an extensive test program dedicated to assessing the low-temperature behavior of various heavy-wall duplex stainless steel forgings, hot isostatically-pressed (HIP) connectors and hot extruded pipes at temperatures down to -60 ◦ C. Several welding processes were also evaluated. The implications for the design of duplex stainless steel production facilities will be discussed.",
+    "text_level": 2,
+    "page_idx": 2
+  },
+  {
+    "type": "text",
+    "text": "a reservoir temperature of 140 ◦ C, which categorizes it as a HPHT field.\nDuplex stainless steels are widely used because of their high strength and good corrosion resistance. In the North Sea, the majority of the duplex stainless steels have been procured according to ASTM Standards and Norsok Standard M-630 and its associated Material Data Sheets, and by qualified suppliers according to Norsok M-650.\nThese MDS require that toughness testing on 25% Cr Duplex Stainless Steels (DSS) is to be performed at -46 ◦ C. Other codes such as DNV OSF 101, API 6A and ISO 13628-4 have di ff erent requirements, as listed in Table 1.",
+    "text_level": 2,
+    "page_idx": 3
+  },
+  {
+    "type": "text",
+    "text": "The Hild Field is located on the Norwegian Continental Shelf 70 km North of Frigg, 45 kmWestofOsebergand37kmSouth-East of the Alwyn North Field; see Figure 1. The water depth is 100 m to 125 m. The field has a maximum reservoir pressure of 780 bar and\nThe initial plan for Hild was to drill a subsea pilot well on the Hild East formation and collect geological reservoir data and then perform an extended well test to confirm the volumes in place. The subsequent plan, depending on test results, was to performasubsea-to-subseatiebacktotheForvie subsea field, as shown in Figure 2. This is the closest geographical asset to the Hild field. This plan was included as a part of the design basis for the tendering and building of the Hild Subsea Production Station.\nFigures 3 and 4, respectively, show a typical Subsea Production System (SPS) installed on the seabed (Christmas XT) and the Hild XMT general assembly.",
+    "text_level": 2,
+    "page_idx": 4
+  },
+  {
+    "type": "text",
+    "text": "The general flow assurance performed early in the project for all the di ff erent start-up conditions highlighted the cold temperatures calculated in the choke module. The choke module on the Hild SPS is subsea retrievable and due to limited space and weight limitations is very compact and complex. The flow assurance simulation showed that this design increases the cooling e ff ect compared with straight pipes on each side\n- F. Busschaert et al.: Revue de Métallurgie 110 , 185-197 (2013)\nFig. 1. Location of the Hild field in the North Sea.\nFig. 2. Hild Field layout as initially planned in 2005.\nTable 1. Toughness testing (Charpy V) requirements in di ff erent codes.\n\nDNVOSF 101, Test temperature = T o = T minimum design -20 ◦ C. DNVOSF 101, Energy requirement = 45 J / 35 J. NORSOK M630, Test temperature = -46 ◦ C. NORSOK M630, Energy requirement = 45 J / 35 J. API 6A, Test temperature = -46 ◦ C. API 6A, Energy requirement = 20 J min. average value. ISO 13628-4, Test temperature = Refer to ISO 104323 for impact tests. ISO 13628-4, Energy requirement = 20 J min. average value. ISO 104323, Test temperature = Same as API 6A. ISO 104323, Energy requirement = 20 J min. average value\nFig. 3. Subsea Production System (SPS) installed on the seabed.\nFig. 4. XMT general assembly.\nFig. 5. Fluid temperatures vs. Pressure Upstream of Choke.\nof the choke. The main basis for the flow assurance is given in Table 1.\nAnalyses performed during building of the Hild subsea production station showed that the maximum Joule Thomson cooling occurs for a shut-in pressure upstream of the production choke of approximately 350400 bar, while the pipeline system is depressurized to around 10 bar. When such a system is cooled to the ambient temperature of 4 ◦ C, maximum cooling occurs when opening the production choke. Figure 5 summarizes the fluid temperature calculations performed using the HYSIS tool.",
+    "text_level": 2,
+    "page_idx": 5
+  },
+  {
+    "type": "text",
+    "text": "Figure 6 shows details of the flow loops on the choke module and Figure 7 shows details of the choke HUBS, flow loop gooseneck and external RTS HUB. The flow pattern downstream of the choke is divided into sections starting with A just downstream of the choke and ending with N at the RTS HUB.",
+    "text_level": 2,
+    "page_idx": 6
+  },
+  {
+    "type": "text",
+    "text": "Extensive flow assurance was performed due to the initial results, showing very low fluid temperatures in the area just downstream of the subsea choke. A series of startup scenarios were investigated, and these are detailed in Table 3.\nFig. 6. Choke module A-L.\nOut of the cases in Table 3, the worstcase scenario giving the lowest temperature is case number 1. Temperatures in locations A-N are shown in Table 4. This case gives a minimum fluid temperature of -92.5 ◦ C and a minimum wall temperature of -72.1 ◦ C. The minimum wall temperature of -72.1 ◦ C is the minimum design temperature for the system.\nIt was agreed between Total and the SPS supplier to mitigate this e ff ect by injecting methanol to increase the design temperature up to -60 ◦ C with the best endeavors to meet -70 ◦ C. This is based mainly on simulation cases 2 & 3, which are seen as the\nTable 2. Hild fluid conditions.\n\nNormal Flow rate (MSCMD), Range = 1.5-2. Maximum Flow rate (MSCMD), Range = 4. WHSIP (bar), Range = 650. Flowing Wellhead pressure (bar), Range = 125-400. Pipeline Operating Pressure (bar), Range = 10-220. Wellhead Temperature (upstream choke), Range = 4-140 ◦ C. Choke Opening Time (normal), Range = 180 min. Methanol Injection (m 3 / h), Range = 0-2. Predosing, Range = -\nTable 3. Olga cases considered for Hild.\nFig. 7. Choke HUBS gooseneck and RTS HUB M-N.\n\n1, Rate of Methanol Injection during start-up (m 3 / h) = 0. 1, Start-up well rate for first hour (MMscmd) = 0.25. 1, System Predosed with Methanol prior to start-up = No. 2, Rate of Methanol Injection during start-up (m 3 / h) = 2. 2, Start-up well rate for first hour (MMscmd) = 0.25. 2, System Predosed with Methanol prior to start-up = No. 3, Rate of Methanol Injection during start-up (m 3 / h) = 0. 3, Start-up well rate for first hour (MMscmd) = 0.25. 3, System Predosed with Methanol prior to start-up = Yes. 4, Rate of Methanol Injection during start-up (m 3 / h) = 2. 4, Start-up well rate for first hour (MMscmd) = 0.25. 4, System Predosed with Methanol prior to start-up = Yes. 5, Rate of Methanol Injection during start-up (m 3 / h) = 0. 5, Start-up well rate for first hour (MMscmd) = 2.0. 5, System Predosed with Methanol prior to start-up = No. 6, Rate of Methanol Injection during start-up (m 3 / h) = 2. 6, Start-up well rate for first hour (MMscmd) = 2.0. 6, System Predosed with Methanol prior to start-up = No\nmost relevant scenarios. Temperatures in locations A-N for these cases are shown in Tables 4 and 5, respectively.\nThe tables containing the Olga results (Tabs. 4-6) include the following parameters:",
+    "text_level": 2,
+    "page_idx": 7
+  },
+  {
+    "type": "text",
+    "text": "- -Minimum fluid temperature ( ◦ C).\n- -The time from opening the choke to reaching the minimum fluid temperature.\n- -The minimum pipe wall temperature ( ◦ C)*.\n- -The time from opening the choke to reaching the minimum pipe wall temperature (s).\n- -The minimum inner wall temperature ( ◦ C)**.\n- * This is the temperature at the inner wall surface.\n- ** This is the mid-wall temperature as the pipe wall is modeled as two equal-thickness layers of identical materials.\nThe temperature profile downstream of the choke is also illustrated in Figure 7, showing the coldest location.",
+    "text_level": 2,
+    "page_idx": 8
+  },
+  {
+    "type": "text",
+    "text": "Based on the flow assurance results, it was decided to apply -60 ◦ C elsius as the design temperature for the flow loops.\nCharpy V test requirements were: average value > 55 J, minimum value > 40 J.\nConcerning the piping stress code, it was decided to apply the ASME B 31.8 code and the DNV RP F 112 [1].\nF. Busschaert et al.: Revue de Métallurgie 110 , 185-197 (2013)\n\nTable 4. Minimum fluid, wall and inner wall temperatures for case 1 in Table 4.",
+    "text_level": 2,
+    "page_idx": 9
+  },
+  {
+    "type": "text",
+    "text": "A, Minimum Fluid Temperature (C) = 92.5. A, Time to Minimum Fluid Temperature (s) = 55. A, Minimum Wall Temperature (C) = -56.8. A, Time to Minimum Wall Temperature (s) = 692. A, Minimum Inner Wall Temperature (C) = 0.6. B, Minimum Fluid Temperature (C) = -89.7. B, Time to Minimum Fluid Temperature (s) = 58. B, Minimum Wall Temperature (C) = -55.1. B, Time to Minimum Wall Temperature (s) = 693. B, Minimum Inner Wall Temperature (C) = 0.7. C, Minimum Fluid Temperature (C) = -87.7. C, Time to Minimum Fluid Temperature (s) = 58. C, Minimum Wall Temperature (C) = -54.4. C, Time to Minimum Wall Temperature (s) = 1294. C, Minimum Inner Wall Temperature (C) = 0.7. D, Minimum Fluid Temperature (C) = -87.4. D, Time to Minimum Fluid Temperature (s) = 58. D, Minimum Wall Temperature (C) = -54.5. D, Time to Minimum Wall Temperature (s) = 694. D, Minimum Inner Wall Temperature (C) = 07. E, Minimum Fluid Temperature (C) = -85.3. E, Time to Minimum Fluid Temperature (s) = 65. E, Minimum Wall Temperature (C) = -72.1. E, Time to Minimum Wall Temperature (s) = 405. E, Minimum Inner Wall Temperature (C) = -0.3. F, Minimum Fluid Temperature (C) = -81.9. F, Time to Minimum Fluid Temperature (s) = 89. F, Minimum Wall Temperature (C) = -72.0. F, Time to Minimum Wall Temperature (s) = 411. F, Minimum Inner Wall Temperature (C) = -0.3. G, Minimum Fluid Temperature (C) = -78.4. G, Time to Minimum Fluid Temperature (s) = 70. G, Minimum Wall Temperature (C) = -62.3. G, Time to Minimum Wall Temperature (s) = 627. G, Minimum Inner Wall Temperature (C) = 0.4. H, Minimum Fluid Temperature (C) = -75.3. H, Time to Minimum Fluid Temperature (s) = 329. H, Minimum Wall Temperature (C) = -51.5. H, Time to Minimum Wall Temperature (s) = 703. H, Minimum Inner Wall Temperature (C) = 11. I, Minimum Fluid Temperature (C) = -74.7. I, Time to Minimum Fluid Temperature (s) = 329. I, Minimum Wall Temperature (C) = -51.7. I, Time to Minimum Wall Temperature (s) = 703. I, Minimum Inner Wall Temperature (C) = 1.0. J, Minimum Fluid Temperature (C) = -74.5. J, Time to Minimum Fluid Temperature (s) = 329. J, Minimum Wall Temperature (C) = -51.5. J, Time to Minimum Wall Temperature (s) = 703. J, Minimum Inner Wall Temperature (C) = 1.0. K, Minimum Fluid Temperature (C) = -73.7. K, Time to Minimum Fluid Temperature (s) = 330. K, Minimum Wall Temperature (C) = -50.8. K, Time to Minimum Wall Temperature (s) = 704. K, Minimum Inner Wall Temperature (C) = 1.1. L, Minimum Fluid Temperature (C) = -72.2. L, Time to Minimum Fluid Temperature (s) = 332. L, Minimum Wall Temperature (C) =",
+    "text_level": 2,
+    "page_idx": 10
+  },
+  {
+    "type": "text",
+    "text": "-49.9. L, Time to Minimum Wall Temperature (s) = 706. L, Minimum Inner Wall Temperature (C) = 1.2. M, Minimum Fluid Temperature (C) = -71.6. M, Time to Minimum Fluid Temperature (s) = 333. M, Minimum Wall Temperature (C) = -65.1. M, Time to Minimum Wall Temperature (s) = 497. M, Minimum Inner Wall Temperature (C) = 0.2. N, Minimum Fluid Temperature (C) = -67.9. N, Time to Minimum Fluid Temperature (s) = 346. N, Minimum Wall Temperature (C) = -60.6. N, Time to Minimum Wall Temperature (s) = 645. N, Minimum Inner Wall Temperature (C) = 0.8\n\nTable 5. Minimum fluid, wall and inner wall temperatures for case 2 in Table 3.",
+    "text_level": 2,
+    "page_idx": 11
+  },
+  {
+    "type": "text",
+    "text": "A, Minimum Fluid Temperature (C) = -88.9. A, Time to Minimum Fluid Temperature (s) = 71. A, Minimum Wall Temperature (C) = -41 0. A, Time to Minimum Wall Temperature (s) = 329. A, Minimum Inner Wall Temperature (C) = 2.0. B, Minimum Fluid Temperature (C) = -86.5. B, Time to Minimum Fluid Temperature (s) = 75. B, Minimum Wall Temperature (C) = -39.0. B, Time to Minimum Wall Temperature (s) = 332. B, Minimum Inner Wall Temperature (C) = 1.9. C, Minimum Fluid Temperature (C) = 84.9. C, Time to Minimum Fluid Temperature (s) = 77. C, Minimum Wall Temperature (C) = -37.9. C, Time to Minimum Wall Temperature (s) = 934. C, Minimum Inner Wall Temperature (C) = 1.9. D, Minimum Fluid Temperature (C) = 84.7. D, Time to Minimum Fluid Temperature (s) = 77. D, Minimum Wall Temperature (C) = -38.1. D, Time to Minimum Wall Temperature (s) = 334. D, Minimum Inner Wall Temperature (C) = 1.8. E, Minimum Fluid Temperature (C) = -83.1. E, Time to Minimum Fluid Temperature (s) = 91. E, Minimum Wall Temperature (C) = -70.1. E, Time to Minimum Wall Temperature (s) = 325. E, Minimum Inner Wall Temperature (C) = 1-3. F, Minimum Fluid Temperature (C) = -810. F, Time to Minimum Fluid Temperature (s) = 110. F, Minimum Wall Temperature (C) = -70.7. F, Time to Minimum Wall Temperature (s) = 326. F, Minimum Inner Wall Temperature (C) = 1.4. G, Minimum Fluid Temperature (C) = -78.2. G, Time to Minimum Fluid Temperature (s) = 317. G, Minimum Wall Temperature (C) = -53.8. G, Time to Minimum Wall Temperature (s) = 334. G, Minimum Inner Wall Temperature (C) = 1.8. H, Minimum Fluid Temperature (C) = -76.7. H, Time to Minimum Fluid Temperature (s) = 319. H, Minimum Wall Temperature (C) = -33.2. H, Time to Minimum Wall Temperature (s) = 437. H, Minimum Inner Wall Temperature (C) = 2.3. I, Minimum Fluid Temperature (C) = -76.2. I, Time to Minimum Fluid Temperature (s) = 318. I, Minimum Wall Temperature (C) = -33.4. I, Time to Minimum Wall Temperature (s) = 437. I, Minimum Inner Wall Temperature (C) = 2.2. J, Minimum Fluid Temperature (C) = -76.0. J, Time to Minimum Fluid Temperature (s) = 318. J, Minimum Wall Temperature (C) = -33.0. J, Time to Minimum Wall Temperature (s) = 439. J, Minimum Inner Wall Temperature (C) = 2.1. K, Minimum Fluid Temperature (C) = -75.2. K, Time to Minimum Fluid Temperature (s) = 320. K, Minimum Wall Temperature (C) = 32.2. K, Time to Minimum Wall Temperature (s) = 442. K, Minimum Inner Wall Temperature (C) = 2.1. L, Minimum Fluid Temperature (C) = -74.0. L, Time to Minimum Fluid Temperature (s) = 320. L, Minimum Wall Temperature (C) = 31.1. L,",
+    "text_level": 2,
+    "page_idx": 12
+  },
+  {
+    "type": "text",
+    "text": "Time to Minimum Wall Temperature (s) = 446. L, Minimum Inner Wall Temperature (C) = 2.1. M, Minimum Fluid Temperature (C) = -73.5. M, Time to Minimum Fluid Temperature (s) = 320. M, Minimum Wall Temperature (C) = -63.8. M, Time to Minimum Wall Temperature (s) = 334. M, Minimum Inner Wall Temperature (C) = 1.5. N, Minimum Fluid Temperature (C) = -71.3. N, Time to Minimum Fluid Temperature (s) = 323. N, Minimum Wall Temperature (C) = -43.7. N, Time to Minimum Wall Temperature (s) = 352. N, Minimum Inner Wall Temperature (C) = 2.2\nTable 6. Minimum fluid, wall and inner wall temperatures for case 3 in Table 3.",
+    "text_level": 2,
+    "page_idx": 13
+  },
+  {
+    "type": "text",
+    "text": "A, Minimum Fluid Temperature (C) = -88.5. A, Time to Minimum Fluid Temperature (s) = 21. A, Minimum Wall Temperature (C) = -50.0. A, Time to Minimum Wall Temperature (s) = 1478. A, Minimum Inner Wall Temperature (C) = -0.8. B, Minimum Fluid Temperature (C) = -86.2. B, Time to Minimum Fluid Temperature (s) = 24. B, Minimum Wall Temperature (C) = -49.9. B, Time to Minimum Wall Temperature (s) = 1480. B, Minimum Inner Wall Temperature (C) = -0.6. C, Minimum Fluid Temperature (C) = -84.8. C, Time to Minimum Fluid Temperature (s) = 27. C, Minimum Wall Temperature (C) = -49.7. C, Time to Minimum Wall Temperature (s) = 1489. C, Minimum Inner Wall Temperature (C) = -0.5. D, Minimum Fluid Temperature (C) = -84.7. D, Time to Minimum Fluid Temperature (s) = 27. D, Minimum Wall Temperature (C) = -49.1. D, Time to Minimum Wall Temperature (s) = 1513. D, Minimum Inner Wall Temperature (C) = -0.2. E, Minimum Fluid Temperature (C) = -83.8. E, Time to Minimum Fluid Temperature (s) = 30. E, Minimum Wall Temperature (C) = -58.7. E, Time to Minimum Wall Temperature (s) = 303. E, Minimum Inner Wall Temperature (C) = -1.3. F, Minimum Fluid Temperature (C) = -81.2. F, Time to Minimum Fluid Temperature (s) = 32. F, Minimum Wall Temperature (C) = -54.3. F, Time to Minimum Wall Temperature (s) = 307. F, Minimum Inner Wall Temperature (C) = -1.4. G, Minimum Fluid Temperature (C) = -75.5. G, Time to Minimum Fluid Temperature (s) = 40. G, Minimum Wall Temperature (C) = -50.0. G, Time to Minimum Wall Temperature (s) = 1478. G, Minimum Inner Wall Temperature (C) = -0.9. H, Minimum Fluid Temperature (C) = -69.3. H, Time to Minimum Fluid Temperature (s) = 1259. H, Minimum Wall Temperature (C) = -50.5. H, Time to Minimum Wall Temperature (s) = 1027. H, Minimum Inner Wall Temperature (C) = -0.9. I, Minimum Fluid Temperature (C) = -67.8. I, Time to Minimum Fluid Temperature (s) = 1259. I, Minimum Wall Temperature (C) = -50.2. I, Time to Minimum Wall Temperature (s) = 1479. I, Minimum Inner Wall Temperature (C) = -0.4. J, Minimum Fluid Temperature (C) = -67.3. J, Time to Minimum Fluid Temperature (s) = 1259. J, Minimum Wall Temperature (C) = -49.7. J, Time to Minimum Wall Temperature (s) = 1495. J, Minimum Inner Wall Temperature (C) = -0.1. K, Minimum Fluid Temperature (C) = -67.2. K, Time to Minimum Fluid Temperature (s) = 1260. K, Minimum Wall Temperature (C) = -49.5. K, Time to Minimum Wall Temperature (s) = 1505. K, Minimum Inner Wall Temperature (C) = 0.0. L, Minimum Fluid Temperature (C) = -73.8. L, Time to Minimum",
+    "text_level": 2,
+    "page_idx": 14
+  },
+  {
+    "type": "text",
+    "text": "Fluid Temperature (s) = 68. L, Minimum Wall Temperature (C) = -49.4. L, Time to Minimum Wall Temperature (s) = 1508. L, Minimum Inner Wall Temperature (C) = 0.0. M, Minimum Fluid Temperature (C) = -65.2. M, Time to Minimum Fluid Temperature (s) = 1261. M, Minimum Wall Temperature (C) = -50.2. M, Time to Minimum Wall Temperature (s) = 1424. M, Minimum Inner Wall Temperature (C) = -1.0. N, Minimum Fluid Temperature (C) = -62.6. N, Time to Minimum Fluid Temperature (s) = 1262. N, Minimum Wall Temperature (C) = -50.0. N, Time to Minimum Wall Temperature (s) = 1483. N, Minimum Inner Wall Temperature (C) = -0.7\nFig. 8. Production fluid temperature downstream of the choke calculated with Fluent CFD.",
+    "text_level": 2,
+    "page_idx": 15
+  },
+  {
+    "type": "text",
+    "text": "As per Figure 9, the di ff erent components to be taken into account were tees, elbows, flanges, hot extruded seamless pipes and Hot Isostatically-Pressed (HIP) hubs.",
+    "text_level": 2,
+    "page_idx": 16
+  },
+  {
+    "type": "text",
+    "text": "Among the di ff erent super duplex grades, the following were selected:\n- -UNS 32550 for the HIP components.\n- -UNS 32760 for all other components.",
+    "text_level": 2,
+    "page_idx": 17
+  },
+  {
+    "type": "text",
+    "text": "It was decided that among the di ff erent types of components of the flow loop, only seamless pipes and forged flanges would be tested, since they were either the coldest or the thickest parts of the flow loop assembly.\nThe scope of the work included two phases. The first phase consisted of mechanical tests and metallographic examination of the base metal of 25% Cr DSS seamless pipes and flanges. Both seamless pipes and flanges were supplied from stockists according to ASTM and Norsok Material data sheets, as mentioned in Table 7, and consequently were impact-tested at -46 ◦ C.\nIn addition to the tests required by these two standards, impact tests were performed at lower temperatures starting from -60 ◦ C down to -100 ◦ C.\nFig. 9. Flow loop layout Components.\nThe second phase was dedicated to assessing the impact properties of two butt welds using the GTAW (Gas Tungsten Arc Welding) process.\nThe project impact test requirements were:\n- -55 J average at -60 ◦ C;\n- -40 J minimum at -60 ◦ C.\nTable 7. Characteristics of the tested components.\n\nSeamless Tube (2 heats), Dimension = 6 ′′ SCH XXS. Seamless Tube (2 heats), Grade = UNS 32760. Seamless Tube (2 heats), Standard = ASTM A790. Seamless Tube (2 heats), Additional spec. = NORSOK MDSD51. 5 1 / 8 ′′ Flange (one heat), Dimension = 5 1 / 8 ′′ WN15000 psi. 5 1 / 8 ′′ Flange (one heat), Grade = UNS 32760. 5 1 / 8 ′′ Flange (one heat), Standard = ASTM A182 F55. 5 1 / 8 ′′ Flange (one heat), Additional spec. = NORSOK MDSD54\nFig. 10. Seamless pipe and flange results.",
+    "text_level": 2,
+    "page_idx": 18
+  },
+  {
+    "type": "text",
+    "text": "Thetest results are summarized in Figure 10.\nThe test data on the 6 ′′ seamless pipe indicated that impact values were within the project requirements and were actually higher than expected, even at very low temperatures down to -100 ◦ C.\nThe 25%Cr DSS hot extruded pipe ductile behavior was expected in relation to the homogeneous fine-grain structure resulting from the extrusion process and a proper solution annealing.\nOn the contrary, the 5 1 / 8 ′′ flange impact test results were not in accordance with the project requirements at -60 ◦ C and dropped significantly at lower temperatures. Coarse-grain structures were expected in such forged parts but other detrimental factors also contributed to obtaining such low values. The metallographic examination revealed the presence of chromium nitrides, Cr2N, as shown in Figure 11. These observations are in agreement with those of Bruch [2].\nFaced with such a situation, it was decided to test smaller flange sizes of 4 ′′ WN and 2 1 / 16 ′′ WN (Welding Neck) from the sameforgemasterandofdi ff erent heats. The impact test results were also too low:\n- -at -60 ◦ C results were between 19 and 54 J;\n- -at -70 ◦ C results were between 14 and 33 J.\nCharpy test results from both flanges were unacceptable and led to the rejection of the\nFig. 11. Forged flange microstructure.\ntested batches. Chromium nitrides were also detected during the metallographic examination of these two additional flanges.",
+    "text_level": 2,
+    "page_idx": 19
+  },
+  {
+    "type": "text",
+    "text": "During this second phase, the performance of two single V bevel GTAW butt welds was evaluated. The GTAW process was selected among other welding processes to achieve the best toughness properties [3].\nThe first butt weld was performed between two pipes and the second one between a pipe and a flange. The characteristics of these components are described in Table 7. Regarding the welding parameters, the root and 'cold pass' were performed by manual GTAW. Automatic pulsed GTAW in the 1 G position (flat position) was used for the remaining passes with a matching filler wireclassified as ER 2553. A heat input range from 0.5 to 1.2 KJ / mm was used and well controlled during the weld execution. The inter-pass temperature was limited to 75 ◦ C (water cooling was used after the completion of the third pass). An example of the butt weld is shown in Figure 12.",
+    "text_level": 2,
+    "page_idx": 20
+  },
+  {
+    "type": "text",
+    "text": "The butt welds were first examined by dye penetrant inspection and radiography prior to the tests.\nAll the tensile tests, bending tests, hardness measurements, metallographic examinations, ferrite contents and ASTM G48\ncorrosion tests performed on the S32760 to S32760 pipe-to-pipe butt weld were in compliance with the project requirements.\nThe impact test results on the same pipeto-pipe butt weld also complied with the project requirements (Fig. 13). They actually showed high impact test values of around 220 J for the weld metal and 150 J at the fusion line of the pipe.\nAfewtests, including metallographic examination, ferrite content, ASTM G48 and impact, were also performed on the butt weld between the pipe and flange. These tests were acceptable, with the exception of some impact values (44, 20 and 19 J) on the S32760 flange side taken on specimens located near the fusion line (CVN notch located 2 mm from the fusion line interface between the pipe and weld metal).\nExtra impact tests on the weld neck of the flange confirmed the brittle behavior of the flange (10, 11, 10 J at -60 ◦ C). Once more, the detrimental e ff ect of precipitation on toughness properties [4] of the flange body was illustrated. No secondary austenite was detected in the weld metal as a typical feature, shown by Gunn [5].\nThese impact test results are reported for comparison in Figure 13.",
+    "text_level": 2,
+    "page_idx": 21
+  },
+  {
+    "type": "text",
+    "text": "This extensive qualification program highlighted:\n- -The very good impact test properties of the 6 ′′ seamless pipes schedule XXS with an average value of around 150 J down to -100 ◦ C,\n- -Theunexpected low impact properties of the 6 ′′ forged flanges at -46 ◦ C on specimens taken from the hub and weld neck,\n- -The consistently low impact test values of forged flanges of smaller dimensions at -60 ◦ C.\nThese results led to the rejection of the flange batches. The reason for the low-impact energy values on flanges was unknown, but the solution annealing and the cooling rate in particular were strongly suspected. Other parameters such as chemical composition and the forging ratio could also contribute to these low-quality results.\n- F. Busschaert et al.: Revue de Métallurgie 110 , 185-197 (2013)\nFig. 12. Completed pipe-to-pipe butt weld.\nFig. 13. Charpy V test results for butt welds.\nRegarding the GTAW butt welds, the impact test values at -60 ◦ C showed quite acceptable values, with an average value of around 220 J in the weld metal, and 150 J in the pipe side. No significant drop in impact properties was observed at -80 ◦ C in the weld metal. The present work confirmed that the GTAW welding process was the correct process to achieve the expected level of impact test properties.",
+    "text_level": 2,
+    "page_idx": 22
+  },
+  {
+    "type": "text",
+    "text": "The extensive test program demonstrated that the low-temperature challenges were technically achievable.\nFig. 14. Flow loop Charpy test results.\nThe way forward was to select forge masters with associated heat treatment facilities able to comply with the project requirements. Selection of these facilities was accomplished by site visits and assessing their technical capabilities. The decision was then taken to proceed with the procurement of the bulk material of the flow loop.",
+    "text_level": 2,
+    "page_idx": 23
+  },
+  {
+    "type": "text",
+    "text": "The supply chain was composed of four main manufacturers for fittings, flanges, pipes and HIP components.\nThe typical test results of some components such as flanges, reduced tees, blind caps and HIP hubs are summarized in Figure 14.\nThe following comments can be made from Figure 14:\n- -despite a large scatter impact, tests on the 6 ′′ blind caps gave very high values between -60 ◦ C and -80 ◦ C, with more than 160 J at -60 ◦ C and a minimum of 100 J at -80 ◦ C;\n- -an average impact test value of 55 J at -80 ◦ Candalowerboundof80Jat-60 ◦ C were obtained on the 6 ′′ × 3 ′′ tees;\n- -5 1 / 8 ′′ flange impact test results gave an average value of 110 J at -60 ◦ C down to 25 J at -80 ◦ C;\n- -lower but still acceptable values were obtained from the HIP hub impact tests. An average value of 70 J at -60 ◦ C and a minimum of 50 J at -70 ◦ C are shown in Figure 14.\nAll the other Charpy V tested components were within the project required values (55 J / 40 J av. / min. at -60 ◦ C). All other mechanical properties were in compliance with the Norsok MDS, and in particular, the microstructures were free from any deleterious phases.",
+    "text_level": 2,
+    "page_idx": 24
+  },
+  {
+    "type": "text",
+    "text": "Several Welding Procedure Qualifications (WPQ) were performed due to the combination of the di ff erent steel grades such as UNS S32550 and S32760 used on the flow loops. The two combinations UNS S32760 to S32760 and UNS S32550 to S32760 were performed on the same dimensions and heat\nFig. 15. Welding procedure qualification minimum average Charpy V test results at -60 ◦ C.\nnumbers as the production flow loop components. The manual GTAW welding process was used for the single V butt weld performancewithamatchingfiller wire classified W 2594NL. A heat input range from 0.8 to 1.5 kJ / mm was used and well controlled during the weld execution. A maximum interpass temperature of 147 ◦ C was recorded during the WPQ tests. The Charpy V test results of these WPQ are tabulated in Figure 15. The test results on tensile, bend, hardness, metallographic examination and ferrite content, as well as ASTM G48 corrosion tests, were all satisfactory.\nThe impact test results on UNS S32760 to S32760 pipe-to-pipe butt welds complied with the project requirements. Minimum average impact values at -60 ◦ C were about 150 J, 120 J and 150 J in the weld metal, the pipe cap fusion line and the pipe root fusion line, respectively. The Charpy test results on UNS S32550 HIP to S32760 flange complied with the project requirements, with the exception of the HIP root, which had an average value of 39 J. The impact test results of the forged fusion line showed a very large scatter (60 to 210 J). This may be explained by Charpy specimen notches possibly located in the weld metal. No deleterious phases such as sigma or secondary austenite were detected in the weld metal or the heata ff ected zone.",
+    "text_level": 2,
+    "page_idx": 25
+  },
+  {
+    "type": "text",
+    "text": "Flow assurance simulations of the Hild choke module showed that very low temperaturescouldbereachedduringcoldstartup. Some of the components of this module weredesignedin duplex stainless steels, and hence their low-temperature properties had to be tested. The properties of the various product types were tested.\nThe present work demonstrated that good impact test values could be achieved at -60 ◦ C on 25% Cr duplex stainless steel components with some size limitations.\nImpact test values varied with the type of component:\n- -Seamlesspipehadaveragevaluesof120J down to -100 ◦ C;\n- -Forged flanges showed an average value of 110 J at -60 ◦ C but down to 25 J at -80 ◦ C. The chemical composition, forging process and solution annealing, including heat treatment temperature and quenching phases, had to be optimizedbythemanufacturertoreachthese results;\n- -HIPhubresultsshowedanaveragevalue of 70 J at -60 ◦ C down to 55 J at -70 ◦ C;\n- -Other components such as forged tees and blind caps had good impact properties down to -80 ◦ C.\nGTAWbutt welds also showed good impact properties down to -80 ◦ C.\nThese qualifications and manufactured product tests demonstrated the feasibility of using 25% Cr duplex stainless steels at low temperaturesdownto-60 ◦ Candevenlower for some products. However, caution must be exercised for heavy-wall components, as these would be expected to have lower impact energy values away from the outer surface. Detailed qualification testing would be required.\nIn addition, GTAW process impact properties will also not be valid for other welding processes. Qualification testing would also be required.",
+    "text_level": 2,
+    "page_idx": 26
+  }
+]

@@ -289,6 +289,14 @@ class PlanGenerator:
                 "total_tokens": response.total_tokens,
                 "retrieved_bullets_count": len(relevant_bullets),
                 "retrieved_bullet_ids": [b.id for b in relevant_bullets],
+                "templates_retrieved": [
+                    {
+                        "title": t.get("title", ""),
+                        "score": t.get("score", 0),
+                        "content_preview": t.get("content", "")[:100]
+                    }
+                    for t in templates
+                ] if templates else [],
                 "duration": total_duration
             },
             timestamp=datetime.now()

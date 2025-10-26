@@ -79,6 +79,10 @@ def format_templates(templates: List[Dict]) -> str:
     """
     Format retrieved templates for prompt.
 
+    Supports both Mock RAG format and Real RAG format:
+    - Mock RAG: {title, procedure_summary, key_points}
+    - Real RAG: {title, content, score}
+
     Args:
         templates: List of template dicts from RAG
 
@@ -92,9 +96,11 @@ def format_templates(templates: List[Dict]) -> str:
     for i, template in enumerate(templates, 1):
         lines.append(f"\n### Template {i}")
 
+        # Title（通用）
         if "title" in template:
             lines.append(f"**Title**: {template['title']}")
 
+        # Mock RAG 格式（向后兼容）
         if "procedure_summary" in template:
             lines.append(f"**Procedure**: {template['procedure_summary']}")
 
@@ -102,6 +108,22 @@ def format_templates(templates: List[Dict]) -> str:
             lines.append("**Key Points**:")
             for point in template["key_points"]:
                 lines.append(f"  - {point}")
+
+        # Real RAG 格式（新增）
+        if "content" in template:
+            # 截取前500字符作为预览（避免过长）
+            content = template["content"]
+            max_length = 500
+            if len(content) > max_length:
+                content_preview = content[:max_length] + "... (内容已截断)"
+            else:
+                content_preview = content
+
+            lines.append(f"**Content**:\n{content_preview}")
+
+        # 相关度分数（可选）
+        if "score" in template:
+            lines.append(f"**Relevance Score**: {template['score']:.3f}")
 
     return "\n".join(lines)
 

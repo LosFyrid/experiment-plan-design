@@ -285,28 +285,9 @@ def main():
         log_dir = Path("logs")
         log_dir.mkdir(exist_ok=True)
 
-        # 1. Chatbot（重定向输出到日志文件）
+        # 1. Chatbot（直接初始化，输出自然显示）
         print("  [1/2] 初始化Chatbot...")
-        chatbot_log = log_dir / "chatbot_init.log"
-
-        # 保存原始stdout/stderr
-        import sys
-        original_stdout = sys.stdout
-        original_stderr = sys.stderr
-
-        try:
-            # 重定向到日志文件
-            with open(chatbot_log, 'w', encoding='utf-8') as f:
-                sys.stdout = f
-                sys.stderr = f
-
-                # 初始化Chatbot（所有输出被重定向）
-                bot = Chatbot(config_path="configs/chatbot_config.yaml")
-
-        finally:
-            # 恢复原始stdout/stderr
-            sys.stdout = original_stdout
-            sys.stderr = original_stderr
+        bot = Chatbot(config_path="configs/chatbot_config.yaml")
 
         # 2. TaskScheduler（替换原来的Generator和LLM）
         print("  [2/2] 初始化TaskScheduler...")

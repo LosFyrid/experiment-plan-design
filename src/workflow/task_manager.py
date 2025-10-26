@@ -49,6 +49,9 @@ class GenerationTask:
     metadata: Dict = field(default_factory=dict)
     error: Optional[str] = None
 
+    # 缓存失效机制：记录文件最后修改时间
+    _file_mtime: Optional[float] = field(default=None, repr=False)
+
     @property
     def requirements_file(self) -> Path:
         """需求文件路径"""
@@ -212,8 +215,13 @@ class TaskManager:
         atexit.register(self._cleanup_on_exit)
 
         # 注册信号处理（优雅关闭）
-        signal.signal(signal.SIGTERM, self._signal_handler)
-        signal.signal(signal.SIGINT, self._signal_handler)
+        # 注意：signal只能在主线程注册，在其他线程会抛出ValueError
+        try:
+            signal.signal(signal.SIGTERM, self._signal_handler)
+            signal.signal(signal.SIGINT, self._signal_handler)
+        except ValueError:
+            # 不在主线程，跳过信号注册（例如在TUI的后台线程中初始化）
+            pass
 
     def start(self, as_daemon: bool = False):
         """启动工作线程
@@ -407,13 +415,8 @@ class TaskManager:
         return task_id
 
     def get_task(self, task_id: str) -> Optional[GenerationTask]:
-        """获取任务（从内存或磁盘）"""
-        with self.task_lock:
-            # 先从内存查找
-            if task_id in self.tasks:
-                return self.tasks[task_id]
-
-        # 从磁盘加载
+        """获取任务（自动检测文件变化，智能刷新缓存）"""
+        # 检查任务文件是否存在
         task_dir = self.tasks_dir / task_id
         if not task_dir.exists():
             return None
@@ -423,10 +426,27 @@ class TaskManager:
             return None
 
         try:
+            # 获取文件当前修改时间
+            current_mtime = task_file.stat().st_mtime
+
+            with self.task_lock:
+                # 如果缓存存在，检查文件是否被修改
+                if task_id in self.tasks:
+                    cached_task = self.tasks[task_id]
+
+                    # 智能刷新：只有文件被修改时才重新加载
+                    if cached_task._file_mtime == current_mtime:
+                        return cached_task  # 文件未变化，返回缓存（快速）
+                    else:
+                        # 文件已被修改（子进程更新了），清除缓存
+                        del self.tasks[task_id]
+
+            # 从磁盘加载最新数据
             with open(task_file, 'r', encoding='utf-8') as f:
                 task_data = json.load(f)
 
             task = GenerationTask.from_dict(task_data, task_dir)
+            task._file_mtime = current_mtime  # 记录加载时的mtime
 
             # 缓存到内存
             with self.task_lock:
