@@ -74,7 +74,7 @@ Your role is to maintain playbook quality through **incremental delta updates**:
 - UPDATE existing bullets to improve clarity or correctness
 - REMOVE harmful or redundant bullets
 
-**Critical Principles** (ACE Paper §3.1-3.2):
+**Critical Principles**:
 
 1. **Incremental Updates**: Generate small, targeted changes (not full rewrites)
 2. **Semantic Specificity**: Make bullets concrete, actionable, and non-obvious
