@@ -338,7 +338,7 @@ curator = PlaybookCurator(
     logger=curator_logger,
     perf_monitor=perf_monitor,
     llm_tracker=curator_llm_tracker,
-    allow_new_sections=True  # 运行时控制是否允许新sections
+    allow_new_sections=allow_new_sections  # 使用上面定义的变量（默认None=配置文件）
 )
 
 size_before = playbook_manager.playbook.size

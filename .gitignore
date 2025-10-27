@@ -32,6 +32,10 @@ config/api_keys.yml
 
 # 数据 (根据需要决定是否跟踪)
 
+# Embedding 缓存文件 (机器生成，不纳入版本控制)
+*.embeddings
+.*.embeddings
+*.embeddings.tmp
 
 # Notebook 缓存
 .ipynb_checkpoints/

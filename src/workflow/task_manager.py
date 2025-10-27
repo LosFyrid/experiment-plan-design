@@ -49,6 +49,18 @@ class GenerationTask:
     metadata: Dict = field(default_factory=dict)
     error: Optional[str] = None
 
+    # 重试机制相关字段
+    retry_count: int = 0
+    max_retries: int = 3
+    failed_stage: Optional[str] = None  # extracting, retrieving, generating, evaluating, reflecting, curating
+    retry_history: List[Dict] = field(default_factory=list)
+
+    # Feedback流程状态（独立于主任务状态）
+    feedback_status: Optional[str] = None  # pending, running, completed, failed
+    feedback_error: Optional[str] = None
+    feedback_retry_count: int = 0
+    feedback_mode: Optional[str] = None  # auto, llm_judge, human - 记录评估模式
+
     # 缓存失效机制：记录文件最后修改时间
     _file_mtime: Optional[float] = field(default=None, repr=False)
 
@@ -66,6 +78,26 @@ class GenerationTask:
     def plan_file(self) -> Path:
         """方案文件路径"""
         return self.task_dir / "plan.json"
+
+    @property
+    def generation_result_file(self) -> Path:
+        """完整生成结果文件路径（包含trajectory和bullets）"""
+        return self.task_dir / "generation_result.json"
+
+    @property
+    def feedback_file(self) -> Path:
+        """反馈文件路径"""
+        return self.task_dir / "feedback.json"
+
+    @property
+    def reflection_file(self) -> Path:
+        """反思结果文件路径"""
+        return self.task_dir / "reflection.json"
+
+    @property
+    def curation_file(self) -> Path:
+        """Playbook更新记录文件路径"""
+        return self.task_dir / "curation.json"
 
     def save_requirements(self, requirements: Dict):
         """保存需求到文件"""
@@ -97,6 +129,90 @@ class GenerationTask:
         with open(self.plan_file, 'w', encoding='utf-8') as f:
             json.dump(plan_dict, f, indent=2, ensure_ascii=False)
 
+    def save_generation_result(self, generation_result):
+        """保存完整的GenerationResult（包含trajectory和bullets）
+
+        Args:
+            generation_result: GenerationResult对象，包含：
+                - generated_plan: ExperimentPlan
+                - trajectory: List[ReasoningStep]
+                - relevant_bullets: List[str]
+                - generation_metadata: Dict
+        """
+        # 使用Pydantic的mode='json'进行序列化（处理datetime等特殊类型）
+        result_dict = {
+            "plan": generation_result.generated_plan.model_dump(mode='json'),
+            "trajectory": [step.model_dump(mode='json') for step in generation_result.trajectory],
+            "relevant_bullets": generation_result.relevant_bullets,
+            "generation_metadata": generation_result.generation_metadata
+        }
+
+        with open(self.generation_result_file, 'w', encoding='utf-8') as f:
+            json.dump(result_dict, f, indent=2, ensure_ascii=False)
+
+    def load_generation_result(self) -> Optional[Dict]:
+        """加载GenerationResult
+
+        Returns:
+            包含plan、trajectory、relevant_bullets、generation_metadata的字典，
+            如果文件不存在则返回None
+        """
+        if not self.generation_result_file.exists():
+            return None
+
+        with open(self.generation_result_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+
+    def save_feedback(self, feedback):
+        """保存评估反馈
+
+        Args:
+            feedback: FeedbackResult对象
+        """
+        feedback_dict = feedback.model_dump(mode='json')
+
+        with open(self.feedback_file, 'w', encoding='utf-8') as f:
+            json.dump(feedback_dict, f, indent=2, ensure_ascii=False)
+
+    def save_reflection(self, reflection):
+        """保存反思结果
+
+        Args:
+            reflection: ReflectionResult对象
+        """
+        reflection_dict = reflection.model_dump(mode='json')
+
+        with open(self.reflection_file, 'w', encoding='utf-8') as f:
+            json.dump(reflection_dict, f, indent=2, ensure_ascii=False)
+
+    def save_curation(self, curation):
+        """保存Playbook更新记录
+
+        Args:
+            curation: PlaybookUpdateResult对象
+        """
+        curation_dict = curation.model_dump(mode='json')
+
+        # 🔧 移除 embedding 以减小文件大小
+        # Embedding 只用于去重，保存到文件后不再需要
+        if 'updated_playbook' in curation_dict and 'bullets' in curation_dict['updated_playbook']:
+            for bullet in curation_dict['updated_playbook']['bullets']:
+                if 'metadata' in bullet and 'embedding' in bullet['metadata']:
+                    bullet['metadata']['embedding'] = None
+
+        # 也清理 delta_operations 中的 embedding
+        if 'delta_operations' in curation_dict:
+            for op in curation_dict['delta_operations']:
+                if 'new_bullet' in op and op['new_bullet'] and 'metadata' in op['new_bullet']:
+                    if 'embedding' in op['new_bullet']['metadata']:
+                        op['new_bullet']['metadata']['embedding'] = None
+                if 'old_bullet' in op and op['old_bullet'] and 'metadata' in op['old_bullet']:
+                    if 'embedding' in op['old_bullet']['metadata']:
+                        op['old_bullet']['metadata']['embedding'] = None
+
+        with open(self.curation_file, 'w', encoding='utf-8') as f:
+            json.dump(curation_dict, f, indent=2, ensure_ascii=False)
+
     def to_dict(self) -> Dict:
         """序列化为字典"""
         return {
@@ -110,7 +226,17 @@ class GenerationTask:
             "error": self.error,
             "metadata": self.metadata,
             "task_dir": str(self.task_dir) if self.task_dir else None,
-            "log_file": str(self.log_file) if self.log_file else None
+            "log_file": str(self.log_file) if self.log_file else None,
+            # Retry相关字段
+            "retry_count": self.retry_count,
+            "max_retries": self.max_retries,
+            "failed_stage": self.failed_stage,
+            "retry_history": self.retry_history,
+            # Feedback相关字段
+            "feedback_status": self.feedback_status,
+            "feedback_error": self.feedback_error,
+            "feedback_retry_count": self.feedback_retry_count,
+            "feedback_mode": self.feedback_mode
         }
 
     @classmethod
@@ -124,7 +250,17 @@ class GenerationTask:
             task_dir=task_dir,
             log_file=Path(data["log_file"]) if data.get("log_file") else None,
             metadata=data.get("metadata", {}),
-            error=data.get("error")
+            error=data.get("error"),
+            # Retry相关字段
+            retry_count=data.get("retry_count", 0),
+            max_retries=data.get("max_retries", 3),
+            failed_stage=data.get("failed_stage"),
+            retry_history=data.get("retry_history", []),
+            # Feedback相关字段
+            feedback_status=data.get("feedback_status"),
+            feedback_error=data.get("feedback_error"),
+            feedback_retry_count=data.get("feedback_retry_count", 0),
+            feedback_mode=data.get("feedback_mode")
         )
 
 

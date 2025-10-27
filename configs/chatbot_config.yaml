@@ -16,7 +16,7 @@ chatbot:
 
   # 记忆配置
   memory:
-    type: "in_memory"        # "in_memory" | "sqlite"
+    type: "sqlite"        # "in_memory" | "sqlite"
     # 内存模式：用于开发调试，会话结束后记录丢失
     # SQLite模式：持久化存储，可恢复之前的对话窗口
     sqlite_path: "data/chatbot_memory.db"  # 仅当type=sqlite时使用

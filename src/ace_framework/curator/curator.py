@@ -410,9 +410,10 @@ class PlaybookCurator:
                         metadata=BulletMetadata(source="reflection")
                     )
 
+                # 🔧 修复：对于 ADD 操作，使用生成的 bullet_id，而非 op_data 中的 None
                 operation = DeltaOperation(
                     operation=op_data["operation"],
-                    bullet_id=op_data.get("bullet_id"),
+                    bullet_id=bullet_id if op_data["operation"] == "ADD" else op_data.get("bullet_id"),
                     new_bullet=new_bullet,
                     reason=op_data.get("reason", "")
                 )
@@ -511,6 +512,9 @@ class PlaybookCurator:
             print(f"Warning: Bullet {operation.bullet_id} not found for UPDATE")
             return
 
+        # 🔧 Save old content for rollback capability
+        operation.old_content = bullet.content
+
         # Update content
         self.playbook_manager.update_bullet(
             bullet_id=operation.bullet_id,
@@ -533,6 +537,17 @@ class PlaybookCurator:
             print("Warning: REMOVE operation missing bullet_id")
             return
 
+        # 🔧 Save complete bullet before removal for rollback capability
+        bullet = self.playbook_manager.playbook.get_bullet_by_id(operation.bullet_id)
+        if bullet is None:
+            print(f"Warning: Bullet {operation.bullet_id} not found for REMOVE")
+            return
+
+        # Deep copy the bullet to preserve all information
+        import copy
+        operation.removed_bullet = copy.deepcopy(bullet)
+
+        # Remove the bullet
         removed = self.playbook_manager.remove_bullet(operation.bullet_id)
         if removed:
             print(f"Removed bullet: {operation.bullet_id}")
@@ -544,7 +559,7 @@ class PlaybookCurator:
                 reason=operation.reason
             )
         else:
-            print(f"Warning: Bullet {operation.bullet_id} not found for REMOVE")
+            print(f"Warning: Failed to remove bullet {operation.bullet_id}")
 
     # ========================================================================
     # Deduplication (ACE §3.2)

@@ -1,4 +1,4 @@
-"""命令处理器 - 处理/generate等命令
+"""命令处理器 - 处理/generate、/retry等命令
 
 负责整个生成工作流的编排：
 1. 提取需求（保存到文件）
@@ -22,6 +22,7 @@ from workflow.task_manager import (
     GenerationTask,
     LogWriter
 )
+from workflow.retry_handler import RetryHandler
 from ace_framework.generator.generator import PlanGenerator
 from utils.llm_provider import BaseLLMProvider, extract_json_from_text
 
@@ -402,3 +403,95 @@ class GenerateCommandHandler:
         log.write(f"提取到 {len(requirements)} 个字段")
 
         return requirements
+
+
+class RetryCommandHandler:
+    """处理 /retry 命令 - 重试失败的任务
+
+    支持两种重试策略：
+    1. 部分重试（默认）：从失败点继续
+    2. 完全重试（--clean）：从头开始
+    """
+
+    def __init__(self, task_scheduler):
+        """
+        Args:
+            task_scheduler: TaskScheduler 实例（用于重启子进程）
+        """
+        self.task_scheduler = task_scheduler
+        self.task_manager = get_task_manager()
+        self.retry_handler = RetryHandler(self.task_manager)
+
+    def handle(
+        self,
+        task_id: str,
+        clean: bool = False,
+        force: bool = False,
+        force_stage: Optional[str] = None,
+        override_mode: Optional[str] = None,
+        keep_playbook: bool = True
+    ) -> bool:
+        """处理重试命令（支持所有状态）
+
+        Args:
+            task_id: 任务ID
+            clean: 是否完全清理
+            force: 是否强制重试
+            force_stage: 强制指定阶段
+            override_mode: 覆盖评估模式
+            keep_playbook: 是否保留 playbook bullets
+
+        Returns:
+            是否成功
+        """
+        # 1. 加载任务
+        task = self.task_manager.get_task(task_id)
+        if not task:
+            print(f"❌ 任务 {task_id} 不存在")
+            return False
+
+        # 2. 检查并终止残留子进程
+        if task_id in self.task_scheduler.processes:
+            print(f"⚠️  检测到残留子进程，正在终止...")
+            self.task_scheduler.terminate_task(task_id)
+            time.sleep(1)  # 等待进程完全退出
+
+        # 3. 执行重试准备
+        success = self.retry_handler.execute_retry(
+            task=task,
+            clean=clean,
+            force=force,
+            force_stage=force_stage,
+            keep_playbook=keep_playbook
+        )
+
+        if not success:
+            return False
+
+        # 4. 重新加载任务（状态已更新）
+        task = self.task_manager.get_task(task_id)
+
+        # 5. 根据策略启动子进程
+        # 别名映射（与 retry_handler 保持一致）
+        stage_aliases = {
+            "generate": "generating",
+            "feedback": "evaluating"
+        }
+        actual_stage = stage_aliases.get(force_stage, force_stage) if force_stage else None
+
+        if actual_stage in ['evaluating', 'reflecting', 'curating']:
+            # Feedback 流程：使用独立子进程
+            success = self.task_scheduler.submit_feedback_task(
+                task_id=task_id,
+                evaluation_mode=override_mode
+            )
+        else:
+            # 主流程：恢复任务
+            success = self.task_scheduler.resume_task(task_id)
+
+        if success:
+            print(f"\n✅ 子进程已启动，使用 /logs {task_id} 查看进度")
+        else:
+            print(f"\n❌ 子进程启动失败")
+
+        return success

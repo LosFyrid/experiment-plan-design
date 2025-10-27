@@ -6,10 +6,12 @@ Implements playbook operations:
 - Semantic bullet retrieval (top-k similarity)
 - Metadata updates (helpful/harmful counts)
 - ID generation with section prefixes
+- Embedding cache management (独立文件，支持增量更新)
 """
 
 import json
 import os
+import hashlib
 from datetime import datetime
 from pathlib import Path
 from typing import List, Optional, Dict, Tuple
@@ -21,6 +23,10 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from utils.qwen_embedding import QwenEmbeddingProvider, util
 
 from .schemas import Playbook, PlaybookBullet, BulletMetadata, BulletTag
+
+# Embedding cache 配置
+CACHE_VERSION = "1.0"
+CACHE_EMBEDDING_DIM = 1024  # Qwen text-embedding-v4 的维度
 
 
 class PlaybookManager:
@@ -46,6 +52,9 @@ class PlaybookManager:
             api_key: Qwen API密钥（如果不提供，从环境变量读取）
         """
         self.playbook_path = Path(playbook_path)
+        # Cache 文件路径：在同目录下，文件名前加点（隐藏文件）
+        self.cache_path = self.playbook_path.parent / f".{self.playbook_path.stem}.embeddings"
+        self.embedding_model = embedding_model
         self.embedding_provider = QwenEmbeddingProvider(model=embedding_model, api_key=api_key)
         self._playbook: Optional[Playbook] = None
         self._embeddings_cache: Dict[str, np.ndarray] = {}  # bullet_id -> embedding
@@ -56,7 +65,14 @@ class PlaybookManager:
 
     def load(self) -> Playbook:
         """
-        Load playbook from JSON file.
+        Load playbook from JSON file with embedding cache support.
+
+        流程：
+        1. 加载 playbook.json
+        2. 尝试加载 cache 文件
+        3. 检测同步状态
+        4. 增量更新（只计算变化的部分）
+        5. 保存更新后的 cache
 
         Returns:
             Playbook object
@@ -67,20 +83,61 @@ class PlaybookManager:
         if not self.playbook_path.exists():
             raise FileNotFoundError(f"Playbook not found: {self.playbook_path}")
 
+        # Step 1: 加载主文件
         with open(self.playbook_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
 
         # Parse with Pydantic for validation
         self._playbook = Playbook(**data)
 
-        # Build embeddings cache
-        self._build_embeddings_cache()
+        # Step 2: 加载缓存
+        cache_data = self._load_cache_file()
+
+        if cache_data is None:
+            print("  ℹ️  缓存文件不存在，将创建新缓存")
+            cache_data = self._create_empty_cache()
+
+        # Step 3: 检测同步状态
+        sync_status = self._detect_sync_status(self._playbook, cache_data)
+
+        needs_compute = sync_status["needs_create"] + sync_status["needs_update"]
+
+        if needs_compute:
+            print(f"  🔄 需要更新 {len(needs_compute)} 个 embedding")
+            if sync_status['needs_create']:
+                print(f"     新增: {len(sync_status['needs_create'])}")
+            if sync_status['needs_update']:
+                print(f"     更新: {len(sync_status['needs_update'])}")
+            if sync_status['needs_delete']:
+                print(f"     删除: {len(sync_status['needs_delete'])}")
+
+            # Step 4: 批量计算
+            self._compute_and_update_embeddings(self._playbook, needs_compute, cache_data)
+        else:
+            print(f"  ✅ 缓存完全同步，加载 {len(sync_status['up_to_date'])} 个 embedding")
+
+        # Step 5: 删除过期的缓存
+        for bullet_id in sync_status["needs_delete"]:
+            if bullet_id in cache_data["embeddings"]:
+                del cache_data["embeddings"][bullet_id]
+
+        # Step 6: 加载到内存
+        self._load_embeddings_to_memory(self._playbook, cache_data)
+
+        # Step 7: 保存更新后的缓存
+        if needs_compute or sync_status["needs_delete"]:
+            self._save_cache_file(cache_data)
 
         return self._playbook
 
     def save(self, playbook: Optional[Playbook] = None) -> None:
         """
-        Save playbook to JSON file.
+        Save playbook to JSON file (不含 embedding，保持文件简洁).
+
+        注意：
+        - 只保存主文件，不更新缓存
+        - 缓存会在下次加载时自动同步
+        - 这样避免保存时的额外计算开销
 
         Args:
             playbook: Playbook to save (uses self._playbook if None)
@@ -100,13 +157,19 @@ class PlaybookManager:
         # Convert to dict and save (exclude embeddings from serialization)
         data = playbook.model_dump(mode='json')
 
-        # Remove embeddings from metadata before saving
+        # Remove embeddings from metadata before saving (保持文件简洁)
         for bullet in data.get('bullets', []):
             if 'metadata' in bullet and 'embedding' in bullet['metadata']:
                 bullet['metadata']['embedding'] = None
 
         with open(self.playbook_path, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
+
+        # 不主动更新缓存，延迟到下次加载时
+        # 理由：
+        # 1. 避免每次保存都触发embedding计算
+        # 2. 如果保存后不立即使用，无需浪费计算
+        # 3. 下次加载时会自动检测并同步
 
     def get_or_create(self, sections: Optional[List[str]] = None) -> Playbook:
         """
@@ -131,26 +194,243 @@ class PlaybookManager:
     # Embeddings
     # ========================================================================
 
-    def _build_embeddings_cache(self) -> None:
-        """Build embeddings for all bullets in current playbook."""
-        if self._playbook is None:
+    # ========================================================================
+    # Embedding Cache 管理
+    # ========================================================================
+
+    def _compute_content_hash(self, content: str) -> str:
+        """计算 bullet content 的 SHA256 hash（前16字符）
+
+        Args:
+            content: Bullet 内容
+
+        Returns:
+            Hash 字符串（16字符）
+        """
+        return hashlib.sha256(content.encode('utf-8')).hexdigest()[:16]
+
+    def _create_empty_cache(self) -> dict:
+        """创建空的 cache 数据结构"""
+        return {
+            "version": CACHE_VERSION,
+            "embedding_model": self.embedding_model,
+            "embedding_dim": CACHE_EMBEDDING_DIM,
+            "last_sync": datetime.now().isoformat(),
+            "bullet_count": 0,
+            "embeddings": {}
+        }
+
+    def _load_cache_file(self) -> Optional[dict]:
+        """加载 embedding cache 文件
+
+        Returns:
+            Cache 数据，如果文件不存在或损坏返回 None
+        """
+        if not self.cache_path.exists():
+            return None
+
+        try:
+            with open(self.cache_path, 'r', encoding='utf-8') as f:
+                cache_data = json.load(f)
+
+            # 验证版本兼容性
+            if not self._validate_cache_version(cache_data):
+                print(f"  ⚠️  缓存版本不兼容，将重新创建")
+                return None
+
+            return cache_data
+        except (json.JSONDecodeError, KeyError, Exception) as e:
+            print(f"  ⚠️  缓存文件损坏: {e}")
+            return None
+
+    def _validate_cache_version(self, cache_data: dict) -> bool:
+        """检查缓存版本是否兼容
+
+        Args:
+            cache_data: Cache 数据
+
+        Returns:
+            是否兼容
+        """
+        if cache_data.get("version") != CACHE_VERSION:
+            print(f"  ⚠️  缓存版本不匹配: {cache_data.get('version')} != {CACHE_VERSION}")
+            return False
+
+        if cache_data.get("embedding_model") != self.embedding_model:
+            print(f"  ⚠️  Embedding 模型不匹配: {cache_data.get('embedding_model')} != {self.embedding_model}")
+            return False
+
+        return True
+
+    def _save_cache_file(self, cache_data: dict) -> None:
+        """原子写入 cache 文件
+
+        Args:
+            cache_data: Cache 数据
+        """
+        temp_file = self.cache_path.with_suffix('.tmp')
+
+        try:
+            # 写入临时文件
+            with open(temp_file, 'w', encoding='utf-8') as f:
+                json.dump(cache_data, f, indent=2, ensure_ascii=False)
+
+            # 原子替换
+            temp_file.replace(self.cache_path)
+        except Exception as e:
+            # 清理临时文件
+            if temp_file.exists():
+                temp_file.unlink()
+            raise RuntimeError(f"Failed to save cache file: {e}")
+
+    def _detect_sync_status(self, playbook: Playbook, cache_data: dict) -> dict:
+        """检测 playbook 和 cache 的同步状态
+
+        Args:
+            playbook: 当前 playbook
+            cache_data: Cache 数据
+
+        Returns:
+            同步状态字典:
+            {
+                "needs_create": ["mat-00005"],     # 新增的bullets
+                "needs_update": ["mat-00001"],     # 内容变化的bullets
+                "needs_delete": ["mat-00002"],     # 删除的bullets
+                "up_to_date": ["mat-00003", ...]   # 无需更新的bullets
+            }
+        """
+        cached_embeddings = cache_data.get("embeddings", {})
+        current_bullets = {b.id: b for b in playbook.bullets}
+
+        result = {
+            "needs_create": [],
+            "needs_update": [],
+            "needs_delete": [],
+            "up_to_date": []
+        }
+
+        # 检查现有bullets
+        for bullet_id, bullet in current_bullets.items():
+            current_hash = self._compute_content_hash(bullet.content)
+
+            if bullet_id not in cached_embeddings:
+                # 新增
+                result["needs_create"].append(bullet_id)
+            elif cached_embeddings[bullet_id].get("content_hash") != current_hash:
+                # 内容变化
+                result["needs_update"].append(bullet_id)
+            else:
+                # 无需更新
+                result["up_to_date"].append(bullet_id)
+
+        # 检查删除的bullets
+        for bullet_id in cached_embeddings:
+            if bullet_id not in current_bullets:
+                result["needs_delete"].append(bullet_id)
+
+        return result
+
+    def _compute_and_update_embeddings(
+        self,
+        playbook: Playbook,
+        bullet_ids: List[str],
+        cache_data: dict
+    ) -> None:
+        """批量计算并更新 embedding
+
+        Args:
+            playbook: 当前 playbook
+            bullet_ids: 需要计算的 bullet IDs
+            cache_data: Cache 数据（会被直接修改）
+        """
+        bullets_to_compute = [
+            b for b in playbook.bullets if b.id in bullet_ids
+        ]
+
+        if not bullets_to_compute:
             return
 
-        contents = [bullet.content for bullet in self._playbook.bullets]
-        if not contents:
-            return
+        # 批量计算（减少API调用）
+        contents = [b.content for b in bullets_to_compute]
+        print(f"  🔄 正在计算 {len(contents)} 个 embedding...")
 
-        # Batch encode for efficiency (Qwen支持批量，最多25个/次)
         embeddings = self.embedding_provider.encode(
             contents,
             show_progress_bar=False
         )
 
-        # Store in cache
-        for bullet, embedding in zip(self._playbook.bullets, embeddings):
-            self._embeddings_cache[bullet.id] = embedding
-            # Also store in bullet metadata for persistence
-            bullet.metadata.embedding = embedding.tolist()
+        # 更新缓存
+        for bullet, embedding in zip(bullets_to_compute, embeddings):
+            content_hash = self._compute_content_hash(bullet.content)
+            cache_data["embeddings"][bullet.id] = {
+                "content_hash": content_hash,
+                "embedding": embedding.tolist()
+            }
+
+        # 更新元数据
+        cache_data["last_sync"] = datetime.now().isoformat()
+        cache_data["bullet_count"] = len(playbook.bullets)
+
+        print(f"  ✅ 已更新 {len(bullets_to_compute)} 个 embedding")
+
+    def _load_embeddings_to_memory(self, playbook: Playbook, cache_data: dict) -> None:
+        """从 cache 加载 embedding 到内存
+
+        Args:
+            playbook: 当前 playbook
+            cache_data: Cache 数据
+        """
+        cached_embeddings = cache_data.get("embeddings", {})
+
+        for bullet in playbook.bullets:
+            if bullet.id in cached_embeddings:
+                embedding_list = cached_embeddings[bullet.id]["embedding"]
+                self._embeddings_cache[bullet.id] = np.array(embedding_list)
+
+    def _build_embeddings_cache(self) -> None:
+        """Build embeddings for all bullets in current playbook.
+
+        【已废弃】此方法已被新的缓存机制替代，保留用于向后兼容。
+        现在使用独立的 cache 文件和增量更新机制。
+
+        Optimized for incremental loading:
+        - Reuses existing embeddings from metadata if available
+        - Only computes missing embeddings via API
+        """
+        if self._playbook is None:
+            return
+
+        if not self._playbook.bullets:
+            return
+
+        # Separate bullets into: has_embedding vs needs_embedding
+        bullets_with_embedding = []
+        bullets_needing_embedding = []
+
+        for bullet in self._playbook.bullets:
+            if bullet.metadata.embedding is not None and len(bullet.metadata.embedding) > 0:
+                # Load from persisted metadata
+                bullets_with_embedding.append(bullet)
+                self._embeddings_cache[bullet.id] = np.array(bullet.metadata.embedding)
+            else:
+                # Needs computation
+                bullets_needing_embedding.append(bullet)
+
+        # Batch compute missing embeddings
+        if bullets_needing_embedding:
+            contents = [b.content for b in bullets_needing_embedding]
+            embeddings = self.embedding_provider.encode(
+                contents,
+                show_progress_bar=False
+            )
+
+            # Store newly computed embeddings
+            for bullet, embedding in zip(bullets_needing_embedding, embeddings):
+                self._embeddings_cache[bullet.id] = embedding
+                bullet.metadata.embedding = embedding.tolist()
+
+            print(f"  ℹ️  Computed {len(bullets_needing_embedding)} new embeddings, "
+                  f"loaded {len(bullets_with_embedding)} from cache")
 
     def _get_embedding(self, text: str) -> np.ndarray:
         """Get embedding for a text string."""

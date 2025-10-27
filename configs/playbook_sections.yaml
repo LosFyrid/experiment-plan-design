@@ -66,7 +66,7 @@ custom_sections: {}
 # Section management settings
 settings:
   # 🎛️ 主开关：是否允许Curator提议新sections
-  allow_new_sections: false
+  allow_new_sections: true
 
   # Curator提议新section时的引导原则（会被插入到prompt中）
   new_section_guidelines: |
@@ -82,3 +82,28 @@ settings:
        - Strong justification explaining why existing sections are insufficient
 
     Think very carefully before proposing a new section. Prefer using existing sections when possible.
+
+    **⚠️ IMPORTANT: If you want to add a bullet to a NEW section, you MUST include the "new_section_proposal" field in your operation:**
+
+    ```json
+    {
+      "operation": "ADD",
+      "new_section_proposal": {
+        "id_prefix": "di",
+        "description": "Data interpretation and experimental adjustment guidelines",
+        "justification": "Current sections do not cover result analysis and data-driven optimization",
+        "examples": [
+          "How to interpret XRD peak shifts",
+          "Adjustment strategies for abnormal electrochemical data",
+          "Application of statistical analysis in experiment optimization"
+        ]
+      },
+      "new_bullet": {
+        "section": "data_interpretation_and_adjustment",
+        "content": "Your bullet content here..."
+      },
+      "reason": "Addresses insight about data interpretation gaps"
+    }
+    ```
+
+    Without a complete "new_section_proposal", operations to new sections will be rejected.

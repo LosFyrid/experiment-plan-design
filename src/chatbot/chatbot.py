@@ -127,7 +127,11 @@ class Chatbot:
             sqlite_path = memory_config["sqlite_path"]
             # 确保目录存在
             Path(sqlite_path).parent.mkdir(parents=True, exist_ok=True)
-            return SqliteSaver.from_conn_string(sqlite_path)
+
+            # 使用简洁的直接创建方式（不使用上下文管理器）
+            import sqlite3
+            conn = sqlite3.connect(sqlite_path, check_same_thread=False)
+            return SqliteSaver(conn)
         else:
             return MemorySaver()
 
@@ -283,3 +287,6 @@ class Chatbot:
         停止MOSES QueryManager，释放资源
         """
         self.moses_wrapper.cleanup()
+
+        # SQLite checkpointer使用上下文管理器，会自动清理
+        # 这里不需要手动关闭

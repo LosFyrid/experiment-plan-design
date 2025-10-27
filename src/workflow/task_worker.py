@@ -109,33 +109,15 @@ def run_task_workflow(task_id: str, resume_mode: bool):
         print(f"[Worker] 断点恢复模式，当前状态: {task.status.value}")
 
     else:
-        # 首次启动模式：从config.json加载配置
-        task_dir = Path(f"logs/generation_tasks/{task_id}")
-        config_file = task_dir / "config.json"
+        # 首次启动模式：从 task.json 加载任务对象
+        # （TaskScheduler 已在启动子进程前创建了 task.json）
+        task = task_manager.get_task(task_id)
 
-        if not config_file.exists():
-            print(f"❌ 配置文件不存在: {config_file}")
+        if not task:
+            print(f"❌ 任务 {task_id} 不存在（task.json 未找到）")
             sys.exit(1)
 
-        with open(config_file, 'r', encoding='utf-8') as f:
-            config = json.load(f)
-
-        # 创建新任务对象
-        from workflow.task_manager import GenerationTask
-        from datetime import datetime
-
-        task = GenerationTask(
-            task_id=task_id,
-            session_id=config['session_id'],
-            task_dir=task_dir,
-            log_file=task_dir / "task.log",
-            created_at=datetime.fromisoformat(config['created_at'])
-        )
-
-        # 保存初始状态
-        task_manager._save_task(task)
-
-        print(f"[Worker] 新建任务，会话ID: {config['session_id']}")
+        print(f"[Worker] 新建任务，会话ID: {task.session_id}")
 
     # ========================================================================
     # 初始化组件（只在需要时初始化）
@@ -231,6 +213,7 @@ def run_task_workflow(task_id: str, resume_mode: bool):
         except Exception as e:
             task.status = TaskStatus.FAILED
             task.error = f"需求提取失败: {str(e)}"
+            task.failed_stage = "extracting"  # 记录失败阶段
             task_manager._save_task(task)
             log_writer.write(f"失败: {task.error}")
             log_writer.close()
@@ -365,8 +348,13 @@ def run_task_workflow(task_id: str, resume_mode: bool):
 
             duration = time.time() - start_time
 
-            # 保存方案到文件
+            # 保存方案到文件（向后兼容）
             task.save_plan(generation_result.generated_plan)
+
+            # 保存完整的 GenerationResult（包含 trajectory 和 bullets）
+            task.save_generation_result(generation_result)
+
+            # 保存元数据到 task.json
             task.metadata = generation_result.generation_metadata
             task.metadata['duration'] = duration
 
@@ -374,6 +362,16 @@ def run_task_workflow(task_id: str, resume_mode: bool):
             print(f"   标题: {generation_result.generated_plan.title}")
             print(f"   耗时: {duration:.2f}s")
             print(f"   Tokens: {task.metadata.get('total_tokens', 0)}")
+
+            # 调试信息：显示 trajectory 和 bullets 保存情况
+            print(f"\n📊 GenerationResult 详情:")
+            print(f"   - Trajectory 步骤数: {len(generation_result.trajectory)}")
+            print(f"   - Relevant bullets: {len(generation_result.relevant_bullets)}")
+            if generation_result.trajectory:
+                print(f"   - Trajectory 预览: {generation_result.trajectory[0].thought[:60]}...")
+            if generation_result.relevant_bullets:
+                print(f"   - Bullets 预览: {', '.join(generation_result.relevant_bullets[:5])}")
+            print(f"   - 完整结果已保存: {task.generation_result_file}")
 
             # 完成
             task.status = TaskStatus.COMPLETED
@@ -392,6 +390,7 @@ def run_task_workflow(task_id: str, resume_mode: bool):
             import traceback
             task.status = TaskStatus.FAILED
             task.error = f"生成失败: {str(e)}"
+            task.failed_stage = "generating"  # 记录失败阶段
             task_manager._save_task(task)
 
             print(f"❌ 生成失败: {e}")

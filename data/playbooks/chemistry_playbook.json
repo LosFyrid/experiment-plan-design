@@ -19,11 +19,11 @@
       "section": "material_selection",
       "content": "Always verify reagent purity and expiration dates before use. Degraded or contaminated reagents can lead to failed reactions or unexpected side products.",
       "metadata": {
-        "helpful_count": 1,
+        "helpful_count": 4,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-01-22T00:00:00",
-        "last_updated": "2025-10-24T14:08:48.636520",
+        "last_updated": "2025-10-27T15:51:38.196015",
         "source": "seed",
         "embedding": null
       }
@@ -33,11 +33,11 @@
       "section": "material_selection",
       "content": "When using strong oxidizers (e.g., KMnO4, H2O2, PCC), verify that all glassware and equipment are free from organic residues to prevent violent exothermic reactions.",
       "metadata": {
-        "helpful_count": 0,
+        "helpful_count": 2,
         "harmful_count": 0,
-        "neutral_count": 0,
+        "neutral_count": 1,
         "created_at": "2025-01-22T00:00:00",
-        "last_updated": "2025-01-22T00:00:00",
+        "last_updated": "2025-10-27T15:51:38.196017",
         "source": "seed",
         "embedding": null
       }
@@ -47,11 +47,11 @@
       "section": "procedure_design",
       "content": "For temperature-sensitive reactions, allow reagents to equilibrate to the target temperature before mixing. Sudden temperature changes can cause side reactions or decomposition. For example, explain 'thermal shock' as 'rapid temperature changes that can cause materials to crack or break.' Alternatively, replace it with a more descriptive phrase such as 'sudden temperature change leading to material damage.'",
       "metadata": {
-        "helpful_count": 0,
+        "helpful_count": 3,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-01-22T00:00:00",
-        "last_updated": "2025-10-23T20:34:52.377554",
+        "last_updated": "2025-10-27T15:51:38.196006",
         "source": "seed",
         "embedding": null
       }
@@ -271,11 +271,11 @@
       "section": "procedure_design",
       "content": "For temperature-sensitive reactions, specify a precise temperature range (e.g., 20-25°C) and include a method for continuous monitoring. Use a thermometer or temperature probe and set up a feedback loop to maintain the temperature within the specified range. Provide a diagram or setup instructions for the monitoring equipment, and include a troubleshooting section for common temperature-related issues, such as overheating or underheating. For example, specify the type of thermometer (e.g., digital thermometer) and the method for adjusting the temperature (e.g., using a thermostat).",
       "metadata": {
-        "helpful_count": 1,
+        "helpful_count": 4,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-10-24T13:04:39.511731",
-        "last_updated": "2025-10-24T14:09:12.225998",
+        "last_updated": "2025-10-27T15:51:38.196020",
         "source": "reflection",
         "embedding": null
       }
@@ -335,6 +335,230 @@
         "source": "reflection",
         "embedding": null
       }
+    },
+    {
+      "id": "proc-00007",
+      "section": "procedure_design",
+      "content": "For any analytical or testing methods, provide a detailed and step-by-step description of the setup, procedure, and data collection method. This includes the type of test (e.g., potentiodynamic polarization), the equipment used (e.g., potentiostat, reference electrode), and specific conditions or parameters (e.g., electrolyte composition, temperature, scan rate). Ensure that all steps are clearly outlined and that any potential variations are accounted for. Include a troubleshooting section to address common issues and their solutions. Additionally, specify the statistical methods to be used for data analysis (e.g., ANOVA, t-tests) and the software tools required (e.g., R, Python).",
+      "metadata": {
+        "helpful_count": 6,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-27T15:36:14.551338",
+        "last_updated": "2025-10-28T00:26:29.069673",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "safe-00006",
+      "section": "safety_protocols",
+      "content": "For experiments involving high-temperature processes, include specific and detailed safety precautions for handling hot samples, such as using tongs or heat-resistant gloves, and the use of appropriate personal protective equipment (PPE) like face shields and lab coats. Provide step-by-step guidance on how to safely handle and transfer hot samples, and include procedures to prevent thermal shock, such as preheating glassware and avoiding rapid temperature changes. Clearly label all safety equipment and ensure it is easily accessible. Additionally, include an emergency response plan and contact information for the nearest safety officer.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-27T15:36:14.551391",
+        "last_updated": "2025-10-27T15:36:14.551392",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "qc-00005",
+      "section": "quality_control",
+      "content": "For experiments where the microstructure is a critical parameter, include detailed quality control steps to verify the phase composition and grain size. Use X-ray diffraction (XRD) to determine the α/γ phase ratio and scanning electron microscopy (SEM) to measure grain size. Specify the exact procedures, including sample preparation (e.g., polishing, etching), measurement settings (e.g., XRD scan range, SEM magnification), and data analysis methods (e.g., peak fitting, image processing). Ensure that all QC steps are documented and that any deviations from expected results are addressed. Include a checklist for each step to ensure consistency.",
+      "metadata": {
+        "helpful_count": 5,
+        "harmful_count": 0,
+        "neutral_count": 1,
+        "created_at": "2025-10-27T15:36:14.551401",
+        "last_updated": "2025-10-28T00:26:29.069695",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "proc-00007",
+      "section": "procedure_design",
+      "content": "For quenching processes, specify the cooling rate (e.g., 100°C/s) and provide a detailed method for controlling it, such as using a water bath or air jet. Ensure that the quenching process is rapid and uniform to achieve the desired microstructure. Include details on the quenching medium (e.g., water, oil), its temperature, and the method for ensuring uniform cooling across the sample. Verify the cooling rate using appropriate sensors or instruments and document the results. Additionally, include a calibration procedure for the cooling rate measurement equipment.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-27T15:36:14.551409",
+        "last_updated": "2025-10-27T15:36:14.551409",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "qc-00006",
+      "section": "quality_control",
+      "content": "For critical tests, provide a detailed description of the method, including specific test standards (e.g., ASTM G1-03) and parameters (e.g., exposure time: 72 hours, solution composition: 3.5% NaCl, temperature: 25°C). This ensures that the experiment is clear, executable, and reproducible. Additionally, include a step-by-step procedure and any necessary equipment setup details.",
+      "metadata": {
+        "helpful_count": 6,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-27T15:44:19.611972",
+        "last_updated": "2025-10-28T00:26:29.069693",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "safe-00007",
+      "section": "safety_protocols",
+      "content": "When using chemicals like epoxy resin, provide detailed safety instructions, including proper ventilation, personal protective equipment (PPE), and emergency procedures. For example, specify that gloves, goggles, and a respirator must be worn. Provide a protocol for handling spills or exposure, such as immediately washing the affected area with soap and water and seeking medical attention if necessary. Include a safety checklist and a section on the potential hazards and how to mitigate them, such as the risk of skin irritation or respiratory issues.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-27T15:44:19.612056",
+        "last_updated": "2025-10-27T15:51:59.591536",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "mat-00004",
+      "section": "material_selection",
+      "content": "Clearly specify the exact quantity of materials required for the experiment, such as 10 grams of epoxy resin, to ensure consistency and reproducibility. Provide a table listing all materials and their required quantities, along with any necessary preparation steps. Include a section on the importance of precise measurements and the potential consequences of imprecise amounts, such as inconsistent results or safety hazards.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-27T15:44:19.612067",
+        "last_updated": "2025-10-27T15:51:59.402143",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "proc-00008",
+      "section": "procedure_design",
+      "content": "Consider ways to optimize the experimental design, such as using fewer temperature points or parallel processing, to reduce the overall time and cost. For example, if testing at multiple temperatures, use a statistical design (e.g., Taguchi or factorial design) to minimize the number of runs while still capturing the necessary data. This approach can significantly reduce the time and resources required for the experiment. For instance, instead of testing at 5 different temperatures, use a 2-level factorial design to test at 4 combinations, reducing the number of runs from 5 to 4. Additionally, use software tools for experimental design and analysis to streamline the process.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-27T15:44:19.612075",
+        "last_updated": "2025-10-27T15:44:19.612075",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "proc-00009",
+      "section": "procedure_design",
+      "content": "For each step involving specialized tests, provide a detailed description of the test method, including the type of test, equipment, and data analysis techniques. For example, if using a salt spray test, specify the duration (e.g., 24 hours), temperature (e.g., 35°C), and salt concentration (e.g., 5% NaCl). Describe how the results will be analyzed and interpreted, such as measuring the weight loss or visual inspection of the corrosion. Additionally, include a flowchart or diagram to illustrate the testing process and data flow.",
+      "metadata": {
+        "helpful_count": 1,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-27T15:51:56.583866",
+        "last_updated": "2025-10-27T21:33:59.850692",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "err-00004",
+      "section": "common_mistakes",
+      "content": "Common mistake: Not considering cost-effective alternatives for materials and methods. Evaluate alternative materials and methods to reduce costs and energy consumption. For example, consider using a more energy-efficient curing oven or optimizing the number of temperature points in the process. Provide detailed material usage estimates and energy consumption calculations to support cost-effectiveness. Conduct a cost-benefit analysis to justify the use of specific materials and methods.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-27T15:51:56.583950",
+        "last_updated": "2025-10-27T15:51:56.583951",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "proc-00010",
+      "section": "procedure_design",
+      "content": "For any steps involving temperature control, provide a detailed strategy, including the use of multiple thermocouples, PID controllers, and other temperature monitoring devices. Specify the exact temperature range, the placement of thermocouples, and the calibration of the PID controller. Ensure that the temperature is maintained within the specified range and that any deviations are addressed promptly. For example, set up a feedback loop to automatically adjust the temperature based on real-time data from the thermocouples. Additionally, include a contingency plan for temperature fluctuations, such as backup power sources or manual adjustment procedures.",
+      "metadata": {
+        "helpful_count": 1,
+        "harmful_count": 0,
+        "neutral_count": 3,
+        "created_at": "2025-10-27T21:34:16.219044",
+        "last_updated": "2025-10-28T00:26:29.069689",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "proc-00011",
+      "section": "procedure_design",
+      "content": "For any analytical or testing methods, specify the exact model and specifications of the equipment used, including the make, model, and any necessary accessories or calibration details. For example, 'XRD: Bruker D8 Discover with LynxEye detector, calibrated using NIST SRM 640e. SEM: Zeiss Merlin with InLens detector, operated at 5 kV.' This ensures that the experiment is clear, executable, and reproducible.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-27T22:15:55.188075",
+        "last_updated": "2025-10-27T22:15:55.188082",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "safe-00008",
+      "section": "safety_protocols",
+      "content": "For any steps involving high-temperature operations or handling of corrosive chemicals, provide detailed safety guidelines. This includes the use of appropriate PPE (e.g., heat-resistant gloves, face shields), safe handling procedures (e.g., use of fume hoods, proper ventilation), and storage and disposal instructions (e.g., use of acid-resistant containers, neutralization before disposal). For example, 'Handle HCl in a fume hood, wearing nitrile gloves and a face shield. Store in a cool, dry place away from incompatible materials. Dispose of by neutralizing with sodium bicarbonate and then disposing of as hazardous waste.' This ensures the safety of the experimenters and the environment.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-27T22:15:55.188121",
+        "last_updated": "2025-10-27T22:15:55.188122",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "ts-00003",
+      "section": "troubleshooting",
+      "content": "For any critical steps in the experiment, develop a contingency plan to address potential issues. This includes specifying backup power sources (e.g., uninterruptible power supply for critical equipment), manual adjustment procedures (e.g., manual control of furnace temperature if automatic control fails), and troubleshooting steps for common problems (e.g., recalibration of XRD if results are inconsistent). For example, 'If the furnace temperature fluctuates, manually adjust the setpoint and monitor the temperature closely. If the XRD results are inconsistent, recalibrate the instrument using a known standard.' This ensures that the experiment can proceed smoothly even in the face of unexpected challenges.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-27T22:15:55.188130",
+        "last_updated": "2025-10-27T22:15:55.188131",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "qc-00007",
+      "section": "quality_control",
+      "content": "For evaluating corrosion performance, provide a detailed and step-by-step guide for handling and analyzing samples after the salt fog test. Include weight loss measurements (e.g., using an analytical balance with 0.0001 g precision), cleaning and drying methods (e.g., using acetone and a desiccator), and conditions for weighing (e.g., at room temperature, after 24 hours of stabilization). For corrosion rate calculations, provide the formula, units, and any necessary conversion factors. Include a troubleshooting section to address common issues and their solutions. Additionally, specify the statistical methods to be used for data analysis (e.g., ANOVA, t-tests) and the software tools required (e.g., R, Python).",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-27T23:20:11.459224",
+        "last_updated": "2025-10-27T23:20:11.459230",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "proc-00012",
+      "section": "procedure_design",
+      "content": "For any steps involving specialized equipment, specify the exact model and manufacturer. For example, use the Bruker D8 Discover XRD system and the JEOL JSM-7600F SEM. Provide detailed instructions for each step, including sample preparation (e.g., mounting, polishing, and coating for SEM), measurement settings (e.g., for XRD: range of 2θ from 20 to 80 degrees, step size of 0.02 degrees, scan speed of 2 degrees per minute; for SEM: accelerating voltage of 15 kV, working distance of 10 mm, magnification of 5000x), and data analysis methods (e.g., phase identification using the ICDD PDF-2 database for XRD, image processing using ImageJ for SEM). Ensure that all participants, including non-experts, can understand and follow the procedures. Include diagrams, images, and videos if necessary to enhance clarity.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-27T23:20:11.459271",
+        "last_updated": "2025-10-27T23:20:11.459272",
+        "source": "reflection",
+        "embedding": null
+      }
     }
   ],
   "sections": [
@@ -346,6 +570,6 @@
     "common_mistakes"
   ],
   "version": "1.0.0",
-  "last_updated": "2025-10-24T14:09:18.392006",
+  "last_updated": "2025-10-28T00:27:41.257847",
   "total_generations": 3
 }

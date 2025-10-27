@@ -282,6 +282,8 @@ class DeltaOperation(BaseModel):
     operation: str = Field(..., pattern="^(ADD|UPDATE|REMOVE)$")
     bullet_id: Optional[str] = Field(default=None, description="For UPDATE/REMOVE")
     new_bullet: Optional[PlaybookBullet] = Field(default=None, description="For ADD/UPDATE")
+    old_content: Optional[str] = Field(default=None, description="Original content before UPDATE (for rollback)")
+    removed_bullet: Optional[PlaybookBullet] = Field(default=None, description="Complete bullet before REMOVE (for rollback)")
     reason: str = Field(..., description="Why this operation is needed")
 
 
