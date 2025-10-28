@@ -88,7 +88,12 @@ class PlaybookCurator:
 
         # Embedding manager for deduplication
         if embedding_manager is None:
-            embedding_manager = EmbeddingManager()
+            # Load embedding config from ACE configuration
+            from utils.config_loader import get_ace_config
+            ace_config = get_ace_config()
+            embedding_manager = EmbeddingManager(
+                model_name=ace_config.embedding.model
+            )
         self.embedding_manager = embedding_manager
 
         # Observability tools
