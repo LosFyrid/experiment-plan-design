@@ -282,7 +282,8 @@ def run_feedback_workflow(task_id: str, evaluation_mode: Optional[str] = None):
             generated_plan=plan,
             feedback=feedback,
             trajectory=trajectory,
-            playbook_bullets_used=relevant_bullets
+            playbook_bullets_used=relevant_bullets,
+            verbose=True  # 启用详细进度输出
         )
 
         task.save_reflection(reflection_result)
@@ -335,7 +336,10 @@ def run_feedback_workflow(task_id: str, evaluation_mode: Optional[str] = None):
     size_before = playbook_manager.playbook.size
 
     try:
-        curation_result = curator.update(reflection_result=reflection_result)
+        curation_result = curator.update(
+            reflection_result=reflection_result,
+            verbose=True  # 启用详细进度输出
+        )
 
         size_after = playbook_manager.playbook.size
 

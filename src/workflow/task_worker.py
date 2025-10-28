@@ -343,7 +343,8 @@ def run_task_workflow(task_id: str, resume_mode: bool):
 
             generation_result = generator.generate(
                 requirements=requirements,
-                templates=templates
+                templates=templates,
+                verbose=True  # 启用详细进度输出
             )
 
             duration = time.time() - start_time

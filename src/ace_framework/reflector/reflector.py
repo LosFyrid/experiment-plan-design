@@ -81,7 +81,8 @@ class PlanReflector:
         feedback: Feedback,
         trajectory: List[TrajectoryStep],
         playbook_bullets_used: List[str],
-        ground_truth: Optional[ExperimentPlan] = None
+        ground_truth: Optional[ExperimentPlan] = None,
+        verbose: bool = False
     ) -> ReflectionResult:
         """
         Analyze generated plan and extract insights.
@@ -94,6 +95,7 @@ class PlanReflector:
             trajectory: Reasoning trajectory from Generator
             playbook_bullets_used: List of bullet IDs referenced
             ground_truth: Optional ground truth plan for comparison
+            verbose: If True, print progress to stdout (useful for long-running tasks)
 
         Returns:
             ReflectionResult with insights and bullet tags
@@ -102,6 +104,13 @@ class PlanReflector:
             RuntimeError: If reflection fails
         """
         reflection_start_time = time.time()
+
+        if verbose:
+            max_rounds = self.config.max_refinement_rounds
+            total_llm_calls = max_rounds if self.config.enable_iterative else 1
+            print(f"\n🔍 开始反思分析（预计 {total_llm_calls} 次 LLM 调用）")
+            print(f"   反馈分数: {feedback.overall_score:.2f}")
+            print(f"   分析的 bullets: {len(playbook_bullets_used)}")
 
         # Log reflection start
         self.logger.log_reflection_started(
@@ -112,6 +121,10 @@ class PlanReflector:
 
         # Get bullet contents for context
         bullet_contents = self._get_bullet_contents(playbook_bullets_used)
+
+        if verbose:
+            print("\n📋 [Round 1] 初始反思...")
+            print("   ⏱️  这可能需要 20-60 秒...")
 
         # Step 1: Initial reflection
         if self.perf_monitor:
@@ -149,14 +162,24 @@ class PlanReflector:
             priority_distribution=priority_dist
         )
 
+        if verbose:
+            print(f"   ✓ 初始反思完成")
+            print(f"      - 耗时: {initial_duration:.1f}s")
+            print(f"      - 提取 insights: {len(initial_insights)}")
+            print(f"      - 优先级分布: High={priority_dist['high']}, Med={priority_dist['medium']}, Low={priority_dist['low']}")
+
         # Step 2: Iterative refinement (if enabled)
         refinement_rounds_completed = 1
         if self.config.enable_iterative and self.config.max_refinement_rounds > 1:
+            if verbose:
+                print(f"\n🔄 开始迭代优化（Rounds 2-{self.config.max_refinement_rounds}）...")
+
             refined_output = self._perform_iterative_refinement(
                 initial_output=initial_output,
                 max_rounds=self.config.max_refinement_rounds,
                 bullets_used=playbook_bullets_used,
-                bullet_contents=bullet_contents
+                bullet_contents=bullet_contents,
+                verbose=verbose
             )
             refinement_rounds_completed = self.config.max_refinement_rounds
         else:
@@ -210,6 +233,13 @@ class PlanReflector:
             final_insights_count=len(insights),
             refinement_rounds_completed=refinement_rounds_completed
         )
+
+        if verbose:
+            print(f"\n✅ 反思分析完成")
+            print(f"   总耗时: {total_duration:.1f}s")
+            print(f"   最终 insights: {len(insights)}")
+            print(f"   Bullet 标记: {len(bullet_tags)} (helpful={tag_counts['helpful']}, harmful={tag_counts['harmful']}, neutral={tag_counts['neutral']})")
+            print(f"   优化轮次: {refinement_rounds_completed}")
 
         return result
 
@@ -308,7 +338,8 @@ class PlanReflector:
         initial_output: Dict,
         max_rounds: int,
         bullets_used: List[str],
-        bullet_contents: Dict[str, str]
+        bullet_contents: Dict[str, str],
+        verbose: bool = False
     ) -> Dict:
         """
         Perform iterative refinement to improve insight quality.
@@ -328,6 +359,10 @@ class PlanReflector:
 
         # Refinement rounds (2 to max_rounds)
         for round_num in range(2, max_rounds + 1):
+            if verbose:
+                print(f"\n   📋 [Round {round_num}] 优化 insights...")
+                print(f"      ⏱️  这可能需要 20-60 秒...")
+
             # Log round start
             self.logger.log_refinement_round_started(round_num)
 
@@ -415,6 +450,12 @@ class PlanReflector:
                     insights_count=len(refined_output.get("insights", [])),
                     quality_improved=quality_improved
                 )
+
+                if verbose:
+                    print(f"      ✓ Round {round_num} 完成")
+                    print(f"         - 耗时: {round_duration:.1f}s")
+                    print(f"         - Insights: {len(refined_output.get('insights', []))}")
+                    print(f"         - 质量{'提升' if quality_improved else '未提升'}")
 
             except Exception as e:
                 print(f"Warning: Failed to parse refinement round {round_num}: {e}")

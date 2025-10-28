@@ -108,7 +108,8 @@ class PlaybookCurator:
     def update(
         self,
         reflection_result: ReflectionResult,
-        id_prefixes: Optional[Dict[str, str]] = None
+        id_prefixes: Optional[Dict[str, str]] = None,
+        verbose: bool = False
     ) -> PlaybookUpdateResult:
         """
         Update playbook based on reflection insights.
@@ -118,6 +119,7 @@ class PlaybookCurator:
         Args:
             reflection_result: Result from Reflector with insights and bullet tags
             id_prefixes: (Deprecated) Section name -> ID prefix mapping - now loaded from SectionManager
+            verbose: If True, print progress to stdout (useful for long-running tasks)
 
         Returns:
             PlaybookUpdateResult with updated playbook and delta operations
@@ -132,6 +134,11 @@ class PlaybookCurator:
         curation_start_time = time.time()
         size_before = self.playbook_manager.playbook.size
 
+        if verbose:
+            print(f"\n🔧 开始 Playbook 更新")
+            print(f"   当前大小: {size_before} bullets")
+            print(f"   待处理 insights: {len(reflection_result.insights)}")
+
         # Log curation start
         self.logger.log_curation_started(
             insights_count=len(reflection_result.insights),
@@ -143,6 +150,10 @@ class PlaybookCurator:
 
         # Step 2: Get id_prefixes from SectionManager (replaces old config loading)
         id_prefixes = self.section_manager.get_id_prefixes()
+
+        if verbose:
+            print("\n📝 [1/4] 生成 Delta 操作...")
+            print("   ⏱️  这可能需要 30-60 秒（LLM 调用）...")
 
         # Step 3: Generate delta operations from insights
         if self.perf_monitor:
@@ -171,6 +182,14 @@ class PlaybookCurator:
             operations=op_counts
         )
 
+        if verbose:
+            print(f"   ✓ Delta 操作生成完成")
+            print(f"      - 耗时: {delta_duration:.1f}s")
+            print(f"      - 操作: ADD={op_counts['ADD']}, UPDATE={op_counts['UPDATE']}, REMOVE={op_counts['REMOVE']}")
+
+        if verbose:
+            print("\n⚙️  [2/4] 应用 Delta 操作...")
+
         # Step 4: Apply delta operations
         if self.perf_monitor:
             with self.perf_monitor.measure("operations_apply", "curator"):
@@ -181,20 +200,34 @@ class PlaybookCurator:
         # Step 5: Deduplication (if enabled)
         dedup_report = None
         if self.config.enable_grow_and_refine:
+            if verbose:
+                print("\n🔎 [3/4] 语义去重...")
+
             if self.perf_monitor:
                 with self.perf_monitor.measure("deduplication", "curator"):
                     dedup_report = self._perform_deduplication()
             else:
                 dedup_report = self._perform_deduplication()
 
+            if verbose and dedup_report:
+                print(f"   ✓ 去重完成: 合并了 {dedup_report.total_deduplicated} 个重复 bullets")
+
         # Step 6: Pruning (if size exceeded)
         if self.playbook_manager.playbook.size > self.config.max_playbook_size:
+            if verbose:
+                print(f"\n✂️  [4/4] 剪枝（大小超限: {self.playbook_manager.playbook.size} > {self.config.max_playbook_size}）...")
+
             if self.config.prune_harmful_bullets:
                 if self.perf_monitor:
                     with self.perf_monitor.measure("pruning", "curator"):
                         self._perform_pruning()
                 else:
                     self._perform_pruning()
+
+                if verbose:
+                    print(f"   ✓ 剪枝完成")
+        elif verbose:
+            print(f"\n✅ [4/4] 无需剪枝（大小: {self.playbook_manager.playbook.size} ≤ {self.config.max_playbook_size}）")
 
         # Step 7: Save updated playbook
         if self.perf_monitor:
@@ -240,6 +273,12 @@ class PlaybookCurator:
             },
             new_version="v_unknown"  # Will be set by version tracker
         )
+
+        if verbose:
+            print(f"\n✅ Playbook 更新完成")
+            print(f"   总耗时: {total_duration:.1f}s")
+            print(f"   大小变化: {size_before} → {size_after} bullets")
+            print(f"   操作统计: +{bullets_added} -{bullets_removed} ~{bullets_updated}")
 
         return result
 

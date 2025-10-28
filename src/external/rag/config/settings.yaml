@@ -36,9 +36,8 @@ document_processing:
 retrieval:
   similarity_top_k: 30                          # 向量检索召回数量（增加候选池）
   rerank_top_n: 8                               # Reranker 最终返回数量（实验计划需要更多模板）
-  similarity_threshold: 0.5                     # 相似度阈值（过滤低质量文档）
-                                                 # 启用后，只返回分数 >= 阈值的结果
-                                                 # 推荐值：0.6-0.8（宁缺毋滥）
+  similarity_threshold: 0.6                    # 相似度阈值（过滤低质量文档）
+
 
 # ============ Reranker 配置 ============
 reranker:

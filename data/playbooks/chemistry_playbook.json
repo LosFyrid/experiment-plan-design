@@ -397,11 +397,11 @@
       "section": "quality_control",
       "content": "For critical tests, provide a detailed description of the method, including specific test standards (e.g., ASTM G1-03) and parameters (e.g., exposure time: 72 hours, solution composition: 3.5% NaCl, temperature: 25°C). This ensures that the experiment is clear, executable, and reproducible. Additionally, include a step-by-step procedure and any necessary equipment setup details.",
       "metadata": {
-        "helpful_count": 6,
+        "helpful_count": 7,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-10-27T15:44:19.611972",
-        "last_updated": "2025-10-28T00:26:29.069693",
+        "last_updated": "2025-10-28T14:11:27.230427",
         "source": "reflection",
         "embedding": null
       }
@@ -437,13 +437,13 @@
     {
       "id": "proc-00008",
       "section": "procedure_design",
-      "content": "Consider ways to optimize the experimental design, such as using fewer temperature points or parallel processing, to reduce the overall time and cost. For example, if testing at multiple temperatures, use a statistical design (e.g., Taguchi or factorial design) to minimize the number of runs while still capturing the necessary data. This approach can significantly reduce the time and resources required for the experiment. For instance, instead of testing at 5 different temperatures, use a 2-level factorial design to test at 4 combinations, reducing the number of runs from 5 to 4. Additionally, use software tools for experimental design and analysis to streamline the process.",
+      "content": "Consider ways to optimize the experimental design, such as using fewer temperature points or parallel processing, to reduce the overall time and cost. For example, if testing at multiple temperatures, use a statistical design (e.g., Taguchi or factorial design) to minimize the number of runs while still capturing the necessary data. Additionally, use more efficient furnaces, process multiple samples at once, or adjust the annealing schedule to minimize downtime. Evaluate the trade-offs between energy savings and experimental outcomes to ensure that the optimization does not compromise the quality of the results.",
       "metadata": {
         "helpful_count": 0,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-10-27T15:44:19.612075",
-        "last_updated": "2025-10-27T15:44:19.612075",
+        "last_updated": "2025-10-28T14:12:12.457332",
         "source": "reflection",
         "embedding": null
       }
@@ -453,11 +453,11 @@
       "section": "procedure_design",
       "content": "For each step involving specialized tests, provide a detailed description of the test method, including the type of test, equipment, and data analysis techniques. For example, if using a salt spray test, specify the duration (e.g., 24 hours), temperature (e.g., 35°C), and salt concentration (e.g., 5% NaCl). Describe how the results will be analyzed and interpreted, such as measuring the weight loss or visual inspection of the corrosion. Additionally, include a flowchart or diagram to illustrate the testing process and data flow.",
       "metadata": {
-        "helpful_count": 1,
+        "helpful_count": 2,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-10-27T15:51:56.583866",
-        "last_updated": "2025-10-27T21:33:59.850692",
+        "last_updated": "2025-10-28T14:11:27.230415",
         "source": "reflection",
         "embedding": null
       }
@@ -559,6 +559,62 @@
         "source": "reflection",
         "embedding": null
       }
+    },
+    {
+      "id": "proc-00013",
+      "section": "procedure_design",
+      "content": "For experiments involving material properties, provide a detailed description of how to control and measure key variables such as grain size. Include the specific methods (e.g., heat treatment at 1050°C for 30 minutes, followed by water quenching), equipment (e.g., optical microscope, SEM), and parameters (e.g., temperature, time). Reference relevant standards (e.g., ASTM E112 for grain size measurement) to ensure consistency and reproducibility.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-28T14:12:03.289810",
+        "last_updated": "2025-10-28T14:12:03.289816",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "mat-00005",
+      "section": "material_selection",
+      "content": "Always specify exact quantities for all materials used in the experiment, including any reagents, solvents, and consumables. For example, instead of '适量', use '10 grams of X' or '5 mL of Y'. This ensures that the experiment can be replicated accurately.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-28T14:12:03.289853",
+        "last_updated": "2025-10-28T14:12:03.289854",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "proc-00013",
+      "section": "procedure_design",
+      "content": "For thermal treatments, describe the cooling process in detail, including the cooling rate and method (e.g., water quenching at a rate of 100°C/min or air cooling at a rate of 50°C/min). Specify the cooling rate in degrees per minute and the duration of the cooling process. This ensures that the microstructure and properties of the material are consistent.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-28T14:12:03.289864",
+        "last_updated": "2025-10-28T14:12:03.289864",
+        "source": "reflection",
+        "embedding": null
+      }
+    },
+    {
+      "id": "safe-00009",
+      "section": "safety_protocols",
+      "content": "Include specific emergency response procedures for each potential hazard, such as what to do in case of accidental exposure to chemicals, inhalation of fumes, or fire. Provide contact information for the nearest first aid station and emergency services. For example, if a chemical spill occurs, specify the steps to contain the spill, the personal protective equipment (PPE) to wear, and the decontamination process. This ensures that all personnel are prepared to handle emergencies effectively.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-28T14:12:03.289872",
+        "last_updated": "2025-10-28T14:12:03.289873",
+        "source": "reflection",
+        "embedding": null
+      }
     }
   ],
   "sections": [
@@ -570,6 +626,6 @@
     "common_mistakes"
   ],
   "version": "1.0.0",
-  "last_updated": "2025-10-28T00:27:41.257847",
+  "last_updated": "2025-10-28T14:12:23.825740",
   "total_generations": 3
 }

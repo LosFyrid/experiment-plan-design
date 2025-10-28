@@ -79,7 +79,8 @@ class PlanGenerator:
         requirements: Dict[str, Any],
         templates: Optional[List[Dict]] = None,
         few_shot_examples: Optional[List[Dict]] = None,
-        section_filter: Optional[List[str]] = None
+        section_filter: Optional[List[str]] = None,
+        verbose: bool = False
     ) -> GenerationResult:
         """
         Generate experiment plan using playbook context.
@@ -91,6 +92,7 @@ class PlanGenerator:
             templates: Retrieved templates from RAG (optional)
             few_shot_examples: Few-shot examples for in-context learning (optional)
             section_filter: Only retrieve bullets from these sections (optional)
+            verbose: If True, print progress to stdout (useful for long-running tasks)
 
         Returns:
             GenerationResult with plan, trajectory, and bullets used
@@ -101,26 +103,38 @@ class PlanGenerator:
         """
         generation_start_time = time.time()
 
-        # Step 1: Retrieve relevant playbook bullets
+        if verbose:
+            print("\n🔍 [1/4] 检索相关 Playbook bullets...")
+
+        # Step 1: Retrieve relevant playbook bullets (with scores for display)
         if self.perf_monitor:
             with self.perf_monitor.measure("bullet_retrieval", "generator"):
-                relevant_bullets = self._retrieve_bullets(
-                    requirements,
-                    section_filter=section_filter
+                relevant_bullets_with_scores = self.playbook_manager.retrieve_relevant_bullets(
+                    query=" ".join([requirements.get("objective", ""), requirements.get("target_compound", "")]),
+                    top_k=self.config.max_playbook_bullets,
+                    section_filter=section_filter,
+                    min_similarity=self.config.min_similarity
                 )
         else:
-            relevant_bullets = self._retrieve_bullets(
-                requirements,
-                section_filter=section_filter
+            relevant_bullets_with_scores = self.playbook_manager.retrieve_relevant_bullets(
+                query=" ".join([requirements.get("objective", ""), requirements.get("target_compound", "")]),
+                top_k=self.config.max_playbook_bullets,
+                section_filter=section_filter,
+                min_similarity=self.config.min_similarity
             )
+
+        # Extract bullets and scores
+        relevant_bullets = [bullet for bullet, _ in relevant_bullets_with_scores]
+        similarities = [score for _, score in relevant_bullets_with_scores]
+
+        # Verbose output with top 5 similarities
+        if verbose:
+            print(f"   ✓ 检索到 {len(relevant_bullets)} 个相关 bullets")
+            if similarities:
+                print(f"      前5个相似度分数: {', '.join([f'{s:.3f}' for s in similarities[:5]])}")
 
         # Log bullet retrieval
         if relevant_bullets:
-            similarities = [score for _, score in self.playbook_manager.retrieve_relevant_bullets(
-                query=" ".join([requirements.get("objective", ""), requirements.get("target_compound", "")]),
-                top_k=len(relevant_bullets)
-            )][:5]  # Top 5 similarities
-
             section_counts = {}
             for bullet in relevant_bullets:
                 section_counts[bullet.section] = section_counts.get(bullet.section, 0) + 1
@@ -130,9 +144,12 @@ class PlanGenerator:
                 bullets_retrieved=len(relevant_bullets),
                 top_k=self.config.max_playbook_bullets,
                 min_similarity=self.config.min_similarity,
-                top_similarities=similarities,
+                top_similarities=similarities[:5],
                 sections=section_counts
             )
+
+        if verbose:
+            print("\n📝 [2/4] 构建生成提示...")
 
         # Step 2: Build prompt
         if self.perf_monitor:
@@ -158,6 +175,12 @@ class PlanGenerator:
             num_templates=len(templates) if templates else 0,
             num_examples=len(few_shot_examples) if few_shot_examples else 0
         )
+
+        if verbose:
+            prompt_chars = len(user_prompt)
+            print(f"   ✓ 提示已构建（{prompt_chars:,} 字符，约 {prompt_chars//4} tokens）")
+            print("\n🤖 [3/4] 调用 LLM 生成方案...")
+            print("   ⏱️  这可能需要 60-120 秒，请耐心等待...")
 
         # Step 3: Generate with LLM
         self.logger.log_llm_call_started(
@@ -226,6 +249,11 @@ class PlanGenerator:
                 llm_call_id=llm_call_id or "unknown"
             )
 
+            if verbose:
+                print(f"   ✓ LLM 响应完成")
+                print(f"      - 耗时: {llm_duration:.1f}s")
+                print(f"      - Tokens: {response.total_tokens:,} (输入: {response.prompt_tokens:,}, 输出: {response.completion_tokens:,})")
+
         except Exception as e:
             # Log error
             if self.llm_tracker and llm_call_id:
@@ -235,6 +263,9 @@ class PlanGenerator:
                     error=str(e)
                 )
             raise RuntimeError(f"LLM generation failed: {e}")
+
+        if verbose:
+            print("\n🔎 [4/4] 解析和验证输出...")
 
         # Step 4: Parse response
         if self.perf_monitor:
@@ -258,6 +289,12 @@ class PlanGenerator:
                 materials_count=len(experiment_plan.materials),
                 procedure_steps=len(experiment_plan.procedure)
             )
+
+            if verbose:
+                print(f"   ✓ 解析成功")
+                print(f"      - 标题: {experiment_plan.title}")
+                print(f"      - 材料数: {len(experiment_plan.materials)}")
+                print(f"      - 步骤数: {len(experiment_plan.procedure)}")
 
         except Exception as e:
             # Log parsing failure
