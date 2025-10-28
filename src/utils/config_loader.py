@@ -24,6 +24,11 @@ class ModelConfig(BaseModel):
     max_tokens: int = Field(default=4096, gt=0)
 
 
+class EmbeddingConfig(BaseModel):
+    """Embedding configuration for ACE framework."""
+    model: str = Field(default="text-embedding-v4", description="Qwen embedding model")
+
+
 # ============================================================================
 # ACE Component Configurations
 # ============================================================================
@@ -31,6 +36,12 @@ class ModelConfig(BaseModel):
 class GeneratorConfig(BaseModel):
     """Configuration for ACE Generator."""
     max_playbook_bullets: int = Field(default=50, gt=0, description="Top-k bullets to retrieve")
+    min_similarity: float = Field(
+        default=0.3,
+        ge=0.0,
+        le=1.0,
+        description="Minimum similarity for playbook bullet retrieval"
+    )
     include_examples: bool = Field(default=True)
     enable_few_shot: bool = Field(default=True)
     few_shot_count: int = Field(default=3, ge=0)
@@ -61,6 +72,7 @@ class CuratorConfig(BaseModel):
 class PlaybookConfig(BaseModel):
     """Playbook structure configuration."""
     default_path: str = Field(default="data/playbooks/chemistry_playbook.json")
+    sections_config: str = Field(default="configs/playbook_sections.yaml")
     sections: List[str] = Field(
         default_factory=lambda: [
             "material_selection",
@@ -117,6 +129,7 @@ class EvaluationConfig(BaseModel):
 class ACEConfig(BaseModel):
     """Complete ACE framework configuration."""
     model: ModelConfig = Field(default_factory=ModelConfig)
+    embedding: EmbeddingConfig = Field(default_factory=EmbeddingConfig)
     generator: GeneratorConfig = Field(default_factory=GeneratorConfig)
     reflector: ReflectorConfig = Field(default_factory=ReflectorConfig)
     curator: CuratorConfig = Field(default_factory=CuratorConfig)

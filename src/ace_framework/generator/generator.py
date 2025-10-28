@@ -129,7 +129,7 @@ class PlanGenerator:
                 query=requirements.get("objective", ""),
                 bullets_retrieved=len(relevant_bullets),
                 top_k=self.config.max_playbook_bullets,
-                min_similarity=0.3,
+                min_similarity=self.config.min_similarity,
                 top_similarities=similarities,
                 sections=section_counts
             )
@@ -352,7 +352,7 @@ class PlanGenerator:
             query=query,
             top_k=self.config.max_playbook_bullets,
             section_filter=section_filter,
-            min_similarity=0.3
+            min_similarity=self.config.min_similarity
         )
 
         # Extract bullets (discard scores)

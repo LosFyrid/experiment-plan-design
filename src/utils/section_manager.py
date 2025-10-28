@@ -19,17 +19,28 @@ class SectionManager:
 
     def __init__(
         self,
-        config_path: str = "configs/playbook_sections.yaml",
+        config_path: Optional[str] = None,
         allow_new_sections: Optional[bool] = None
     ):
         """
         初始化Section Manager
 
         Args:
-            config_path: Section配置文件路径
+            config_path: Section配置文件路径（默认从ace_config读取）
             allow_new_sections: 运行时覆盖配置文件中的allow_new_sections设置
                                如果为None，则使用配置文件中的值
         """
+        # 从 ACE 配置读取默认路径
+        if config_path is None:
+            try:
+                from utils.config_loader import get_ace_config
+                ace_config = get_ace_config()
+                config_path = ace_config.playbook.sections_config
+            except Exception as e:
+                # Fallback to default if config loading fails
+                config_path = "configs/playbook_sections.yaml"
+                print(f"⚠️ Warning: Could not load sections_config from ace_config, using default. Error: {e}")
+
         project_root = Path(__file__).parent.parent.parent
         self.config_path = project_root / config_path
         self.config = self._load_config()

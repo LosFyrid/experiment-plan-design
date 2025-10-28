@@ -17,6 +17,7 @@ ace:
   # Generator Configuration
   generator:
     max_playbook_bullets: 50  # Retrieve top-k relevant bullets
+    min_similarity: 0.3  # Minimum similarity for bullet retrieval (0-1)
     include_examples: true
     enable_few_shot: true
     few_shot_count: 3
