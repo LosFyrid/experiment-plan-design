@@ -60,6 +60,7 @@ class GenerationTask:
     feedback_error: Optional[str] = None
     feedback_retry_count: int = 0
     feedback_mode: Optional[str] = None  # auto, llm_judge, human - 记录评估模式
+    feedback_file_path: Optional[str] = None  # human模式的反馈文件路径
 
     # 缓存失效机制：记录文件最后修改时间
     _file_mtime: Optional[float] = field(default=None, repr=False)
@@ -236,7 +237,8 @@ class GenerationTask:
             "feedback_status": self.feedback_status,
             "feedback_error": self.feedback_error,
             "feedback_retry_count": self.feedback_retry_count,
-            "feedback_mode": self.feedback_mode
+            "feedback_mode": self.feedback_mode,
+            "feedback_file_path": self.feedback_file_path
         }
 
     @classmethod
@@ -260,7 +262,8 @@ class GenerationTask:
             feedback_status=data.get("feedback_status"),
             feedback_error=data.get("feedback_error"),
             feedback_retry_count=data.get("feedback_retry_count", 0),
-            feedback_mode=data.get("feedback_mode")
+            feedback_mode=data.get("feedback_mode"),
+            feedback_file_path=data.get("feedback_file_path")
         )
 
 

@@ -1,0 +1,44 @@
+# 人工反馈模板
+# 用于评估生成的实验方案质量
+
+# 评估维度列表（可自定义3-8个维度）
+criteria:
+  - name: completeness        # 维度名称（必填）
+    score: 8.5                # 分数：0-10，可用小数（必填）
+    explanation: |            # 解释说明（必填，至少10字符）
+      方案包含了材料、步骤、安全提示等必需部分，但缺少详细的质量控制检查点。
+      建议补充中间产物的验证方法。
+
+  - name: safety
+    score: 9.0
+    explanation: |
+      安全提示充分，覆盖了主要危险点。特别是对有机溶剂的处理和废液处理说明清晰。
+
+  - name: clarity
+    score: 7.5
+    explanation: |
+      步骤描述基本清晰，但第3步的"适量"表述不够精确，建议给出具体用量范围。
+
+  - name: executability
+    score: 8.0
+    explanation: |
+      方案可执行性良好，温度和时间参数明确。但缺少设备型号建议，可能影响重现性。
+
+  - name: cost_effectiveness
+    score: 6.5
+    explanation: |
+      材料成本偏高，建议考虑用更经济的替代试剂。例如可以用乙酸代替乙酸酐降低成本。
+
+# 总体评论（可选，留空则自动生成）
+overall_comments: |
+  方案整体质量良好，安全性和可执行性较强。
+  主要改进点：补充质量控制细节，优化部分用量表述，考虑成本优化方案。
+
+# 使用说明：
+# 1. 复制此模板: cp docs/examples/feedback_template.yaml my_feedback.yaml
+# 2. 修改criteria列表:
+#    - 可自定义任意评估维度（不限于上述5个）
+#    - name: 维度名称，用英文或拼音（避免空格）
+#    - score: 0-10分，可用小数，10分最高
+#    - explanation: 必填！这是AI学习改进的关键，至少10字符。可以评论优点和缺点。
+# 3. 提交反馈: /feedback <task_id> --mode human --file my_feedback.yaml

@@ -339,13 +339,13 @@
     {
       "id": "proc-00007",
       "section": "procedure_design",
-      "content": "For any analytical or testing methods, provide a detailed and step-by-step description of the setup, procedure, and data collection method. This includes the type of test (e.g., potentiodynamic polarization), the equipment used (e.g., potentiostat, reference electrode), and specific conditions or parameters (e.g., electrolyte composition, temperature, scan rate). Ensure that all steps are clearly outlined and that any potential variations are accounted for. Include a troubleshooting section to address common issues and their solutions. Additionally, specify the statistical methods to be used for data analysis (e.g., ANOVA, t-tests) and the software tools required (e.g., R, Python).",
+      "content": "For any analytical or testing methods, provide a detailed and step-by-step description of the setup, procedure, and data collection method. This includes the type of test (e.g., potentiodynamic polarization), the equipment used (e.g., potentiostat, reference electrode), and specific conditions or parameters (e.g., electrolyte composition, temperature, scan rate). Ensure that all steps are clearly outlined and that any potential variations are accounted for. Include a troubleshooting section to address common issues and their solutions. Additionally, specify the statistical methods to be used for data analysis (e.g., ANOVA, t-tests) and the software tools required (e.g., R, Python). For specialized tests like the salt spray test, provide a detailed description of the setup, including the equipment, electrolyte composition, and data collection method, and a flowchart or diagram to illustrate the process.",
       "metadata": {
-        "helpful_count": 6,
+        "helpful_count": 7,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-10-27T15:36:14.551338",
-        "last_updated": "2025-10-28T00:26:29.069673",
+        "last_updated": "2025-10-29T10:58:13.021880",
         "source": "reflection",
         "embedding": null
       }
@@ -441,9 +441,9 @@
       "metadata": {
         "helpful_count": 0,
         "harmful_count": 0,
-        "neutral_count": 0,
+        "neutral_count": 1,
         "created_at": "2025-10-27T15:44:19.612075",
-        "last_updated": "2025-10-28T14:12:12.457332",
+        "last_updated": "2025-10-29T10:57:49.454811",
         "source": "reflection",
         "embedding": null
       }
@@ -453,11 +453,11 @@
       "section": "procedure_design",
       "content": "For each step involving specialized tests, provide a detailed description of the test method, including the type of test, equipment, and data analysis techniques. For example, if using a salt spray test, specify the duration (e.g., 24 hours), temperature (e.g., 35°C), and salt concentration (e.g., 5% NaCl). Describe how the results will be analyzed and interpreted, such as measuring the weight loss or visual inspection of the corrosion. Additionally, include a flowchart or diagram to illustrate the testing process and data flow.",
       "metadata": {
-        "helpful_count": 2,
+        "helpful_count": 3,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-10-27T15:51:56.583866",
-        "last_updated": "2025-10-28T14:11:27.230415",
+        "last_updated": "2025-10-29T10:57:49.454797",
         "source": "reflection",
         "embedding": null
       }
@@ -481,11 +481,11 @@
       "section": "procedure_design",
       "content": "For any steps involving temperature control, provide a detailed strategy, including the use of multiple thermocouples, PID controllers, and other temperature monitoring devices. Specify the exact temperature range, the placement of thermocouples, and the calibration of the PID controller. Ensure that the temperature is maintained within the specified range and that any deviations are addressed promptly. For example, set up a feedback loop to automatically adjust the temperature based on real-time data from the thermocouples. Additionally, include a contingency plan for temperature fluctuations, such as backup power sources or manual adjustment procedures.",
       "metadata": {
-        "helpful_count": 1,
+        "helpful_count": 2,
         "harmful_count": 0,
         "neutral_count": 3,
         "created_at": "2025-10-27T21:34:16.219044",
-        "last_updated": "2025-10-28T00:26:29.069689",
+        "last_updated": "2025-10-29T10:57:49.454800",
         "source": "reflection",
         "embedding": null
       }
@@ -495,11 +495,11 @@
       "section": "procedure_design",
       "content": "For any analytical or testing methods, specify the exact model and specifications of the equipment used, including the make, model, and any necessary accessories or calibration details. For example, 'XRD: Bruker D8 Discover with LynxEye detector, calibrated using NIST SRM 640e. SEM: Zeiss Merlin with InLens detector, operated at 5 kV.' This ensures that the experiment is clear, executable, and reproducible.",
       "metadata": {
-        "helpful_count": 0,
+        "helpful_count": 1,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-10-27T22:15:55.188075",
-        "last_updated": "2025-10-27T22:15:55.188082",
+        "last_updated": "2025-10-29T10:57:49.454804",
         "source": "reflection",
         "embedding": null
       }
@@ -509,11 +509,11 @@
       "section": "safety_protocols",
       "content": "For any steps involving high-temperature operations or handling of corrosive chemicals, provide detailed safety guidelines. This includes the use of appropriate PPE (e.g., heat-resistant gloves, face shields), safe handling procedures (e.g., use of fume hoods, proper ventilation), and storage and disposal instructions (e.g., use of acid-resistant containers, neutralization before disposal). For example, 'Handle HCl in a fume hood, wearing nitrile gloves and a face shield. Store in a cool, dry place away from incompatible materials. Dispose of by neutralizing with sodium bicarbonate and then disposing of as hazardous waste.' This ensures the safety of the experimenters and the environment.",
       "metadata": {
-        "helpful_count": 0,
+        "helpful_count": 1,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-10-27T22:15:55.188121",
-        "last_updated": "2025-10-27T22:15:55.188122",
+        "last_updated": "2025-10-29T10:57:49.454802",
         "source": "reflection",
         "embedding": null
       }
@@ -565,11 +565,11 @@
       "section": "procedure_design",
       "content": "For experiments involving material properties, provide a detailed description of how to control and measure key variables such as grain size. Include the specific methods (e.g., heat treatment at 1050°C for 30 minutes, followed by water quenching), equipment (e.g., optical microscope, SEM), and parameters (e.g., temperature, time). Reference relevant standards (e.g., ASTM E112 for grain size measurement) to ensure consistency and reproducibility.",
       "metadata": {
-        "helpful_count": 0,
+        "helpful_count": 1,
         "harmful_count": 0,
         "neutral_count": 0,
         "created_at": "2025-10-28T14:12:03.289810",
-        "last_updated": "2025-10-28T14:12:03.289816",
+        "last_updated": "2025-10-29T10:57:49.454784",
         "source": "reflection",
         "embedding": null
       }
@@ -615,6 +615,20 @@
         "source": "reflection",
         "embedding": null
       }
+    },
+    {
+      "id": "qc-00008",
+      "section": "quality_control",
+      "content": "For each step involving quality control, provide specific criteria for acceptable results. For example, in XRD analysis, specify the expected range for phase ratios (e.g., 70-80% for the desired phase). In SEM analysis, specify the expected range for grain sizes (e.g., 1-5 μm). In the salt spray test, specify the acceptable weight loss (e.g., less than 0.5 mg/cm²) and the criteria for visual inspection of corrosion (e.g., no visible pitting or rust). Include a table or chart summarizing these criteria for easy reference and ensure that all team members are trained on these standards.",
+      "metadata": {
+        "helpful_count": 0,
+        "harmful_count": 0,
+        "neutral_count": 0,
+        "created_at": "2025-10-29T10:58:09.371380",
+        "last_updated": "2025-10-29T10:58:09.371381",
+        "source": "reflection",
+        "embedding": null
+      }
     }
   ],
   "sections": [
@@ -626,6 +640,6 @@
     "common_mistakes"
   ],
   "version": "1.0.0",
-  "last_updated": "2025-10-28T14:12:23.825740",
+  "last_updated": "2025-10-29T10:58:24.262090",
   "total_generations": 3
 }

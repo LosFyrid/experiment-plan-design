@@ -411,48 +411,53 @@ class LLMJudgeEvaluator:
 
 class HumanEvaluator:
     """
-    人工评分占位符。
+    人工评分（文件模式）
 
-    在实际使用中，这会连接到一个Web界面或评分系统，
-    让化学专家对方案进行评分。
+    使用方式:
+        1. 复制模板: cp docs/examples/feedback_template.yaml my_feedback.yaml
+        2. 编辑文件: 填写criteria和explanation
+        3. 调用evaluate()传入文件路径
     """
 
-    def evaluate(self, plan: ExperimentPlan, criteria: List[str]) -> Feedback:
+    def __init__(self, feedback_file: str):
         """
-        请求人工评分。
+        Args:
+            feedback_file: 反馈文件路径（YAML格式）
+        """
+        self.feedback_file = feedback_file
 
-        在实际系统中，这会：
-        1. 保存方案到待评分队列
-        2. 通知评分员
-        3. 等待评分完成
-        4. 返回评分结果
+    def evaluate(self, plan: ExperimentPlan, criteria: List[str] = None) -> Feedback:
+        """
+        从文件读取人工反馈
 
         Args:
-            plan: 生成的实验方案
-            criteria: 评估标准
+            plan: 生成的实验方案（用于验证，未使用）
+            criteria: 评估标准（兼容性参数，实际从文件读取）
 
         Returns:
             Feedback对象
+
+        Raises:
+            ValueError: 文件不存在或格式错误
         """
-        # 占位符实现：返回模拟的人工评分
-        print("⚠️  人工评分模式未完全实现，使用模拟评分")
+        from evaluation.feedback_parser import parse_feedback_file
 
-        scores = [
-            FeedbackScore(
-                criterion=c,
-                score=0.85,
-                explanation=f"人工评分 - {c}"
+        # 检查文件存在
+        if not Path(self.feedback_file).exists():
+            raise ValueError(
+                f"反馈文件不存在: {self.feedback_file}\n"
+                "请先创建反馈文件:\n"
+                "  cp docs/examples/feedback_template.yaml feedback.yaml\n"
+                "  vim feedback.yaml"
             )
-            for c in criteria
-        ]
 
-        return Feedback(
-            scores=scores,
-            overall_score=0.85,
-            feedback_source="human",
-            comments="【模拟】专家评审：方案整体质量良好",
-            timestamp=datetime.now()
-        )
+        # 解析文件
+        try:
+            feedback = parse_feedback_file(self.feedback_file)
+            print(f"✅ 成功解析反馈文件: {len(feedback.scores)}个评估维度")
+            return feedback
+        except Exception as e:
+            raise ValueError(f"解析反馈文件失败: {e}")
 
 
 # ============================================================================
@@ -461,7 +466,8 @@ class HumanEvaluator:
 
 def create_evaluator(
     source: str,
-    llm_provider: Optional[BaseLLMProvider] = None
+    llm_provider: Optional[BaseLLMProvider] = None,
+    feedback_file: Optional[str] = None
 ):
     """
     创建评估器。
@@ -469,6 +475,7 @@ def create_evaluator(
     Args:
         source: 评估来源 ("auto", "llm_judge", "human")
         llm_provider: LLM提供者（llm_judge模式需要）
+        feedback_file: 反馈文件路径（human模式需要）
 
     Returns:
         对应的评估器实例
@@ -485,7 +492,12 @@ def create_evaluator(
         return LLMJudgeEvaluator(llm_provider)
 
     elif source == "human":
-        return HumanEvaluator()
+        if not feedback_file:
+            raise ValueError(
+                "human模式需要提供feedback_file参数\n"
+                "用法: create_evaluator('human', feedback_file='feedback.yaml')"
+            )
+        return HumanEvaluator(feedback_file)
 
     else:
         raise ValueError(f"不支持的评估来源: {source}，请使用 'auto', 'llm_judge', 或 'human'")

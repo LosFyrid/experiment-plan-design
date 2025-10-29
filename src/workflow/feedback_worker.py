@@ -122,6 +122,17 @@ def run_feedback_workflow(task_id: str, evaluation_mode: Optional[str] = None):
     else:
         print(f"[Worker] 使用指定的评估模式: {evaluation_mode}")
 
+    # human模式需要读取反馈文件路径
+    feedback_file = None
+    if evaluation_mode == "human":
+        feedback_file = task.feedback_file_path
+        if not feedback_file:
+            raise ValueError(
+                "human模式需要feedback_file_path，但任务中未找到。\n"
+                "请使用: /feedback <task_id> --mode human --file feedback.yaml"
+            )
+        print(f"[Worker] 反馈文件: {feedback_file}")
+
     # 3. 从 generation_result.json 加载完整数据
     print()
     print("=" * 70)
@@ -233,15 +244,27 @@ def run_feedback_workflow(task_id: str, evaluation_mode: Optional[str] = None):
     print("=" * 70)
     print("STEP 1: 评估方案质量")
     print("=" * 70)
+    print(f"  评估模式: {evaluation_mode}")
 
-    from evaluation.evaluator import evaluate_plan
+    from evaluation.evaluator import create_evaluator
 
     try:
-        feedback = evaluate_plan(
-            plan=plan,
-            source=evaluation_mode,
-            llm_provider=llm_provider if evaluation_mode == "llm_judge" else None
-        )
+        # 创建评估器（human模式传入文件路径）
+        if evaluation_mode == "human":
+            evaluator = create_evaluator(
+                source="human",
+                feedback_file=feedback_file
+            )
+        elif evaluation_mode == "llm_judge":
+            evaluator = create_evaluator(
+                source="llm_judge",
+                llm_provider=llm_provider
+            )
+        else:  # auto
+            evaluator = create_evaluator(source="auto")
+
+        # 执行评估
+        feedback = evaluator.evaluate(plan)
 
         task.save_feedback(feedback)
         print(f"  ✅ 评估完成: {feedback.overall_score:.2f}")

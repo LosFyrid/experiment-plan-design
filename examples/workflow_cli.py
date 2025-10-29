@@ -140,6 +140,9 @@ def print_help():
 📋 命令列表:
   /generate, /gen         - 根据对话历史生成实验方案（后台子进程）
   /feedback <task_id>     - 对已完成的方案进行反馈训练（ACE循环）
+      --mode auto            基于规则的自动评估（快速）
+      --mode llm_judge       LLM评估（准确）
+      --mode human --file <yaml>  人工评分（需提供反馈文件）
   /status [task_id]       - 查看任务状态和文件路径
   /requirements [task_id] - 查看任务的需求文件（JSON格式）
   /logs [task_id]         - 查看任务日志（实时缓冲区）
@@ -185,6 +188,25 @@ def print_help():
   你: /view <task_id>        ← 查看方案
   你: /feedback <task_id>    ← （可选）反馈训练，改进playbook
   你: 第3步的温度可以调低吗？  ← 继续对话
+
+💡 人工反馈使用方法:
+  1. 复制模板:
+     cp docs/examples/feedback_template.yaml my_feedback.yaml
+
+  2. 编辑文件（自定义评估维度，填写分数和理由）:
+     vim my_feedback.yaml
+
+  3. 提交反馈:
+     /feedback <task_id> --mode human --file my_feedback.yaml
+
+  4. 查看训练进度:
+     /logs <task_id>
+
+📝 反馈文件说明:
+  • criteria: 评估维度列表（可自定义，3-8个为宜）
+  • score: 0-10分（可用小数）
+  • explanation: 必填！AI从这里学习改进方向（至少10字符）
+  • overall_comments: 可选
 
 📂 会话管理（SQLite模式）:
   /sessions                  - 列出所有保存的会话
@@ -1233,34 +1255,32 @@ def main():
                         print()
                         continue
 
-                    # /feedback <task_id> [--mode auto|llm_judge|human]
+                    # /feedback <task_id> [--mode auto|llm_judge|human] [--file <feedback.yaml>]
                     elif cmd == "/feedback":
                         if len(cmd_parts) < 2:
-                            print("\n用法: /feedback <task_id> [--mode <evaluation_mode>]")
-                            print("\n评估模式说明:")
-                            print("  auto       - 基于规则的自动评估（快速，免费）")
-                            print("  llm_judge  - LLM评估（准确，消耗tokens）")
-                            print("  human      - 人工评分（待实现）")
-
-                            # 显示配置的默认模式
-                            from utils.config_loader import get_ace_config
-                            ace_config = get_ace_config()
-                            default_mode = ace_config.training.feedback_source
-                            print(f"\n💡 默认模式（configs/ace_config.yaml）: {default_mode}")
-                            print("\n示例:")
-                            print("  /feedback abc123              # 使用配置默认模式")
-                            print("  /feedback abc123 --mode auto  # 指定auto模式\n")
+                            print("\n用法:")
+                            print("  /feedback <task_id> --mode auto")
+                            print("  /feedback <task_id> --mode llm_judge")
+                            print("  /feedback <task_id> --mode human --file <feedback.yaml>")
+                            print("\n💡 human模式说明:")
+                            print("  1. 复制模板: cp docs/examples/feedback_template.yaml my_feedback.yaml")
+                            print("  2. 编辑文件: vim my_feedback.yaml")
+                            print("  3. 提交: /feedback <task_id> --mode human --file my_feedback.yaml")
+                            print("\n评分指南:")
+                            print("  0-10分，可用小数。explanation必填（AI学习的关键）")
+                            print("  可自定义任意评估维度，不限于标准5维度\n")
                             continue
 
                         task_id = cmd_parts[1]
 
-                        # 解析评估模式（如果不指定，传None，由worker从配置读取）
-                        evaluation_mode = None  # 默认从配置读取
+                        # 解析--mode和--file参数
+                        evaluation_mode = None
+                        feedback_file = None
 
                         if "--mode" in cmd_parts:
                             try:
-                                idx = cmd_parts.index("--mode")
-                                evaluation_mode = cmd_parts[idx + 1]
+                                mode_idx = cmd_parts.index("--mode")
+                                evaluation_mode = cmd_parts[mode_idx + 1]
                                 if evaluation_mode not in ["auto", "llm_judge", "human"]:
                                     print(f"\n❌ 不支持的评估模式: {evaluation_mode}")
                                     print("   请使用: auto, llm_judge, 或 human\n")
@@ -1269,10 +1289,39 @@ def main():
                                 print("\n❌ --mode 参数缺少值\n")
                                 continue
 
-                        # 确定并存储评估模式
+                        if "--file" in cmd_parts:
+                            try:
+                                file_idx = cmd_parts.index("--file")
+                                feedback_file = cmd_parts[file_idx + 1]
+                            except IndexError:
+                                print("\n❌ --file 参数缺少值\n")
+                                continue
+
+                        # human模式必须提供文件
+                        if evaluation_mode == "human":
+                            if not feedback_file:
+                                print("\n❌ human模式必须提供反馈文件")
+                                print("用法: /feedback <task_id> --mode human --file feedback.yaml")
+                                print("\n快速开始:")
+                                print("  cp docs/examples/feedback_template.yaml feedback.yaml")
+                                print("  vim feedback.yaml")
+                                print("  /feedback <task_id> --mode human --file feedback.yaml\n")
+                                continue
+
+                            # 检查文件是否存在
+                            if not Path(feedback_file).exists():
+                                print(f"\n❌ 文件不存在: {feedback_file}\n")
+                                continue
+
+                        # 验证任务
                         task = task_manager.get_task(task_id)
                         if not task:
                             print(f"\n❌ 任务 {task_id} 不存在\n")
+                            continue
+
+                        if task.status != TaskStatus.COMPLETED:
+                            print(f"\n❌ 任务未完成 (状态: {task.status.value})")
+                            print("   只能对已完成的任务进行反馈训练\n")
                             continue
 
                         # 确定实际使用的模式
@@ -1283,15 +1332,16 @@ def main():
                         else:
                             actual_mode = evaluation_mode
 
-                        # 存储到任务
+                        # 存储到任务（human模式需要保存文件路径）
                         task.feedback_mode = actual_mode
+                        if actual_mode == "human" and feedback_file:
+                            task.feedback_file_path = str(Path(feedback_file).resolve())
                         task_manager._save_task(task)
 
                         # 显示即将使用的模式
-                        if evaluation_mode is None:
-                            print(f"\n🚀 启动反馈训练流程（使用配置默认: {actual_mode}）")
-                        else:
-                            print(f"\n🚀 启动反馈训练流程（{actual_mode}模式）")
+                        print(f"\n🚀 启动反馈训练流程（{actual_mode}模式）")
+                        if actual_mode == "human":
+                            print(f"   反馈文件: {feedback_file}")
 
                         # 提交反馈任务
                         success = scheduler.submit_feedback_task(task_id, actual_mode)
